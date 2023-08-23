@@ -1,0 +1,13 @@
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\bin\Debug\Hexagonal Chess.exe.config
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\bin\Debug\Hexagonal Chess.exe
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\bin\Debug\Hexagonal Chess.pdb
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.csproj.AssemblyReference.cache
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.csproj.SuggestedBindingRedirects.cache
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.Properties.Resources.resources
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.csproj.GenerateResource.cache
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.csproj.CoreCompileInputs.cache
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.exe
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.pdb
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.MDIParent.resources
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.frmHome.resources
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.FrmBoard.resources
