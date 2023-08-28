@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows;
 
 using static Hexagonal_Chess.Utils;
 
@@ -15,11 +16,13 @@ namespace Hexagonal_Chess
     public partial class FrmBoard : Form
     {
 
-        int hexRadius = 45;
+        int hexRadius = 43;
 
 
 
         private IDictionary<string, Hexagon> boardNodes = new Dictionary<string, Hexagon>();
+
+        private IDictionary<LocNotation, PictureBox> boardPieces = new Dictionary<LocNotation, PictureBox>();
 
 
         private Board board = new Board();
@@ -29,17 +32,29 @@ namespace Hexagonal_Chess
             InitializeComponent();
         }
 
+        private List<PictureBox> MovementButtons = new List<PictureBox>();
+
         private void Board_Load(object sender, EventArgs e)
         {
+
             buildBoard();
+
+            this.lblTopEval.Text = "";
+
 
         }
 
 
         private void buildBoard()
         {
+            //find the point that centers the board horizontally
+            int x = (int) Math.Round((pnlBoard.Width / 2) - (hexRadius * 7.78));
+
+            //find the point that centers the board verti
+            int y = (int)Math.Round((pnlBoard.Height / 2) + (hexRadius * 4.26));
+
             //Starting point of the entire board, this will be center of A1
-            Point startingPosition = new Point(100, 725);
+            Point startingPosition = new Point(x, y);
 
             //The distance from the center of a hexagon to center of any of its lines
             int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
@@ -163,17 +178,15 @@ namespace Hexagonal_Chess
             pictureBox.Name = piece.pieceType + piece.locNotation.notation;
             pictureBox.BackColor = Color.Transparent;
             pictureBox.Click += (sender, EventArgs) => { Piece_Click(sender, EventArgs, piece); };
-            this.Controls.Add(pictureBox);
+            this.pnlBoard.Controls.Add(pictureBox);
+
+            boardPieces.Add(piece.locNotation, pictureBox);
         }
 
 
 
         private void Board_Paint(object sender, PaintEventArgs e)
         {
-            foreach (KeyValuePair<string, Hexagon> node in boardNodes)
-            {
-                DrawHexagon(node.Value, e);
-            }
 
 
         }
@@ -199,12 +212,23 @@ namespace Hexagonal_Chess
         }
 
 
-        private async void Piece_Click(object sender, EventArgs e, Piece piece)
+        private void Move_Click(object sender, EventArgs e, Move move)
         {
-            foreach (Control item in this.Controls.OfType<Control>().ToList())
+            board.makeMove(move);
+        }
+
+        private void Piece_Click(object s, EventArgs e, Piece piece)
+        {
+            //if it is not the pieces turn to move
+            if(!(piece.isWhite == board.whiteToPlay))
             {
-                if (item.Name == "MovementButton")
-                    await Task.Run(() => this.Controls.Remove(item));
+                //ignore the click
+                return;
+            }
+
+            foreach (PictureBox image in MovementButtons)
+            {
+                this.pnlBoard.Controls.Remove(image);
             }
 
             List<Move> availableMoves;
@@ -217,7 +241,7 @@ namespace Hexagonal_Chess
 
             Point tempLocation;
             PictureBox tempImage;
-            //
+           
             for (int i = 0; i < availableMoves.Count; i++)
             {
 
@@ -230,13 +254,19 @@ namespace Hexagonal_Chess
                 tempImage = new PictureBox();
                 tempImage.Size = new Size(size, size);
                 tempImage.Location = new Point(tempLocation.X - size / 2, tempLocation.Y - size / 2);
-                tempImage.Name = "MovementButton";
+                tempImage.Name = "MovementButton"+i;
                 tempImage.BackColor = Color.Transparent;
-                tempImage.Image = Hexagonal_Chess.Properties.Resources.AvailableMove;
                 tempImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                //tempImage.Click += (sender, EventArgs) => { Move_Click(sender, EventArgs, piece); };
-                this.Controls.Add(tempImage);
+                tempImage.BringToFront();
+                tempImage.Click += (sender, EventArgs) => { Move_Click(sender, EventArgs, move); };
 
+                //assign the image based on the move type
+                tempImage.Image = move.isCapture ? Properties.Resources.AvailableTake : Properties.Resources.AvailableMove;
+
+                this.pnlBoard.Controls.Add(tempImage);
+
+                //add it to the List for later removal
+                MovementButtons.Add(tempImage);
 
             }
 
@@ -246,7 +276,8 @@ namespace Hexagonal_Chess
         private List<Move> FindMoves(Piece piece)
         {
             List<Move> Moves = new List<Move>();
-            int[][] horizontalIncrementors = new int[][] { 
+
+            int[][] horizontalIncrementors = new int[][] {
                 new int[2] { 0, 1 }, //Up
                 new int[2] { 0, -1 }, //down
                 new int[2] { -1, 0 }, //Up and left
@@ -302,12 +333,21 @@ namespace Hexagonal_Chess
                 new int[2] { -1, -2 } //down and left
             };
 
-
+            if (piece.locNotation.col > 5)
+            {
+                //shift the row down by the number of columns it is right of center
+                int newRow = piece.locNotation.row - 5 + piece.locNotation.col;
+                //if we are off the board, continue to the next
+                if (newRow > 0)
+                {
+                    piece.locNotation.setRow(newRow);
+                }
+            }
 
             switch (piece.pieceType)
             {
                 case 'P':
-                    Moves.AddRange(FindDisplacement(piece, horizontalIncrementors));
+                    Moves.AddRange(FindPawnMoves(piece));
                     break;
 
                 case 'R':
@@ -327,14 +367,170 @@ namespace Hexagonal_Chess
                     break;
 
                 case 'Q':
-                    Moves.AddRange(FindStraightMoves(piece, horizontalIncrementors ));
-                    Moves.AddRange(FindStraightMoves(piece , diagnalIncrementors));
+                    Moves.AddRange(FindStraightMoves(piece, horizontalIncrementors));
+                    Moves.AddRange(FindStraightMoves(piece, diagnalIncrementors));
                     break;
 
                 default:
                     throw new Exception("Invalid Piece Type");
             }
+
             return Moves;
+        }
+
+
+        private LocNotation offsetRightBoard( LocNotation locNotation)
+        {
+            //if the move is right of the centerline
+            if (locNotation.col > 5)
+            {
+                //shift the row down by the number of columns it is right of center
+                int newRow = locNotation.row + 5 - locNotation.col;
+                //if we are off the board, continue to the next
+                if (newRow > 0)
+                {
+                    locNotation.setRow(newRow);
+                }
+            }
+            return locNotation;
+            
+        }
+
+        private int offsetRightBoard(int col, int row)
+        {
+            //if the move is right of the centerline
+            if (col > 5)
+            {
+                int dec = col - 5;
+
+                //shift the row down by the number of columns it is right of center
+                int newRow = row - 1;
+                //if we are off the board, continue to the next
+                if (newRow > 0)
+                {
+                    return newRow;
+                }
+            }
+            return row;
+
+        }
+
+
+
+        private List<Move> FindPawnMoves(Piece piece)
+        {
+            List<Move> outputMoves = new List<Move>();
+
+            int[][] whitePawnDisplacers = new int[][] {
+                new int[2] { -1, 0 }, //up and left
+                new int[2] { 1, 1 } //up and right
+            };
+            int[][] blackPawnDisplacers = new int[][] {
+                //Horizontals
+                new int[2] { -1, -1 }, //down and left
+                new int[2] {  1, 0 } //down and right
+            };
+
+            //Get the location of the piece we are moving
+            int col = piece.locNotation.col;
+            int row = piece.locNotation.row;
+
+            LocNotation tempLocation;
+
+            Piece selectedPiece;
+
+            int[][] displacements = piece.isWhite?whitePawnDisplacers:blackPawnDisplacers;
+
+            for (int i = 0; i < displacements.Length; i++)
+            {
+                //calculate the new position using the displacements
+                tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
+
+                //offset the position 
+                tempLocation = offsetRightBoard(tempLocation);
+
+                try
+                {
+                    //get the piece at the next square
+                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+                }
+                catch (Exception)
+                {
+                    //we have moved outside the bounds of the board
+                    continue;
+                }
+
+                //if the square is empty
+                if (selectedPiece == null)
+                {
+                    //look at the next displacement
+                    continue;
+                }
+                //if the pieces are not the same color
+                else if (selectedPiece.isWhite != piece.isWhite)
+                {
+                    //add it as a potential move 
+                    outputMoves.Add(new Move(piece, tempLocation, true));
+                }
+                //Otherwise we are looking at one of our own pieces
+            }
+
+
+            //Look one square ahead
+            tempLocation = new LocNotation(col, row + (piece.isWhite? 1: -1));
+
+            //offset the position 
+            tempLocation = offsetRightBoard(tempLocation);
+
+            try
+            {
+                //get the piece at the next square
+                selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+            }
+            catch (Exception)
+            {
+                //we have moved outside the bounds of the board
+                return outputMoves;
+            }
+
+            //If space is not empty
+            if (!(selectedPiece == null))
+            {
+                //finish the function becuase there is no reason to look 2 squares ahead
+                return outputMoves;
+            }
+            //if the space is empty, add the move
+            outputMoves.Add(new Move(piece, tempLocation, false));
+
+            //If the piece is on a starting square
+            if ( col < 6?(col - 1 == row): ((col - 11) * -1 == row))
+            {
+                //Get the square two spaces ahead
+                tempLocation = new LocNotation(col, row + (piece.isWhite ? 2 : -2));
+
+                //offset the position 
+                tempLocation = offsetRightBoard(tempLocation);
+
+                try
+                {
+                    //get the piece at the square
+                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+                }
+                catch (Exception)
+                {
+                    //we have moved outside the bounds of the board
+                    return outputMoves;
+                }
+
+                //if the spot is empty
+                if (selectedPiece == null)
+                {
+                    //add the move
+                    outputMoves.Add(new Move(piece, tempLocation, false));
+                }
+            }
+
+            return outputMoves;
         }
 
 
@@ -357,6 +553,9 @@ namespace Hexagonal_Chess
                 //calculate the new position using the displacements
                 tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
 
+                //offset the position 
+                tempLocation = offsetRightBoard(tempLocation);
+
                 try
                 {
                     //get the piece at the next square
@@ -372,7 +571,7 @@ namespace Hexagonal_Chess
                 if (selectedPiece == null)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, tempLocation));
+                    outputMoves.Add(new Move(piece, tempLocation, false));
 
                     //look at the next displacement
                     continue;
@@ -381,7 +580,7 @@ namespace Hexagonal_Chess
                 else if (selectedPiece.isWhite != piece.isWhite)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, tempLocation ));
+                    outputMoves.Add(new Move(piece, tempLocation, true));
                 }
                 //Otherwise we are looking at one of our own pieces
             }
@@ -422,6 +621,9 @@ namespace Hexagonal_Chess
                 col += colIncrement;
                 row += rowIncrement;
 
+                //offset the position 
+                //row = offsetRightBoard(col, row);
+
                 try
                 {
                     //get the piece at the next square
@@ -440,7 +642,7 @@ namespace Hexagonal_Chess
                 if (selectedPiece == null)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, new LocNotation(col, row)));
+                    outputMoves.Add(new Move(piece, new LocNotation(col, row), false));
 
                     //look at the next square 
                     continue;
@@ -449,7 +651,7 @@ namespace Hexagonal_Chess
                 else if (selectedPiece.isWhite != piece.isWhite)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, new LocNotation(col, row)));
+                    outputMoves.Add(new Move(piece, new LocNotation(col, row), true));
 
                     //stop moving down the line
                     moving = false;
@@ -464,6 +666,14 @@ namespace Hexagonal_Chess
             }
 
             return outputMoves;
+        }
+
+        private void GamePanel_Paint(object sender, PaintEventArgs e)
+        {
+            foreach (KeyValuePair<string, Hexagon> node in boardNodes)
+            {
+                DrawHexagon(node.Value, e);
+            }
         }
 
     }

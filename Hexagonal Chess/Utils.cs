@@ -48,17 +48,31 @@ namespace Hexagonal_Chess
                 //};
 
 
+                //List<char>[] tempBoard = new List<char>[] {
+                //    new List<char> { 'P', ' ', 'P', ' ', ' ', ' ' },
+                //    new List<char> { ' ', 'p', ' ', ' ', ' ', ' ', ' ' } ,
+                //    new List<char> { 'R', ' ', ' ', 'k', 'N', ' ', ' ', 'r' },
+                //    new List<char> { 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'n' },
+                //    new List<char> { 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'q' },
+                //    new List<char> { ' ', ' ', ' ', 'p', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                //    new List<char>      { 'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'k' },
+                //    new List<char>           { 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'n' },
+                //    new List<char>                { 'R', ' ', ' ', ' ', 'Q', ' ', ' ', 'r' },
+                //    new List<char>                     { 'p', ' ', ' ', ' ', 'P', ' ', 'P' } ,
+                //    new List<char>                          { ' ', ' ', ' ', ' ', 'p', ' ' }
+                //};
+
                 List<char>[] tempBoard = new List<char>[] {
                     new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
                     new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
-                    new List<char> { 'R', ' ', ' ', 'k', 'N', ' ', ' ', 'r' },
-                    new List<char> { 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'n' },
-                    new List<char> { 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'q' },
-                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                    new List<char>      { 'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'k' },
-                    new List<char>           { 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'n' },
-                    new List<char>                { 'R', ' ', ' ', ' ', 'B', ' ', ' ', 'r' },
-                    new List<char>                     { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char> { ' ', ' ', ' ', ' ', 'R', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char>      { ' ', 'R', ' ', ' ', 'R', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char>           { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char>                { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char>                     { ' ', ' ', ' ', 'R', ' ', ' ', ' ' } ,
                     new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
                 };
 
@@ -82,6 +96,49 @@ namespace Hexagonal_Chess
                 }
 
                 this.gameBoard = outputBoard;
+            }
+
+            public void makeMove(Move move)
+            {
+                var whitePieces = new Dictionary<char, string>()
+                {
+                     { 'P', "♙"},
+                     { 'K', "♔"},
+                     { 'Q', "♕"},
+                     { 'R', "♖"},
+                     { 'B', "♗"},
+                     { 'N', "♘"},
+                };
+
+                var blackPieces = new Dictionary<char, string>()
+                {
+                     { 'P', "♟︎"},
+                     { 'K', "♚"},
+                     { 'Q', "♛"},
+                     { 'R', "♜"},
+                     { 'B', "♝"},
+                     { 'N', "♞"},
+                };
+
+
+                //update the board
+
+
+
+                if (move.isCapture)
+                {
+                    //update the evaluation
+
+                    //add the taken piece to the piece counter
+                }
+
+
+                //add the move the datagrid
+                string pieceCharcter = move.piece.isWhite? whitePieces[move.piece.pieceType] : blackPieces[move.piece.pieceType];
+                string temp = pieceCharcter + move.moveNotation;
+
+                //change it to the opposing teams move
+                this.whiteToPlay = !this.whiteToPlay;
             }
         }
 
@@ -135,14 +192,16 @@ namespace Hexagonal_Chess
             public LocNotation endLocation;
             public readonly string moveNotation;
             public bool isCheck;
+            public bool isCapture;
 
-            public Move(Piece piece, LocNotation endLocation)
+            public Move(Piece piece, LocNotation endLocation, bool isCapture)
             {
                 this.piece = piece;
                 this.endLocation = endLocation;
 
                 //build the chess move notation
-                this.moveNotation = piece.pieceType + endLocation.notation /*+ (isCheck ? "+" : "")*/;
+                this.moveNotation = piece.pieceType + (isCapture?"x":"") + endLocation.notation /*+ (isCheck ? "+" : "")*/;
+                this.isCapture = isCapture;
             }
         }
 
@@ -150,12 +209,24 @@ namespace Hexagonal_Chess
         {
             public int col;
             public int row;
-            public readonly string notation;
+            public string notation;
             public LocNotation(int col, int row)
             {
                 this.col = col;
                 this.row = row;
                 this.notation = ((char)(col + 65)).ToString() + (row + 1).ToString();
+            }
+
+            public void setColumn(int col)
+            {
+                this.col = col;
+                this.notation = ((char)(col + 65)).ToString() + (this.row + 1).ToString();
+            }
+
+            public void setRow(int row)
+            {
+                this.row = row;
+                this.notation = ((char)(this.col + 65)).ToString() + (row + 1).ToString();
             }
         }
     }

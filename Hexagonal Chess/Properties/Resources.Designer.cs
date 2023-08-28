@@ -73,6 +73,16 @@ namespace Hexagonal_Chess.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AvailableTake {
+            get {
+                object obj = ResourceManager.GetObject("AvailableTake", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap BlackBishop {
             get {
                 object obj = ResourceManager.GetObject("BlackBishop", resourceCulture);

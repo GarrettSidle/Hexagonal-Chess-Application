@@ -103,6 +103,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Images\AvailableTake.png" />
     <Content Include="Images\Hex.ico" />
     <None Include="Images\AvailableMove.png" />
     <None Include="Images\HomeBackground.jpg" />

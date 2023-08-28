@@ -36,6 +36,7 @@ namespace Hexagonal_Chess
         {
             screens.TryGetValue(screenName, out var screen);
             screen.MdiParent = mdiParent;
+            screen.Dock = DockStyle.Fill;
             screen.Show();
         }
 
