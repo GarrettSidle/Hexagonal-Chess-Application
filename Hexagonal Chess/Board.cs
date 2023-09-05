@@ -207,14 +207,23 @@ namespace Hexagonal_Chess
                     hexagon.location.X + hexRadius * (float)Math.Cos(a * 60 * Math.PI / 180f),
                     hexagon.location.Y + hexRadius * (float)Math.Sin(a * 60 * Math.PI / 180f));
             }
-
+                
             graphics.FillPolygon(new SolidBrush(hexagon.color), shape);
         }
 
 
         private void Move_Click(object sender, EventArgs e, Move move)
         {
-            board.makeMove(move);
+            Utils.makeMove(move, board, boardPieces, boardNodes, (FrmBoard) MDIParent.getScreen("Board"));
+        }
+
+
+        public void removeMovementIcons()
+        {
+            foreach (PictureBox image in MovementButtons)
+            {
+                this.pnlBoard.Controls.Remove(image);
+            }
         }
 
         private void Piece_Click(object s, EventArgs e, Piece piece)
@@ -222,14 +231,11 @@ namespace Hexagonal_Chess
             //if it is not the pieces turn to move
             if(!(piece.isWhite == board.whiteToPlay))
             {
-                //ignore the click
+                //ignore the click   
                 return;
             }
 
-            foreach (PictureBox image in MovementButtons)
-            {
-                this.pnlBoard.Controls.Remove(image);
-            }
+            removeMovementIcons();
 
             List<Move> availableMoves;
             //get all of the available moves for the selected piece
@@ -381,6 +387,9 @@ namespace Hexagonal_Chess
 
         private LocNotation offsetRightBoard( LocNotation locNotation)
         {
+
+            //return locNotation;
+
             //if the move is right of the centerline
             if (locNotation.col > 5)
             {
@@ -603,6 +612,8 @@ namespace Hexagonal_Chess
             return outputMoves;
         }
 
+
+
         private List<Move> FindStraightLine(Piece piece, int colIncrement, int rowIncrement)
         {
             List<Move> outputMoves = new List<Move>();
@@ -622,7 +633,7 @@ namespace Hexagonal_Chess
                 row += rowIncrement;
 
                 //offset the position 
-                //row = offsetRightBoard(col, row);
+                row = offsetRightBoard(col, row);
 
                 try
                 {

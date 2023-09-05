@@ -79,7 +79,7 @@
             this.layoutEval.Controls.Add(this.pnlEvalTop, 0, 0);
             this.layoutEval.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutEval.Location = new System.Drawing.Point(0, 0);
-            this.layoutEval.Margin = new System.Windows.Forms.Padding(30);
+            this.layoutEval.Margin = new System.Windows.Forms.Padding(0);
             this.layoutEval.Name = "layoutEval";
             this.layoutEval.Padding = new System.Windows.Forms.Padding(10);
             this.layoutEval.RowCount = 2;
@@ -320,11 +320,11 @@
         private System.Windows.Forms.Panel pnlEvaluation;
         private System.Windows.Forms.Panel pnlTopUser;
         private System.Windows.Forms.PictureBox imgTopUser;
-        private System.Windows.Forms.Label lblTopUserEval;
+        public System.Windows.Forms.Label lblTopUserEval;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.Panel pnlBottomUser;
         private System.Windows.Forms.PictureBox imgBottomUser;
-        private System.Windows.Forms.Label lblBottomUserEval;
+        public System.Windows.Forms.Label lblBottomUserEval;
         private System.Windows.Forms.Label lblBottomName;
         private System.Windows.Forms.Panel pnlMoves;
         public System.Windows.Forms.DataGridView dgMoves;

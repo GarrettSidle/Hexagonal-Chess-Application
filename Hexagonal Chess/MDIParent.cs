@@ -40,6 +40,12 @@ namespace Hexagonal_Chess
             screen.Show();
         }
 
+        public static Form getScreen(string screenName)
+        {
+            screens.TryGetValue(screenName, out var screen);
+            return screen;
+        }
+
     }
 
 }
