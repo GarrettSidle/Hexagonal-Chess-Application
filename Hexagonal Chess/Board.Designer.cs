@@ -164,9 +164,8 @@
             this.lblTopUserEval.ForeColor = System.Drawing.Color.Black;
             this.lblTopUserEval.Location = new System.Drawing.Point(87, 40);
             this.lblTopUserEval.Name = "lblTopUserEval";
-            this.lblTopUserEval.Size = new System.Drawing.Size(68, 21);
+            this.lblTopUserEval.Size = new System.Drawing.Size(0, 21);
             this.lblTopUserEval.TabIndex = 3;
-            this.lblTopUserEval.Text = "♙♙ +2";
             // 
             // lblUser
             // 
@@ -207,9 +206,8 @@
             this.lblBottomUserEval.ForeColor = System.Drawing.Color.Black;
             this.lblBottomUserEval.Location = new System.Drawing.Point(87, 40);
             this.lblBottomUserEval.Name = "lblBottomUserEval";
-            this.lblBottomUserEval.Size = new System.Drawing.Size(68, 21);
+            this.lblBottomUserEval.Size = new System.Drawing.Size(0, 21);
             this.lblBottomUserEval.TabIndex = 3;
-            this.lblBottomUserEval.Text = "♙♙ +2";
             // 
             // lblBottomName
             // 
@@ -329,13 +327,13 @@
         private System.Windows.Forms.Panel pnlMoves;
         public System.Windows.Forms.DataGridView dgMoves;
         private System.Windows.Forms.Panel pnlBoard;
-        private System.Windows.Forms.TableLayoutPanel layoutEval;
+        public System.Windows.Forms.TableLayoutPanel layoutEval;
         private System.Windows.Forms.Panel pnlEvalBottom;
         private System.Windows.Forms.Panel pnlEvalTop;
-        private System.Windows.Forms.Label lblTopEval;
+        public System.Windows.Forms.Label lblTopEval;
         private System.Windows.Forms.DataGridViewTextBoxColumn colMoveNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn colWhite;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBlack;
-        private System.Windows.Forms.Label lblBottomEval;
+        public System.Windows.Forms.Label lblBottomEval;
     }
 }

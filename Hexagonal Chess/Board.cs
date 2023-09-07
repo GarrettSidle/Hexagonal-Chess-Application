@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows;
 
 using static Hexagonal_Chess.Utils;
+using static Hexagonal_Chess.FindMoves;
 
 namespace Hexagonal_Chess
 {
@@ -22,10 +23,8 @@ namespace Hexagonal_Chess
 
         private IDictionary<string, Hexagon> boardNodes = new Dictionary<string, Hexagon>();
 
-        private IDictionary<LocNotation, PictureBox> boardPieces = new Dictionary<LocNotation, PictureBox>();
+        private IDictionary<string, PictureBox> boardPieces = new Dictionary<string, PictureBox>();
 
-
-        private Board board = new Board();
 
         public FrmBoard()
         {
@@ -180,7 +179,7 @@ namespace Hexagonal_Chess
             pictureBox.Click += (sender, EventArgs) => { Piece_Click(sender, EventArgs, piece); };
             this.pnlBoard.Controls.Add(pictureBox);
 
-            boardPieces.Add(piece.locNotation, pictureBox);
+            boardPieces.Add(piece.locNotation.notation, pictureBox);
         }
 
 
@@ -214,7 +213,7 @@ namespace Hexagonal_Chess
 
         private void Move_Click(object sender, EventArgs e, Move move)
         {
-            Utils.makeMove(move, board, boardPieces, boardNodes, (FrmBoard) MDIParent.getScreen("Board"));
+            makeMove(move, board, boardPieces, boardNodes, (FrmBoard) MDIParent.getScreen("Board"));
         }
 
 
@@ -239,10 +238,10 @@ namespace Hexagonal_Chess
 
             List<Move> availableMoves;
             //get all of the available moves for the selected piece
-            availableMoves = FindMoves(piece);
+            availableMoves = FindMoves.FindPieceMoves(piece);
 
             //find the size of the dot based on the hexagon
-            int size = (int)Math.Round(hexRadius * 1.0);
+            int size = (int)Math.Round(hexRadius * 2.0);
 
 
             Point tempLocation;
@@ -260,7 +259,7 @@ namespace Hexagonal_Chess
                 tempImage = new PictureBox();
                 tempImage.Size = new Size(size, size);
                 tempImage.Location = new Point(tempLocation.X - size / 2, tempLocation.Y - size / 2);
-                tempImage.Name = "MovementButton"+i;
+                tempImage.Name = "MovementButton "+i;
                 tempImage.BackColor = Color.Transparent;
                 tempImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                 tempImage.BringToFront();
@@ -279,404 +278,152 @@ namespace Hexagonal_Chess
 
         }
 
-        private List<Move> FindMoves(Piece piece)
+        private void makeMove(Move move, Board board, IDictionary<string, PictureBox> boardPieces, IDictionary<string, Hexagon> boardNodes, FrmBoard frmBoard)
         {
-            List<Move> Moves = new List<Move>();
+            frmBoard.removeMovementIcons();
 
-            int[][] horizontalIncrementors = new int[][] {
-                new int[2] { 0, 1 }, //Up
-                new int[2] { 0, -1 }, //down
-                new int[2] { -1, 0 }, //Up and left
-                new int[2] { 1, 0 }, //down and right
-                new int[2] { 1, 1 }, //up and right
-                new int[2] { -1, -1 } //down and left
-            };
-            int[][] diagnalIncrementors = new int[][] {
-                new int[2] { -2, -1 }, //left
-                new int[2] { 2, 1 }, //right
-                new int[2] { 1, 2 }, //up and right
-                new int[2] { -1, 1 }, //up and left
-                new int[2] { 1, -1 }, //down and right
-                new int[2] { -1, -2 } //down and left
-            };
-
-            int[][] knightDisplacers = new int[][] {
-                new int[2] { 1, 3 }, //left most up and right
-                new int[2] { 2, 3 }, //right most up and right
-
-                new int[2] { 3, 1 }, //down most right
-                new int[2] { 3, 2 }, //up most right
-
-                new int[2] { 2, -1 }, //right most down and right
-                new int[2] { 1, -2 }, //left most down and right
-
-                new int[2] {-1 , -3 }, //right most down and left
-                new int[2] {-2 , -3 }, //left most down and left
-
-                new int[2] {-3 ,  -1}, //up most left
-                new int[2] {-3 ,  -2}, //down most left
-
-                new int[2] { -2, 1 }, //left most up and left
-                new int[2] {-1 , 2  }, //right most up and right
-            };
+            LocNotation startLocation = move.piece.locNotation;
+            LocNotation endLocation = move.endLocation;
 
 
-            int[][] kingDisplacers = new int[][] {
-                //Horizontals
-                new int[2] { 0, 1 }, //Up
-                new int[2] { 0, -1 }, //down
-                new int[2] { -1, 0 }, //Up and left
-                new int[2] { 1, 0 }, //down and right
-                new int[2] { 1, 1 }, //up and right
-                new int[2] { -1, -1 }, //down and left
-
-                //Diagnals
-                new int[2] { -2, -1 }, //left
-                new int[2] { 2, 1 }, //right
-                new int[2] { 1, 2 }, //up and right
-                new int[2] { -1, 1 }, //up and left
-                new int[2] { 1, -1 }, //down and right
-                new int[2] { -1, -2 } //down and left
-            };
-
-            if (piece.locNotation.col > 5)
+            //if a piece was taken
+            if (move.isCapture)
             {
-                //shift the row down by the number of columns it is right of center
-                int newRow = piece.locNotation.row - 5 + piece.locNotation.col;
-                //if we are off the board, continue to the next
-                if (newRow > 0)
+                //get the piece object that is being captured
+                Piece capturedPiece = board.gameBoard[endLocation.col][endLocation.row];
+                PictureBox capturedPieceImage = boardPieces[endLocation.notation];
+
+                //remove the pieces image
+                capturedPieceImage.Visible = false;
+                frmBoard.Controls.Remove(capturedPieceImage);
+
+                //remove the piece from the dictionary
+                boardPieces.Remove(endLocation.notation);
+
+                //if the move is white, add to the eval, if black subtract
+                int newEvaluation = board.whiteToPlay ? board.evaluation + capturedPiece.value : board.evaluation - capturedPiece.value;
+
+                //update the evaluation
+                board.setEval(newEvaluation, capturedPiece);
+
+                //if the piece that was taken was a king
+                if(capturedPiece.pieceType == 'K')
                 {
-                    piece.locNotation.setRow(newRow);
+                    ResultScreen resultScreen = new ResultScreen();
+                    resultScreen.setWinner(true);
+                    resultScreen.Show();
                 }
             }
 
-            switch (piece.pieceType)
+            //move the piece image to the new location
+            Point hexCenter = boardNodes[endLocation.notation].location;
+            PictureBox pieceImage = boardPieces[startLocation.notation];
+
+            //replace the key with the new location
+            boardPieces.Remove(startLocation.notation);
+            boardPieces.Add(endLocation.notation, pieceImage);
+
+            //place the piece in the center of the hex
+            pieceImage.Location = new Point(hexCenter.X - pieceImage.Height / 2, hexCenter.Y - pieceImage.Width / 2);
+
+            //Change the pieces location
+            move.piece.locNotation = new LocNotation(endLocation.col, endLocation.row);
+
+            //update the internal board
+            board.gameBoard[startLocation.col][startLocation.row] = null;
+            board.gameBoard[endLocation.col][endLocation.row] = move.piece;
+
+            updateMoveTable(move, board, frmBoard);
+
+            //change it to the opposing teams move
+            board.swapTurns();
+        }
+
+        private static void updateMoveTable(Move move, Board board, FrmBoard frmBoard)
+        {
+            //add the move the datagrid
+            string pieceCharcter = pieceChars[move.piece.pieceType];
+            string moveNotation = pieceCharcter + move.moveNotation;
+
+            DataGridView movesTable = frmBoard.dgMoves;
+
+            DataGridViewRow row;
+
+            //if it was whites move
+            if (board.whiteToPlay)
             {
-                case 'P':
-                    Moves.AddRange(FindPawnMoves(piece));
-                    break;
+                ////create a new row
+                //row = (DataGridViewRow)movesTable.Rows[0].Clone();
+                //movesTable.Rows.Add(row);
 
-                case 'R':
-                    Moves.AddRange(FindStraightMoves(piece, horizontalIncrementors));
-                    break;
+                ////insert the move number
+                //row.Cells[0].Value = movesTable.Rows.Count;
 
-                case 'N':
-                    Moves.AddRange(FindDisplacement(piece, knightDisplacers));
-                    break;
+                ////input whites last move
+                //row.Cells[1].Value = moveNotation;
 
-                case 'B':
-                    Moves.AddRange(FindStraightMoves(piece, diagnalIncrementors));
-                    break;
-
-                case 'K':
-                    Moves.AddRange(FindDisplacement(piece, kingDisplacers));
-                    break;
-
-                case 'Q':
-                    Moves.AddRange(FindStraightMoves(piece, horizontalIncrementors));
-                    Moves.AddRange(FindStraightMoves(piece, diagnalIncrementors));
-                    break;
-
-                default:
-                    throw new Exception("Invalid Piece Type");
             }
+            //if it was blacks move
+            else
+            {
+                //find the last row
+                row = movesTable.Rows[movesTable.Rows.Count - 1];
+                //input blacks last move
+                row.Cells[2].Value = moveNotation;
+            }
+            //get the current row index
+            int currentRow = movesTable.Rows.Count - 1;
 
-            return Moves;
+            //scroll to the bottom of the moves
+            movesTable.FirstDisplayedScrollingRowIndex = currentRow;
+            //select the row
+            movesTable.Rows[currentRow].Selected = true;
         }
 
 
-        private LocNotation offsetRightBoard( LocNotation locNotation)
+        public class Hexagon
         {
+            public Point location;
+            public Color color;
 
-            //return locNotation;
-
-            //if the move is right of the centerline
-            if (locNotation.col > 5)
+            public Hexagon(Point location, Color color)
             {
-                //shift the row down by the number of columns it is right of center
-                int newRow = locNotation.row + 5 - locNotation.col;
-                //if we are off the board, continue to the next
-                if (newRow > 0)
-                {
-                    locNotation.setRow(newRow);
-                }
+                this.location = location;
+                this.color = color;
             }
-            return locNotation;
-            
-        }
-
-        private int offsetRightBoard(int col, int row)
-        {
-            //if the move is right of the centerline
-            if (col > 5)
-            {
-                int dec = col - 5;
-
-                //shift the row down by the number of columns it is right of center
-                int newRow = row - 1;
-                //if we are off the board, continue to the next
-                if (newRow > 0)
-                {
-                    return newRow;
-                }
-            }
-            return row;
 
         }
 
 
-
-        private List<Move> FindPawnMoves(Piece piece)
+        public static void stripEval()
         {
-            List<Move> outputMoves = new List<Move>();
+            FrmBoard frmBoard = (FrmBoard)MDIParent.getScreen("Board");
 
-            int[][] whitePawnDisplacers = new int[][] {
-                new int[2] { -1, 0 }, //up and left
-                new int[2] { 1, 1 } //up and right
-            };
-            int[][] blackPawnDisplacers = new int[][] {
-                //Horizontals
-                new int[2] { -1, -1 }, //down and left
-                new int[2] {  1, 0 } //down and right
-            };
+            Label whiteEvalLabel = frmBoard.lblBottomUserEval;
+            Label blackEvalLabel = frmBoard.lblTopUserEval;
 
-            //Get the location of the piece we are moving
-            int col = piece.locNotation.col;
-            int row = piece.locNotation.row;
+            Label whiteBarEval = frmBoard.lblBottomEval;
+            Label blackBarEval = frmBoard.lblTopEval;
 
-            LocNotation tempLocation;
-
-            Piece selectedPiece;
-
-            int[][] displacements = piece.isWhite?whitePawnDisplacers:blackPawnDisplacers;
-
-            for (int i = 0; i < displacements.Length; i++)
+            //remove the +X from the current winner
+            if (whiteEvalLabel.Text.Contains('+'))
             {
-                //calculate the new position using the displacements
-                tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
-
-                //offset the position 
-                tempLocation = offsetRightBoard(tempLocation);
-
-                try
-                {
-                    //get the piece at the next square
-                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
-                }
-                catch (Exception)
-                {
-                    //we have moved outside the bounds of the board
-                    continue;
-                }
-
-                //if the square is empty
-                if (selectedPiece == null)
-                {
-                    //look at the next displacement
-                    continue;
-                }
-                //if the pieces are not the same color
-                else if (selectedPiece.isWhite != piece.isWhite)
-                {
-                    //add it as a potential move 
-                    outputMoves.Add(new Move(piece, tempLocation, true));
-                }
-                //Otherwise we are looking at one of our own pieces
+                //find the plus
+                int plusLocation = whiteEvalLabel.Text.IndexOf("+");
+                //remove everything after the plus
+                whiteEvalLabel.Text = whiteEvalLabel.Text.Substring(0, plusLocation);
+            }
+            if (blackEvalLabel.Text.Contains('+'))
+            {
+                //find the plus
+                int plusLocation = blackEvalLabel.Text.IndexOf("+");
+                //remove everything after the plus
+                blackEvalLabel.Text = blackEvalLabel.Text.Substring(0, plusLocation);
             }
 
-
-            //Look one square ahead
-            tempLocation = new LocNotation(col, row + (piece.isWhite? 1: -1));
-
-            //offset the position 
-            tempLocation = offsetRightBoard(tempLocation);
-
-            try
-            {
-                //get the piece at the next square
-                selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
-            }
-            catch (Exception)
-            {
-                //we have moved outside the bounds of the board
-                return outputMoves;
-            }
-
-            //If space is not empty
-            if (!(selectedPiece == null))
-            {
-                //finish the function becuase there is no reason to look 2 squares ahead
-                return outputMoves;
-            }
-            //if the space is empty, add the move
-            outputMoves.Add(new Move(piece, tempLocation, false));
-
-            //If the piece is on a starting square
-            if ( col < 6?(col - 1 == row): ((col - 11) * -1 == row))
-            {
-                //Get the square two spaces ahead
-                tempLocation = new LocNotation(col, row + (piece.isWhite ? 2 : -2));
-
-                //offset the position 
-                tempLocation = offsetRightBoard(tempLocation);
-
-                try
-                {
-                    //get the piece at the square
-                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
-                }
-                catch (Exception)
-                {
-                    //we have moved outside the bounds of the board
-                    return outputMoves;
-                }
-
-                //if the spot is empty
-                if (selectedPiece == null)
-                {
-                    //add the move
-                    outputMoves.Add(new Move(piece, tempLocation, false));
-                }
-            }
-
-            return outputMoves;
-        }
-
-
-        private List<Move> FindDisplacement(Piece piece, int[][] displacements)
-        {
-            List<Move> outputMoves = new List<Move>();
-
-            //Get the location of the piece we are moving
-            int col = piece.locNotation.col;
-            int row = piece.locNotation.row;
-
-            LocNotation tempLocation;
-
-            //This represents the square we are trying to move to 
-            Piece selectedPiece;
-
-            //For each potential move
-            for (int i = 0; i < displacements.Length; i++)
-            {
-                //calculate the new position using the displacements
-                tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
-
-                //offset the position 
-                tempLocation = offsetRightBoard(tempLocation);
-
-                try
-                {
-                    //get the piece at the next square
-                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
-                }
-                catch (Exception)
-                {
-                    //we have moved outside the bounds of the board
-                    continue;
-                }
-
-                //if the square is empty
-                if (selectedPiece == null)
-                {
-                    //add it as a potential move 
-                    outputMoves.Add(new Move(piece, tempLocation, false));
-
-                    //look at the next displacement
-                    continue;
-                }
-                //if the pieces are not the same color
-                else if (selectedPiece.isWhite != piece.isWhite)
-                {
-                    //add it as a potential move 
-                    outputMoves.Add(new Move(piece, tempLocation, true));
-                }
-                //Otherwise we are looking at one of our own pieces
-            }
-            return outputMoves;
-        }
-
-        private List<Move> FindStraightMoves(Piece piece, int[][] incrementors)
-        {
-            //Get the moves for each direction
-
-            List<Move> outputMoves = new List<Move>();
-
-            //for each set of direction icrementors
-            for (int i = 0; i < incrementors.Length; i++)
-            {
-                // find the available moves in that direction
-                outputMoves.AddRange(FindStraightLine(piece, incrementors[i][0], incrementors[i][1]));
-            }
-
-            return outputMoves;
-        }
-
-
-
-        private List<Move> FindStraightLine(Piece piece, int colIncrement, int rowIncrement)
-        {
-            List<Move> outputMoves = new List<Move>();
-            bool moving = true;
-
-            int col = piece.locNotation.col;
-            int row = piece.locNotation.row;
-
-            Piece selectedPiece;
-
-
-            while (moving)
-            {
-
-                //move in the selected direction
-                col += colIncrement;
-                row += rowIncrement;
-
-                //offset the position 
-                row = offsetRightBoard(col, row);
-
-                try
-                {
-                    //get the piece at the next square
-                    selectedPiece = board.gameBoard[col][row];
-                }
-                catch (Exception)
-                {
-                    //we have moved outside the bounds of the board
-                    //Stop searching in this direction
-                    break;
-                }
-
-
-
-                //if the square is empty
-                if (selectedPiece == null)
-                {
-                    //add it as a potential move 
-                    outputMoves.Add(new Move(piece, new LocNotation(col, row), false));
-
-                    //look at the next square 
-                    continue;
-                }
-                //if the pieces are not the same color
-                else if (selectedPiece.isWhite != piece.isWhite)
-                {
-                    //add it as a potential move 
-                    outputMoves.Add(new Move(piece, new LocNotation(col, row), true));
-
-                    //stop moving down the line
-                    moving = false;
-                }
-                //Otherwise we are looking at one of our own pieces
-                else
-                {
-                    //stop moving down the line
-                    moving = false;
-                }
-
-            }
-
-            return outputMoves;
+            //clear both bar evals
+            whiteBarEval.Text = "";
+            blackBarEval.Text = "";
         }
 
         private void GamePanel_Paint(object sender, PaintEventArgs e)

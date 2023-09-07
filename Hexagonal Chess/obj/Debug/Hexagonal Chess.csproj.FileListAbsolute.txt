@@ -11,3 +11,4 @@ C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Ch
 C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.MDIParent.resources
 C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.frmHome.resources
 C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.FrmBoard.resources
+C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.ResultScreen.resources

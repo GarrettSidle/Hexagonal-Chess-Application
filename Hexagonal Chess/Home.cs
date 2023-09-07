@@ -1,4 +1,4 @@
-﻿using System;
+﻿  using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -41,23 +41,37 @@ namespace Hexagonal_Chess
 
         private void btnComputer_Click(object sender, EventArgs e)
         {
+            //set the game type to single player
+            Utils.userMode = 0;
+
+            //Swap Screens
             MDIParent.swapScreen("Board");
             this.Close();
         }
 
         private void btnHostGame_Click(object sender, EventArgs e)
         {
+            //set the game type to Host
+            Utils.userMode = 1;
 
+            //Swap Screens
+            MDIParent.swapScreen("Board");
+            this.Close();
         }
 
         private void btnJoinGame_Click(object sender, EventArgs e)
         {
+            //set the game type to client
+            Utils.userMode = 0;
 
+            //Swap Screens
+            MDIParent.swapScreen("Board");
+            this.Close();
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-
+            
         }
     }
 }

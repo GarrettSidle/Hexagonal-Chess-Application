@@ -10,12 +10,17 @@ namespace Hexagonal_Chess
 {
     internal class Utils
     {
+        // 0 = Glinski,
+        // 1 = McCooey,
+        // 2 = Hexofen
+        public static int gameType = 0;
 
-        public static void makeMove(Move move, Board board, IDictionary<LocNotation, PictureBox> boardPieces, IDictionary<string, Hexagon> boardNodes, FrmBoard frmBoard)
-        {
-            frmBoard.removeMovementIcons();
+        // 0 = Single Player
+        // 1 = Host
+        // 2 = Client
+        public static int userMode = 0;
 
-            var whitePieces = new Dictionary<char, string>()
+        public static Dictionary<char, string> pieceChars = new Dictionary<char, string>()
                 {
                      { 'P', "♙"},
                      { 'K', "♔"},
@@ -25,144 +30,35 @@ namespace Hexagonal_Chess
                      { 'N', "♘"},
                 };
 
-            var blackPieces = new Dictionary<char, string>()
-                {
-                     { 'P', "♟︎"},
-                     { 'K', "♚"},
-                     { 'Q', "♛"},
-                     { 'R', "♜"},
-                     { 'B', "♝"},
-                     { 'N', "♞"},
-                };
-
-            LocNotation startLocation = move.piece.locNotation;
-            LocNotation endLocation = move.endLocation;
-
-            //if a piece was taken
-            if (move.isCapture)
-            {
-                //get the piece object that is being captured
-                Piece capturedPiece = board.gameBoard[endLocation.col][endLocation.row];
-
-                //remove the pieces image
-                frmBoard.Controls.Remove(boardPieces[endLocation]);
-
-                //update the evaluation
-                board.setEval(
-                    board.evaluation - capturedPiece.value
-                );
-
-                //add the taken piece to the piece counter
-                Label pieceLabel = move.piece.isWhite?frmBoard.lblBottomUserEval : frmBoard.lblBottomUserEval;
-                pieceLabel.Text += capturedPiece.isWhite ? whitePieces[capturedPiece.pieceType] : blackPieces[capturedPiece.pieceType];
-            }
-
-            //move the piece image to the new location
-            Point hexCenter = boardNodes[endLocation.notation].location;
-            PictureBox pieceImage = boardPieces[startLocation];
-
-            //place the piece in the center of the hex
-            pieceImage.Location = new Point(hexCenter.X-pieceImage.Height/2, hexCenter.Y - pieceImage.Width / 2);
-
-            //update the internal board
-            board.gameBoard[startLocation.col][startLocation.row] = null;
-            board.gameBoard[endLocation.col][endLocation.row] =  move.piece;
-
-            //TODO
-            //See if the move is check
-            //if (findChecks(board))
-            //{
-            //    board.isCheck = true;
-
-            //    if (findMate(board))
-            //    {
-            //        //TODO 
-            //        //end game
-            //    }
-            //}
-
-
-            //add the move the datagrid
-            string pieceCharcter = move.piece.isWhite ? whitePieces[move.piece.pieceType] : blackPieces[move.piece.pieceType];
-            string moveNotation = pieceCharcter + move.moveNotation;
-
-            DataGridView movesTable = frmBoard.dgMoves;
-
-            DataGridViewRow row;
-
-            //if it was whites move
-            if (board.whiteToPlay)
-            {
-                //create a new row
-                row = new DataGridViewRow();
-                row.CreateCells(movesTable);
-
-                //insert the move number
-                row.Cells[0].Value = movesTable.Rows.Count;
-
-                //input whites last move
-                row.Cells[1].Value = moveNotation;
-            }
-            //if it was blacks move
-            else
-            {
-                //find the last row
-                row = movesTable.Rows[movesTable.Rows.Count - 1];
-                //input blacks last move
-                row.Cells[2].Value = moveNotation;
-            }
-            //get the current row index
-            int currentRow = movesTable.Rows.Count - 1;
-
-            //scroll to the bottom of the moves
-            movesTable.FirstDisplayedScrollingRowIndex = currentRow ;
-            //select the row
-            movesTable.Rows[currentRow].Selected = true;
-
-
-            //change it to the opposing teams move
-            board.swapTurns();
-        }
-
-
-        public class Hexagon
-        {
-            public Point location;
-            public Color color;
-
-            public Hexagon(Point location, Color color)
-            {
-                this.location = location;
-                this.color = color;
-            }
-
-        }
+        public static Board board = new Board();
 
         public class Board
         {
             public int evaluation;
             public List<Piece>[] gameBoard;
             public bool whiteToPlay;
-            public bool isCheck;
 
             public Board()
             {
                 this.whiteToPlay = true;
-                //evaluation for a defualt board
-                this.evaluation = 43;
-                List<char>[] tempBoard = new List<char>[] {
-                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
-                    new List<char> { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
-                    new List<char> { 'R', 'P', ' ', ' ', ' ', ' ', 'p', 'r' },
-                    new List<char> { 'N', ' ', 'P', ' ', ' ', ' ', 'p', ' ', 'n' },
-                    new List<char> { 'Q', ' ', ' ', 'P', ' ', ' ', 'p', ' ', ' ', 'q' },
-                    new List<char> { 'B', 'B', 'B', ' ', 'P', ' ', 'p', ' ', 'b', 'b', 'b' },
-                    new List<char>      { 'K', ' ', ' ', 'P', ' ', ' ', 'p', ' ', ' ', 'k' },
-                    new List<char>           { 'N', ' ', 'P', ' ', ' ', ' ', 'p', ' ', 'n' },
-                    new List<char>                { 'R', 'P', ' ', ' ', ' ', ' ', 'p', 'r' },
-                    new List<char>                     { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
-                    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
-                };
+
+                //evaluation for the starting board board
+                //negative evalution represents black, and postive white
+                this.evaluation = 0;
+
+                //List<char>[] tempBoard = new List<char>[] {
+                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
+                //    new List<char> { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
+                //    new List<char> { 'R', 'P', ' ', ' ', ' ', ' ', 'p', 'r' },
+                //    new List<char> { 'N', ' ', 'P', ' ', ' ', ' ', 'p', ' ', 'n' },
+                //    new List<char> { 'Q', ' ', ' ', 'P', ' ', ' ', 'p', ' ', ' ', 'q' },
+                //    new List<char> { 'B', 'B', 'B', ' ', 'P', ' ', 'p', ' ', 'b', 'b', 'b' },
+                //    new List<char>      { 'K', ' ', ' ', 'P', ' ', ' ', 'p', ' ', ' ', 'k' },
+                //    new List<char>           { 'N', ' ', 'P', ' ', ' ', ' ', 'p', ' ', 'n' },
+                //    new List<char>                { 'R', 'P', ' ', ' ', ' ', ' ', 'p', 'r' },
+                //    new List<char>                     { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
+                //    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
+                //};
 
 
                 //List<char>[] tempBoard = new List<char>[] {
@@ -179,19 +75,19 @@ namespace Hexagonal_Chess
                 //    new List<char>                          { ' ', ' ', ' ', ' ', 'p', ' ' }
                 //};
 
-                //List<char>[] tempBoard = new List<char>[] {
-                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char> { ' ', ' ', 'R', ' ', ' ', ' ', ' ' } ,
-                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char> { ' ', ' ', ' ', ' ', 'B', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char>      { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char>           { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char>                { ' ', ' ', ' ', ' ', ' ', ' ', 'R', ' ' },
-                //    new List<char>                     { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
-                //    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
-                //};
+                List<char>[] tempBoard = new List<char>[] {
+                    new List<char> { ' ', ' ', 'P', ' ', ' ', ' ' },
+                    new List<char> { ' ', ' ', ' ', 'p', ' ', ' ', ' ' } ,
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', 'R', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char>      { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char>           { ' ', 'P', ' ', ' ', 'N', ' ', ' ', ' ', ' ' },
+                    new List<char>                { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char>                     { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
+                    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
+                };
 
 
                 List<Piece>[] outputBoard = new List<Piece>[tempBoard.Length];
@@ -207,18 +103,76 @@ namespace Hexagonal_Chess
                         }
                         else
                         {
-                            outputBoard[col].Add(new Piece(new LocNotation(col, row), tempBoard[col][row], char.IsUpper(tempBoard[col][row])));
+                            Piece tempPiece = new Piece(new LocNotation(col, row), tempBoard[col][row], char.IsUpper(tempBoard[col][row]));
+                            outputBoard[col].Add(tempPiece);
                         }
                     }
                 }
 
                 this.gameBoard = outputBoard;
-                this.isCheck = false;
             }
 
-            public void setEval(int newEval)
+            public void setEval(int newEval, Piece capturedPiece)
             {
+
+                FrmBoard.stripEval();
+                updatePieceEvalIndicator(newEval, capturedPiece);
+
+                //update to the new evaluation
                 this.evaluation = newEval;
+            }
+
+
+            public static void updatePieceEvalIndicator(int newEval, Piece capturedPiece)
+            {
+                FrmBoard frmBoard = (FrmBoard)MDIParent.getScreen("Board");
+
+                Label whiteEvalLabel = frmBoard.lblBottomUserEval;
+                Label blackEvalLabel = frmBoard.lblTopUserEval;
+
+                Label whiteBarEval = frmBoard.lblBottomEval;
+                Label blackBarEval = frmBoard.lblTopEval;
+
+                //add the taken piece to the piece counter
+                Label pieceLabel = capturedPiece.isWhite ? frmBoard.lblTopUserEval : frmBoard.lblBottomUserEval;
+                pieceLabel.Text += pieceChars[capturedPiece.pieceType];
+
+                //if white is winning
+                if (newEval > 0)
+                {
+                    //display their winning value
+                    whiteEvalLabel.Text = $"{whiteEvalLabel.Text}+{Math.Abs(newEval)}";
+                    whiteBarEval.Text = $"+{Math.Abs(newEval)}.0";
+                }
+                //if black is winning
+                else if (newEval < 0)
+                {
+                    //display their winning value
+                    blackEvalLabel.Text = $"{blackEvalLabel.Text}+{Math.Abs(newEval)}";
+                    blackBarEval.Text = $"+{Math.Abs(newEval)}.0";
+                }
+
+                int blackBarPercent;
+                //if white is overwelmingly winning
+                if (newEval > 6)
+                {
+                    //Cap whites % at 90
+                    blackBarPercent = 10;
+                }
+                //if black is overwelmingly winning
+                else if (newEval < -6)
+                {
+                    //Cap blacks % at 90
+                    blackBarPercent = 90;
+                }
+                else
+                {
+                    //calculate the % based on the eval
+                    blackBarPercent = ((20 / 3) * newEval) + 50;
+                }
+
+                //Update the bar display
+                frmBoard.layoutEval.RowStyles[0].Height = blackBarPercent;
             }
 
             public void swapTurns()
@@ -278,7 +232,6 @@ namespace Hexagonal_Chess
             public Piece piece;
             public LocNotation endLocation;
             public readonly string moveNotation;
-            public bool isCheck;
             public bool isCapture;
 
             public Move(Piece piece, LocNotation endLocation, bool isCapture)
@@ -287,7 +240,7 @@ namespace Hexagonal_Chess
                 this.endLocation = endLocation;
 
                 //build the chess move notation
-                this.moveNotation = piece.pieceType + (isCapture?"x":"") + endLocation.notation /*+ (isCheck ? "+" : "")*/;
+                this.moveNotation = piece.pieceType + (isCapture?"x":"") + endLocation.notation;
                 this.isCapture = isCapture;
             }
         }
