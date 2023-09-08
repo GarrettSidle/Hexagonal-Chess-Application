@@ -13,7 +13,7 @@ namespace Hexagonal_Chess
         // 0 = Glinski,
         // 1 = McCooey,
         // 2 = Hexofen
-        public static int gameType = 0;
+        public static int gameType = 2;
 
         // 0 = Single Player
         // 1 = Host
@@ -46,19 +46,63 @@ namespace Hexagonal_Chess
                 //negative evalution represents black, and postive white
                 this.evaluation = 0;
 
-                //List<char>[] tempBoard = new List<char>[] {
-                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char> { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
-                //    new List<char> { 'R', 'P', ' ', ' ', ' ', ' ', 'p', 'r' },
-                //    new List<char> { 'N', ' ', 'P', ' ', ' ', ' ', 'p', ' ', 'n' },
-                //    new List<char> { 'Q', ' ', ' ', 'P', ' ', ' ', 'p', ' ', ' ', 'q' },
-                //    new List<char> { 'B', 'B', 'B', ' ', 'P', ' ', 'p', ' ', 'b', 'b', 'b' },
-                //    new List<char>      { 'K', ' ', ' ', 'P', ' ', ' ', 'p', ' ', ' ', 'k' },
-                //    new List<char>           { 'N', ' ', 'P', ' ', ' ', ' ', 'p', ' ', 'n' },
-                //    new List<char>                { 'R', 'P', ' ', ' ', ' ', ' ', 'p', 'r' },
-                //    new List<char>                     { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
-                //    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
-                //};
+                List<char>[] glinskiBoard = new List<char>[] {
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char> { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
+                    new List<char> { 'R', 'P', ' ', ' ', ' ', ' ', 'p', 'r' },
+                    new List<char> { 'N', ' ', 'P', ' ', ' ', ' ', 'p', ' ', 'n' },
+                    new List<char> { 'Q', ' ', ' ', 'P', ' ', ' ', 'p', ' ', ' ', 'q' },
+                    new List<char> { 'B', 'B', 'B', ' ', 'P', ' ', 'p', ' ', 'b', 'b', 'b' },
+                    new List<char>      { 'K', ' ', ' ', 'P', ' ', ' ', 'p', ' ', ' ', 'k' },
+                    new List<char>           { 'N', ' ', 'P', ' ', ' ', ' ', 'p', ' ', 'n' },
+                    new List<char>                { 'R', 'P', ' ', ' ', ' ', ' ', 'p', 'r' },
+                    new List<char>                     { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
+                    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
+                };
+
+                List<char>[] mcCooeyBoard = new List<char>[] {
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
+                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
+                    new List<char> { 'P', ' ', ' ', ' ', ' ', ' ', ' ', 'p' },
+                    new List<char> { 'R', 'P', ' ', ' ', ' ', ' ', ' ', 'p', 'r' },
+                    new List<char> { 'Q', 'N', 'P', ' ', ' ', ' ', ' ', 'p', 'n', 'q' },
+                    new List<char> { 'B', 'B', 'B', 'P', ' ', ' ', ' ', 'p', 'b', 'b', 'b' },
+                    new List<char>      { 'K', 'N', 'P', ' ', ' ', ' ', ' ', 'p', 'n', 'k' },
+                    new List<char>           { 'R', 'P', ' ', ' ', ' ', ' ', ' ', 'p', 'r' },
+                    new List<char>                { 'P', ' ', ' ', ' ', ' ', ' ', ' ', 'p' },
+                    new List<char>                     { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
+                    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
+                };
+
+                List<char>[] hexofenBoard = new List<char>[] {
+                    new List<char> { 'P', ' ', ' ', ' ', ' ', 'p' },
+                    new List<char> { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
+                    new List<char> { 'N', 'P', ' ', ' ', ' ', ' ', 'p', 'b' },
+                    new List<char> { 'R', 'P', ' ', ' ', ' ', ' ', ' ', 'p', 'r' },
+                    new List<char> { 'B', 'N', 'P', ' ', ' ', ' ', ' ', 'p', 'n', 'q' },
+                    new List<char> { 'K', 'B', 'P', ' ', ' ', ' ', ' ', ' ', 'p', 'b', 'k' },
+                    new List<char>      { 'Q', 'N', 'P', ' ', ' ', ' ', ' ', 'p', 'n', 'b' },
+                    new List<char>           { 'R', 'P', ' ', ' ', ' ', ' ', ' ', 'p', 'r' },
+                    new List<char>                { 'B', 'P', ' ', ' ', ' ', ' ', 'p', 'n' },
+                    new List<char>                     { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
+                    new List<char>                          { 'P', ' ', ' ', ' ', ' ', 'p' }
+                };
+
+                List<char>[] tempBoard;
+                switch (gameType)
+                {
+                    case 0 : 
+                        tempBoard = glinskiBoard; 
+                        break;
+                    case 1 : 
+                        tempBoard = mcCooeyBoard;
+                        break;
+                    case 2:
+                        tempBoard = hexofenBoard;
+                        break ;
+                    default :
+                        throw new Exception("Invalid Game Type");
+                }
 
 
                 //List<char>[] tempBoard = new List<char>[] {
@@ -75,19 +119,21 @@ namespace Hexagonal_Chess
                 //    new List<char>                          { ' ', ' ', ' ', ' ', 'p', ' ' }
                 //};
 
-                List<char>[] tempBoard = new List<char>[] {
-                    new List<char> { ' ', ' ', 'P', ' ', ' ', ' ' },
-                    new List<char> { ' ', ' ', ' ', 'p', ' ', ' ', ' ' } ,
-                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                    new List<char> { ' ', ' ', ' ', ' ', ' ', 'R', ' ', ' ', ' ', ' ', ' ' },
-                    new List<char>      { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                    new List<char>           { ' ', 'P', ' ', ' ', 'N', ' ', ' ', ' ', ' ' },
-                    new List<char>                { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                    new List<char>                     { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
-                    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
-                };
+                //List<char>[] tempBoard = new List<char>[] {
+                //    new List<char> { ' ', ' ', 'P', ' ', ' ', ' ' },
+                //    new List<char> { ' ', ' ', ' ', 'p', ' ', ' ', ' ' } ,
+                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                //    new List<char> { ' ', ' ', ' ', ' ', ' ', 'R', ' ', ' ', ' ', ' ', ' ' },
+                //    new List<char>      { ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'R', ' ', ' ' },
+                //    new List<char>           { ' ', 'P', ' ', ' ', 'N', ' ', ' ', ' ', ' ' },
+                //    new List<char>                { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                //    new List<char>                     { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
+                //    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
+                //};
+
+
 
 
                 List<Piece>[] outputBoard = new List<Piece>[tempBoard.Length];

@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlEvaluation = new System.Windows.Forms.Panel();
             this.layoutEval = new System.Windows.Forms.TableLayoutPanel();
             this.pnlEvalBottom = new System.Windows.Forms.Panel();
@@ -45,10 +48,11 @@
             this.lblBottomName = new System.Windows.Forms.Label();
             this.pnlMoves = new System.Windows.Forms.Panel();
             this.dgMoves = new System.Windows.Forms.DataGridView();
+            this.pnlBoard = new System.Windows.Forms.Panel();
+            this.lblMovesTableRef = new System.Windows.Forms.Label();
             this.colMoveNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colWhite = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colBlack = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pnlBoard = new System.Windows.Forms.Panel();
             this.pnlEvaluation.SuspendLayout();
             this.layoutEval.SuspendLayout();
             this.pnlEvalBottom.SuspendLayout();
@@ -222,6 +226,7 @@
             // 
             // pnlMoves
             // 
+            this.pnlMoves.Controls.Add(this.lblMovesTableRef);
             this.pnlMoves.Controls.Add(this.dgMoves);
             this.pnlMoves.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlMoves.Location = new System.Drawing.Point(981, 0);
@@ -232,6 +237,8 @@
             // 
             // dgMoves
             // 
+            this.dgMoves.AllowUserToAddRows = false;
+            this.dgMoves.AllowUserToDeleteRows = false;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dgMoves.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dgMoves.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -246,28 +253,6 @@
             this.dgMoves.Size = new System.Drawing.Size(263, 630);
             this.dgMoves.TabIndex = 0;
             // 
-            // colMoveNumber
-            // 
-            this.colMoveNumber.HeaderText = "Move";
-            this.colMoveNumber.Name = "colMoveNumber";
-            this.colMoveNumber.ReadOnly = true;
-            this.colMoveNumber.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colMoveNumber.Width = 40;
-            // 
-            // colWhite
-            // 
-            this.colWhite.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colWhite.HeaderText = "White";
-            this.colWhite.Name = "colWhite";
-            this.colWhite.ReadOnly = true;
-            // 
-            // colBlack
-            // 
-            this.colBlack.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colBlack.HeaderText = "Black";
-            this.colBlack.Name = "colBlack";
-            this.colBlack.ReadOnly = true;
-            // 
             // pnlBoard
             // 
             this.pnlBoard.Controls.Add(this.pnlBottomUser);
@@ -278,6 +263,49 @@
             this.pnlBoard.Size = new System.Drawing.Size(895, 690);
             this.pnlBoard.TabIndex = 4;
             this.pnlBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.GamePanel_Paint);
+            // 
+            // lblMovesTableRef
+            // 
+            this.lblMovesTableRef.AutoSize = true;
+            this.lblMovesTableRef.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMovesTableRef.Location = new System.Drawing.Point(6, 3);
+            this.lblMovesTableRef.Name = "lblMovesTableRef";
+            this.lblMovesTableRef.Size = new System.Drawing.Size(0, 15);
+            this.lblMovesTableRef.TabIndex = 3;
+            this.lblMovesTableRef.Visible = false;
+            // 
+            // colMoveNumber
+            // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.colMoveNumber.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colMoveNumber.HeaderText = "Move";
+            this.colMoveNumber.Name = "colMoveNumber";
+            this.colMoveNumber.ReadOnly = true;
+            this.colMoveNumber.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colMoveNumber.Width = 50;
+            // 
+            // colWhite
+            // 
+            this.colWhite.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.colWhite.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colWhite.FillWeight = 100.6803F;
+            this.colWhite.HeaderText = "White";
+            this.colWhite.Name = "colWhite";
+            this.colWhite.ReadOnly = true;
+            // 
+            // colBlack
+            // 
+            this.colBlack.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.colBlack.DefaultCellStyle = dataGridViewCellStyle4;
+            this.colBlack.FillWeight = 99.31973F;
+            this.colBlack.HeaderText = "Black";
+            this.colBlack.Name = "colBlack";
+            this.colBlack.ReadOnly = true;
             // 
             // FrmBoard
             // 
@@ -307,6 +335,7 @@
             this.pnlBottomUser.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBottomUser)).EndInit();
             this.pnlMoves.ResumeLayout(false);
+            this.pnlMoves.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgMoves)).EndInit();
             this.pnlBoard.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -331,9 +360,10 @@
         private System.Windows.Forms.Panel pnlEvalBottom;
         private System.Windows.Forms.Panel pnlEvalTop;
         public System.Windows.Forms.Label lblTopEval;
+        public System.Windows.Forms.Label lblBottomEval;
+        private System.Windows.Forms.Label lblMovesTableRef;
         private System.Windows.Forms.DataGridViewTextBoxColumn colMoveNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn colWhite;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBlack;
-        public System.Windows.Forms.Label lblBottomEval;
     }
 }

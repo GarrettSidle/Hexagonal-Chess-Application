@@ -47,7 +47,7 @@ namespace Hexagonal_Chess
         private void buildBoard()
         {
             //find the point that centers the board horizontally
-            int x = (int) Math.Round((pnlBoard.Width / 2) - (hexRadius * 7.78));
+            int x = (int)Math.Round((pnlBoard.Width / 2) - (hexRadius * 7.78));
 
             //find the point that centers the board verti
             int y = (int)Math.Round((pnlBoard.Height / 2) + (hexRadius * 4.26));
@@ -179,7 +179,21 @@ namespace Hexagonal_Chess
             pictureBox.Click += (sender, EventArgs) => { Piece_Click(sender, EventArgs, piece); };
             this.pnlBoard.Controls.Add(pictureBox);
 
-            boardPieces.Add(piece.locNotation.notation, pictureBox);
+            LocNotation tempNotation = piece.locNotation;
+
+            if (piece.locNotation.col > 5)
+            {
+                //shift the row down by the number of columns it is right of center
+                int newRow = piece.locNotation.row - 5 + piece.locNotation.col;
+                //if we are off the board, continue to the next
+                if (newRow > 0)
+                {
+                    tempNotation = new LocNotation(piece.locNotation.col, newRow);
+                }
+            }
+
+
+            boardPieces.Add(tempNotation.notation, pictureBox);
         }
 
 
@@ -206,14 +220,14 @@ namespace Hexagonal_Chess
                     hexagon.location.X + hexRadius * (float)Math.Cos(a * 60 * Math.PI / 180f),
                     hexagon.location.Y + hexRadius * (float)Math.Sin(a * 60 * Math.PI / 180f));
             }
-                
+
             graphics.FillPolygon(new SolidBrush(hexagon.color), shape);
         }
 
 
         private void Move_Click(object sender, EventArgs e, Move move)
         {
-            makeMove(move, board, boardPieces, boardNodes, (FrmBoard) MDIParent.getScreen("Board"));
+            makeMove(move, board, boardPieces, boardNodes, (FrmBoard)MDIParent.getScreen("Board"));
         }
 
 
@@ -228,7 +242,7 @@ namespace Hexagonal_Chess
         private void Piece_Click(object s, EventArgs e, Piece piece)
         {
             //if it is not the pieces turn to move
-            if(!(piece.isWhite == board.whiteToPlay))
+            if (!(piece.isWhite == board.whiteToPlay))
             {
                 //ignore the click   
                 return;
@@ -241,12 +255,12 @@ namespace Hexagonal_Chess
             availableMoves = FindMoves.FindPieceMoves(piece);
 
             //find the size of the dot based on the hexagon
-            int size = (int)Math.Round(hexRadius * 2.0);
+            int size = (int)Math.Round(hexRadius * 1.0);
 
 
             Point tempLocation;
             PictureBox tempImage;
-           
+
             for (int i = 0; i < availableMoves.Count; i++)
             {
 
@@ -259,10 +273,9 @@ namespace Hexagonal_Chess
                 tempImage = new PictureBox();
                 tempImage.Size = new Size(size, size);
                 tempImage.Location = new Point(tempLocation.X - size / 2, tempLocation.Y - size / 2);
-                tempImage.Name = "MovementButton "+i;
+                tempImage.Name = "MovementButton " + i;
                 tempImage.BackColor = Color.Transparent;
                 tempImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                tempImage.BringToFront();
                 tempImage.Click += (sender, EventArgs) => { Move_Click(sender, EventArgs, move); };
 
                 //assign the image based on the move type
@@ -272,6 +285,7 @@ namespace Hexagonal_Chess
 
                 //add it to the List for later removal
                 MovementButtons.Add(tempImage);
+                tempImage.BringToFront();
 
             }
 
@@ -307,7 +321,7 @@ namespace Hexagonal_Chess
                 board.setEval(newEvaluation, capturedPiece);
 
                 //if the piece that was taken was a king
-                if(capturedPiece.pieceType == 'K')
+                if (capturedPiece.pieceType == 'K')
                 {
                     ResultScreen resultScreen = new ResultScreen();
                     resultScreen.setWinner(true);
@@ -329,55 +343,110 @@ namespace Hexagonal_Chess
             //Change the pieces location
             move.piece.locNotation = new LocNotation(endLocation.col, endLocation.row);
 
+            //if we are a pawn on the last rank
+            if (pawnPromotion(move))
+            {
+                //promote the pawn to a queen
+                move.piece = new Piece(move.piece.locNotation, 'Q', move.piece.isWhite);
+
+                //update the image
+                pieceImage.Image = move.piece.isWhite ? Properties.Resources.WhiteQueen : Properties.Resources.BlackQueen;
+                pieceImage.Click += (sender, EventArgs) => { Piece_Click(sender, EventArgs, move.piece); };
+            }
+
             //update the internal board
             board.gameBoard[startLocation.col][startLocation.row] = null;
             board.gameBoard[endLocation.col][endLocation.row] = move.piece;
 
             updateMoveTable(move, board, frmBoard);
 
+
             //change it to the opposing teams move
             board.swapTurns();
+        }
+
+        private bool pawnPromotion(Move move)
+        {
+            int col = move.endLocation.col;
+            int row = move.endLocation.row;
+
+            //if it is a not pawn
+            if (move.piece.pieceType != 'P')
+            {
+                return false;
+            }
+            //if we are white
+            if (move.piece.isWhite)
+            {
+                //if we are on the right side of the board
+                if (col > 6)
+                {
+                    //find final row for left side
+                    return row - col == 5;
+                }
+                //if we are on the left side of the board
+                else
+                {
+                    //find final row for right side
+                    return col + row == 15;
+                }
+            }
+            //if we are black
+            else
+            {
+                //0 is always the final row for black
+                return row == 0;
+            }
         }
 
         private static void updateMoveTable(Move move, Board board, FrmBoard frmBoard)
         {
             //add the move the datagrid
             string pieceCharcter = pieceChars[move.piece.pieceType];
-            string moveNotation = pieceCharcter + move.moveNotation;
+            //build the notation and remove the piece type char
+            string moveNotation = pieceCharcter + move.moveNotation.TrimStart(move.piece.pieceType);
+
 
             DataGridView movesTable = frmBoard.dgMoves;
 
             DataGridViewRow row;
 
+            int currentRow = movesTable.Rows.Count;
+
+            movesTable.ForeColor = Color.Black;
+            movesTable.Font = frmBoard.lblMovesTableRef.Font;
+
+
             //if it was whites move
             if (board.whiteToPlay)
             {
-                ////create a new row
-                //row = (DataGridViewRow)movesTable.Rows[0].Clone();
-                //movesTable.Rows.Add(row);
 
-                ////insert the move number
-                //row.Cells[0].Value = movesTable.Rows.Count;
+                string[] strRow = new string[] { "", "", "" };
 
-                ////input whites last move
-                //row.Cells[1].Value = moveNotation;
+                movesTable.Rows.Add(strRow);
 
+                //input the move number
+                movesTable.Rows[currentRow].Cells[0].Value = currentRow + 1;
+                //input whites last move
+                movesTable.Rows[currentRow].Cells[1].Value = moveNotation;
+
+                //select the row
+                movesTable.ClearSelection();
+                movesTable.Rows[currentRow].Selected = true;
             }
             //if it was blacks move
             else
             {
-                //find the last row
-                row = movesTable.Rows[movesTable.Rows.Count - 1];
+                //find the first row
+                row = movesTable.Rows[currentRow - 1];
                 //input blacks last move
                 row.Cells[2].Value = moveNotation;
-            }
-            //get the current row index
-            int currentRow = movesTable.Rows.Count - 1;
 
-            //scroll to the bottom of the moves
-            movesTable.FirstDisplayedScrollingRowIndex = currentRow;
-            //select the row
-            movesTable.Rows[currentRow].Selected = true;
+                //select the row
+                movesTable.ClearSelection();
+                movesTable.Rows[currentRow - 1].Selected = true;
+            }
+
         }
 
 
@@ -433,6 +502,5 @@ namespace Hexagonal_Chess
                 DrawHexagon(node.Value, e);
             }
         }
-
     }
 }
