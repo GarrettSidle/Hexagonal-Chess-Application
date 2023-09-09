@@ -13,14 +13,18 @@ namespace Hexagonal_Chess
     public partial class ResultScreen : Form
     {
 
-        private bool whiteIsWinner;
 
-        public void setWinner(bool whiteIsWinner)
-        {
-            this.whiteIsWinner = whiteIsWinner;
+
+        public void setWinner(bool whiteIsWinner, int numOfMoves)
+        { 
 
             string tempWinner = whiteIsWinner ? "White" : "Black";
 
+            //Find the semi colon in the text
+            int movesStart = lblGameMoves.Text.IndexOf(':') + 1;
+
+            //add the number of moves after the semicolon
+            this.lblGameMoves.Text = $"{lblGameMoves.Text.Remove(movesStart)} {numOfMoves} Moves";
             this.lblGameWinner.Text = $"{tempWinner} Wins!!!";
         }
 
@@ -32,13 +36,13 @@ namespace Hexagonal_Chess
 
         private void btnPlayAgain_Click(object sender, EventArgs e)
         {
-            FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
+            //create a new board
+            MDIParent.regenerateBoard();
 
-            //close the current board screen
-            board.Close();
+            //open the new form
+            MDIParent.swapScreen("Board");
 
-            //Swap Screens
-            MDIParent.swapScreen("Home");
+            //close the results screen
             this.Close();
         }
 
@@ -46,12 +50,13 @@ namespace Hexagonal_Chess
         {
             FrmBoard board = (FrmBoard) MDIParent.getScreen("Board");
 
-            //close the board screen
-            board.Close();
+            //create a new board
+            MDIParent.regenerateBoard();
+            //close the results screen
+            this.Close();
 
             //Swap Screens
             MDIParent.swapScreen("Home");
-            this.Close();
         }
     }
 }

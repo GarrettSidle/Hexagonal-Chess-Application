@@ -46,7 +46,6 @@ namespace Hexagonal_Chess
 
             //Swap Screens
             MDIParent.swapScreen("Board");
-            this.Close();
         }
 
         private void btnHostGame_Click(object sender, EventArgs e)
@@ -56,7 +55,6 @@ namespace Hexagonal_Chess
 
             //Swap Screens
             MDIParent.swapScreen("Board");
-            this.Close();
         }
 
         private void btnJoinGame_Click(object sender, EventArgs e)
@@ -66,7 +64,6 @@ namespace Hexagonal_Chess
 
             //Swap Screens
             MDIParent.swapScreen("Board");
-            this.Close();
         }
 
         private void btnSettings_Click(object sender, EventArgs e)

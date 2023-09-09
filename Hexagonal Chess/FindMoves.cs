@@ -120,7 +120,7 @@ namespace Hexagonal_Chess
         }
 
 
-        private static LocNotation offsetRightBoard(LocNotation origLocNotation)
+        public static LocNotation offsetRightBoard(LocNotation origLocNotation)
         {
 
             LocNotation locNotation = new LocNotation(origLocNotation.col, origLocNotation.row);

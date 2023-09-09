@@ -29,34 +29,26 @@ namespace Hexagonal_Chess
         public FrmBoard()
         {
             InitializeComponent();
+            buildBoard();
         }
 
         private List<PictureBox> MovementButtons = new List<PictureBox>();
 
-        private void Board_Load(object sender, EventArgs e)
-        {
-
-            buildBoard();
-
-            this.lblTopEval.Text = "";
-
-
-        }
 
 
         private void buildBoard()
         {
-            //find the point that centers the board horizontally
-            int x = (int)Math.Round((pnlBoard.Width / 2) - (hexRadius * 7.78));
-
-            //find the point that centers the board verti
-            int y = (int)Math.Round((pnlBoard.Height / 2) + (hexRadius * 4.26));
-
-            //Starting point of the entire board, this will be center of A1
-            Point startingPosition = new Point(x, y);
 
             //The distance from the center of a hexagon to center of any of its lines
             int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
+
+            //find the point that centers the board horizontally
+            int x = (int)Math.Round((pnlGame.Width / 2) + (hexRadius * 0.0)); //7.78
+            //find the point that centers the board vertical
+            int y = (int)Math.Round((pnlGame.Height / 2) + (hexRadius * 8.0)); //4.26
+
+            //Starting point of the entire board, this will be center of A1
+            Point startingPosition = new Point(x, y);
 
             int rowMax = 5;
 
@@ -177,7 +169,7 @@ namespace Hexagonal_Chess
             pictureBox.Name = piece.pieceType + piece.locNotation.notation;
             pictureBox.BackColor = Color.Transparent;
             pictureBox.Click += (sender, EventArgs) => { Piece_Click(sender, EventArgs, piece); };
-            this.pnlBoard.Controls.Add(pictureBox);
+            this.pnlGame.Controls.Add(pictureBox);
 
             LocNotation tempNotation = piece.locNotation;
 
@@ -235,7 +227,7 @@ namespace Hexagonal_Chess
         {
             foreach (PictureBox image in MovementButtons)
             {
-                this.pnlBoard.Controls.Remove(image);
+                this.pnlGame.Controls.Remove(image);
             }
         }
 
@@ -281,7 +273,7 @@ namespace Hexagonal_Chess
                 //assign the image based on the move type
                 tempImage.Image = move.isCapture ? Properties.Resources.AvailableTake : Properties.Resources.AvailableMove;
 
-                this.pnlBoard.Controls.Add(tempImage);
+                this.pnlGame.Controls.Add(tempImage);
 
                 //add it to the List for later removal
                 MovementButtons.Add(tempImage);
@@ -298,6 +290,8 @@ namespace Hexagonal_Chess
 
             LocNotation startLocation = move.piece.locNotation;
             LocNotation endLocation = move.endLocation;
+
+            bool endGame = false;
 
 
             //if a piece was taken
@@ -320,17 +314,13 @@ namespace Hexagonal_Chess
                 //update the evaluation
                 board.setEval(newEvaluation, capturedPiece);
 
-                //if the piece that was taken was a king
-                if (capturedPiece.pieceType == 'K')
-                {
-                    ResultScreen resultScreen = new ResultScreen();
-                    resultScreen.setWinner(true);
-                    resultScreen.Show();
-                }
+                //if the piece that was taken was a king then store endgame as true
+                endGame = (capturedPiece.pieceType == 'K');
             }
 
             //move the piece image to the new location
             Point hexCenter = boardNodes[endLocation.notation].location;
+
             PictureBox pieceImage = boardPieces[startLocation.notation];
 
             //replace the key with the new location
@@ -363,6 +353,15 @@ namespace Hexagonal_Chess
 
             //change it to the opposing teams move
             board.swapTurns();
+
+            if (endGame)
+            {
+                int numOfMoves = dgMoves.Rows.Count + (move.piece.isWhite ? 1 : 0);
+
+                ResultScreen resultScreen = new ResultScreen();
+                resultScreen.setWinner(true, numOfMoves);
+                resultScreen.ShowDialog();
+            }
         }
 
         private bool pawnPromotion(Move move)
@@ -495,7 +494,7 @@ namespace Hexagonal_Chess
             blackBarEval.Text = "";
         }
 
-        private void GamePanel_Paint(object sender, PaintEventArgs e)
+        private void pnlGame_Paint(object sender, PaintEventArgs e)
         {
             foreach (KeyValuePair<string, Hexagon> node in boardNodes)
             {

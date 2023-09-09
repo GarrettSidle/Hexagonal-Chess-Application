@@ -28,6 +28,7 @@ namespace Hexagonal_Chess
             mdiParent = this;
 
             home.MdiParent = this;
+            home.Dock = DockStyle.Fill;
             home.Show();
         }
 
@@ -38,6 +39,19 @@ namespace Hexagonal_Chess
             screen.MdiParent = mdiParent;
             screen.Dock = DockStyle.Fill;
             screen.Show();
+        }
+
+        public static void regenerateBoard()
+        {
+            //reset them board
+            Utils.board = new Utils.Board();
+
+            //close the existing board form
+            Form frmBoard = getScreen("Board");
+            frmBoard.Close();
+
+            //create a new board form 
+            screens["Board"] = new FrmBoard();
         }
 
         public static Form getScreen(string screenName)

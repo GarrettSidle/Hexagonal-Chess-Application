@@ -161,6 +161,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackgroundImage = global::Hexagonal_Chess.Properties.Resources.HomeBackground;
             this.ClientSize = new System.Drawing.Size(1219, 665);
             this.ControlBox = false;
             this.Controls.Add(this.btnSettings);

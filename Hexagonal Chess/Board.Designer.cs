@@ -47,12 +47,14 @@
             this.lblBottomUserEval = new System.Windows.Forms.Label();
             this.lblBottomName = new System.Windows.Forms.Label();
             this.pnlMoves = new System.Windows.Forms.Panel();
-            this.dgMoves = new System.Windows.Forms.DataGridView();
-            this.pnlBoard = new System.Windows.Forms.Panel();
             this.lblMovesTableRef = new System.Windows.Forms.Label();
+            this.dgMoves = new System.Windows.Forms.DataGridView();
             this.colMoveNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colWhite = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colBlack = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pnlBoard = new System.Windows.Forms.Panel();
+            this.layoutGame = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlGame = new System.Windows.Forms.Panel();
             this.pnlEvaluation.SuspendLayout();
             this.layoutEval.SuspendLayout();
             this.pnlEvalBottom.SuspendLayout();
@@ -64,6 +66,7 @@
             this.pnlMoves.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgMoves)).BeginInit();
             this.pnlBoard.SuspendLayout();
+            this.layoutGame.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlEvaluation
@@ -145,10 +148,10 @@
             this.pnlTopUser.Controls.Add(this.imgTopUser);
             this.pnlTopUser.Controls.Add(this.lblTopUserEval);
             this.pnlTopUser.Controls.Add(this.lblUser);
-            this.pnlTopUser.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTopUser.Location = new System.Drawing.Point(0, 0);
+            this.pnlTopUser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTopUser.Location = new System.Drawing.Point(3, 3);
             this.pnlTopUser.Name = "pnlTopUser";
-            this.pnlTopUser.Size = new System.Drawing.Size(895, 72);
+            this.pnlTopUser.Size = new System.Drawing.Size(889, 66);
             this.pnlTopUser.TabIndex = 1;
             // 
             // imgTopUser
@@ -187,8 +190,9 @@
             this.pnlBottomUser.Controls.Add(this.imgBottomUser);
             this.pnlBottomUser.Controls.Add(this.lblBottomUserEval);
             this.pnlBottomUser.Controls.Add(this.lblBottomName);
-            this.pnlBottomUser.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottomUser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlBottomUser.Location = new System.Drawing.Point(0, 618);
+            this.pnlBottomUser.Margin = new System.Windows.Forms.Padding(0);
             this.pnlBottomUser.Name = "pnlBottomUser";
             this.pnlBottomUser.Size = new System.Drawing.Size(895, 72);
             this.pnlBottomUser.TabIndex = 2;
@@ -235,6 +239,16 @@
             this.pnlMoves.Size = new System.Drawing.Size(323, 690);
             this.pnlMoves.TabIndex = 3;
             // 
+            // lblMovesTableRef
+            // 
+            this.lblMovesTableRef.AutoSize = true;
+            this.lblMovesTableRef.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMovesTableRef.Location = new System.Drawing.Point(6, 3);
+            this.lblMovesTableRef.Name = "lblMovesTableRef";
+            this.lblMovesTableRef.Size = new System.Drawing.Size(0, 19);
+            this.lblMovesTableRef.TabIndex = 3;
+            this.lblMovesTableRef.Visible = false;
+            // 
             // dgMoves
             // 
             this.dgMoves.AllowUserToAddRows = false;
@@ -252,27 +266,6 @@
             this.dgMoves.ReadOnly = true;
             this.dgMoves.Size = new System.Drawing.Size(263, 630);
             this.dgMoves.TabIndex = 0;
-            // 
-            // pnlBoard
-            // 
-            this.pnlBoard.Controls.Add(this.pnlBottomUser);
-            this.pnlBoard.Controls.Add(this.pnlTopUser);
-            this.pnlBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlBoard.Location = new System.Drawing.Point(86, 0);
-            this.pnlBoard.Name = "pnlBoard";
-            this.pnlBoard.Size = new System.Drawing.Size(895, 690);
-            this.pnlBoard.TabIndex = 4;
-            this.pnlBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.GamePanel_Paint);
-            // 
-            // lblMovesTableRef
-            // 
-            this.lblMovesTableRef.AutoSize = true;
-            this.lblMovesTableRef.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMovesTableRef.Location = new System.Drawing.Point(6, 3);
-            this.lblMovesTableRef.Name = "lblMovesTableRef";
-            this.lblMovesTableRef.Size = new System.Drawing.Size(0, 15);
-            this.lblMovesTableRef.TabIndex = 3;
-            this.lblMovesTableRef.Visible = false;
             // 
             // colMoveNumber
             // 
@@ -307,6 +300,41 @@
             this.colBlack.Name = "colBlack";
             this.colBlack.ReadOnly = true;
             // 
+            // pnlBoard
+            // 
+            this.pnlBoard.Controls.Add(this.layoutGame);
+            this.pnlBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlBoard.Location = new System.Drawing.Point(86, 0);
+            this.pnlBoard.Name = "pnlBoard";
+            this.pnlBoard.Size = new System.Drawing.Size(895, 690);
+            this.pnlBoard.TabIndex = 4;
+            // 
+            // layoutGame
+            // 
+            this.layoutGame.ColumnCount = 1;
+            this.layoutGame.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutGame.Controls.Add(this.pnlBottomUser, 0, 2);
+            this.layoutGame.Controls.Add(this.pnlTopUser, 0, 0);
+            this.layoutGame.Controls.Add(this.pnlGame, 0, 1);
+            this.layoutGame.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutGame.Location = new System.Drawing.Point(0, 0);
+            this.layoutGame.Name = "layoutGame";
+            this.layoutGame.RowCount = 3;
+            this.layoutGame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 72F));
+            this.layoutGame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutGame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 72F));
+            this.layoutGame.Size = new System.Drawing.Size(895, 690);
+            this.layoutGame.TabIndex = 3;
+            // 
+            // pnlGame
+            // 
+            this.pnlGame.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlGame.Location = new System.Drawing.Point(3, 75);
+            this.pnlGame.Name = "pnlGame";
+            this.pnlGame.Size = new System.Drawing.Size(889, 540);
+            this.pnlGame.TabIndex = 3;
+            this.pnlGame.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlGame_Paint);
+            // 
             // FrmBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -320,7 +348,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FrmBoard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Load += new System.EventHandler(this.Board_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Board_Paint);
             this.pnlEvaluation.ResumeLayout(false);
             this.layoutEval.ResumeLayout(false);
@@ -338,6 +365,7 @@
             this.pnlMoves.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgMoves)).EndInit();
             this.pnlBoard.ResumeLayout(false);
+            this.layoutGame.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -365,5 +393,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colMoveNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn colWhite;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBlack;
+        private System.Windows.Forms.TableLayoutPanel layoutGame;
+        private System.Windows.Forms.Panel pnlGame;
     }
 }
