@@ -84,6 +84,12 @@
     <Compile Include="ResultScreen.Designer.cs">
       <DependentUpon>ResultScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="Board.resx">
       <DependentUpon>Board.cs</DependentUpon>
@@ -102,6 +108,9 @@
     <EmbeddedResource Include="ResultScreen.resx">
       <DependentUpon>ResultScreen.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -116,6 +125,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Images\Settings.png" />
     <None Include="Images\Trophy.png" />
     <None Include="Images\AvailableTake.png" />
     <Content Include="Images\Hex.ico" />

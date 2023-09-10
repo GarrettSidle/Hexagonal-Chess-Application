@@ -172,6 +172,7 @@ namespace Hexagonal_Chess
             int col = piece.locNotation.col;
             int row = piece.locNotation.row;
 
+
             LocNotation tempLocation;
 
             //This represents the square we are trying to move to 

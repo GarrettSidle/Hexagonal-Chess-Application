@@ -11,12 +11,12 @@ namespace Hexagonal_Chess
 {
     public class CustomButton : Button
     {
-        private Color _borderColor = Color.Silver;
-        private Color _onHoverBorderColor = Color.Gray;
-        private Color _buttonColor = Color.Red;
-        private Color _onHoverButtonColor = Color.Yellow;
+        private Color _borderColor = Color.FromArgb(102, 133, 64);
+        private Color _onHoverBorderColor = Color.FromArgb(102, 133, 64);
+        private Color _buttonColor = Color.FromArgb(136, 171, 95);
+        private Color _onHoverButtonColor = Color.Gray;
         private Color _textColor = Color.White;
-        private Color _onHoverTextColor = Color.Gray;
+        private Color _onHoverTextColor = Color.White;
 
         private bool _isHovering;
         private int _borderThickness = 6;

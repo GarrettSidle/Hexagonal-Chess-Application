@@ -19,27 +19,12 @@ namespace Hexagonal_Chess
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label2.BackColor = Color.Transparent;
-            label1.BackColor = Color.Transparent;
-            btnComputer.BackColor = Color.Transparent;
-            btnHostGame.BackColor = Color.Transparent;
-            btnJoinGame.BackColor = Color.Transparent;
+            lblSubitle.BackColor = Color.Transparent;
+            lblTitle.BackColor = Color.Transparent;
             btnSettings.BackColor = Color.Transparent;
         }
 
-        private void HomeButton_MouseEnter(object sender, EventArgs e)
-        {
-            Label Label = (Label)sender;
-            Label.ForeColor = Color.FromArgb(255, 128, 0);
-        }
-
-        private void HomeButton_MouseLeave(object sender, EventArgs e)
-        {
-            Label Label = (Label)sender;
-            Label.ForeColor = Color.Black;
-        }
-
-        private void btnComputer_Click(object sender, EventArgs e)
+        private void btnSinglePlayer_Click(object sender, EventArgs e)
         {
             //set the game type to single player
             Utils.userMode = 0;
@@ -48,7 +33,7 @@ namespace Hexagonal_Chess
             MDIParent.swapScreen("Board");
         }
 
-        private void btnHostGame_Click(object sender, EventArgs e)
+        private void btnHost_Click(object sender, EventArgs e)
         {
             //set the game type to Host
             Utils.userMode = 1;
@@ -57,7 +42,7 @@ namespace Hexagonal_Chess
             MDIParent.swapScreen("Board");
         }
 
-        private void btnJoinGame_Click(object sender, EventArgs e)
+        private void btnJoin_Click(object sender, EventArgs e)
         {
             //set the game type to client
             Utils.userMode = 0;
@@ -68,7 +53,9 @@ namespace Hexagonal_Chess
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            
+            FrmSettings frmSettings = new FrmSettings();
+            frmSettings.ShowDialog();
         }
+
     }
 }

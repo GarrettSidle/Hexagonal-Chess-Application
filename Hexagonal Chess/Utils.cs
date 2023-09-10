@@ -218,7 +218,7 @@ namespace Hexagonal_Chess
                 }
 
                 //Update the bar display
-                frmBoard.layoutEval.RowStyles[0].Height = blackBarPercent;
+                frmBoard.layoutEval.RowStyles[1].Height = blackBarPercent;
             }
 
             public void swapTurns()
@@ -260,7 +260,7 @@ namespace Hexagonal_Chess
                         break;
 
                     case 'K':
-                        this.value = 1000;
+                        this.value = 0;
                         break;
 
                     case 'Q':

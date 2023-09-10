@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows;
+using Hexagonal_Chess.Properties;
 
 using static Hexagonal_Chess.Utils;
 using static Hexagonal_Chess.FindMoves;
@@ -18,6 +19,15 @@ namespace Hexagonal_Chess
     {
 
         int hexRadius = 43;
+
+        private void FrmBoard_Load(object sender, EventArgs e)
+        {
+            lblBottomEval.Text = "";
+            lblTopEval.Text = "";
+
+            hexRadius = (int) Math.Round(Screen.PrimaryScreen.Bounds.Height / 25.0);
+        }
+
 
 
 
@@ -131,28 +141,27 @@ namespace Hexagonal_Chess
             switch (char.ToUpper(piece.pieceType))
             {
                 case 'P':
-
-                    pieceImage = piece.isWhite ? Properties.Resources.WhitePawn : Properties.Resources.BlackPawn;
+                    pieceImage = piece.isWhite ? Resources.WhitePawn : Resources.BlackPawn;
                     break;
 
                 case 'R':
-                    pieceImage = piece.isWhite ? Properties.Resources.WhiteRook : Properties.Resources.BlackRook;
+                    pieceImage = piece.isWhite ? Resources.WhiteRook : Resources.BlackRook;
                     break;
 
                 case 'N':
-                    pieceImage = piece.isWhite ? Properties.Resources.WhiteKnight : Properties.Resources.BlackKnight;
+                    pieceImage = piece.isWhite ? Resources.WhiteKnight : Resources.BlackKnight;
                     break;
 
                 case 'B':
-                    pieceImage = piece.isWhite ? Properties.Resources.WhiteBishop : Properties.Resources.BlackBishop;
+                    pieceImage = piece.isWhite ? Resources.WhiteBishop : Resources.BlackBishop;
                     break;
 
                 case 'K':
-                    pieceImage = piece.isWhite ? Properties.Resources.WhiteKing : Properties.Resources.BlackKing;
+                    pieceImage = piece.isWhite ? Resources.WhiteKing : Resources.BlackKing;
                     break;
 
                 case 'Q':
-                    pieceImage = piece.isWhite ? Properties.Resources.WhiteQueen : Properties.Resources.BlackQueen;
+                    pieceImage = piece.isWhite ? Resources.WhiteQueen : Resources.BlackQueen;
                     break;
 
                 default:
@@ -501,5 +510,6 @@ namespace Hexagonal_Chess
                 DrawHexagon(node.Value, e);
             }
         }
+
     }
 }
