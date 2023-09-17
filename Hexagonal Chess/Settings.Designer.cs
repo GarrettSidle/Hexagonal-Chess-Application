@@ -29,19 +29,19 @@
         private void InitializeComponent()
         {
             this.layoutSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.lblGameWinner = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.btnSave = new Hexagonal_Chess.CustomButton();
             this.btnClose = new Hexagonal_Chess.CustomButton();
+            this.lblGameWinner = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.btnHexofen = new Hexagonal_Chess.CustomButton();
             this.btnMcCooey = new Hexagonal_Chess.CustomButton();
             this.btnGlinksi = new Hexagonal_Chess.CustomButton();
+            this.label1 = new System.Windows.Forms.Label();
             this.customButton1 = new Hexagonal_Chess.CustomButton();
             this.layoutSettings.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // layoutSettings
@@ -61,55 +61,6 @@
             this.layoutSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.layoutSettings.Size = new System.Drawing.Size(800, 599);
             this.layoutSettings.TabIndex = 1;
-            // 
-            // lblGameWinner
-            // 
-            this.lblGameWinner.AccessibleRole = System.Windows.Forms.AccessibleRole.Client;
-            this.lblGameWinner.AutoSize = true;
-            this.lblGameWinner.BackColor = System.Drawing.Color.Transparent;
-            this.lblGameWinner.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblGameWinner.Font = new System.Drawing.Font("Sitka Text", 65.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.lblGameWinner.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
-            this.lblGameWinner.Location = new System.Drawing.Point(3, 0);
-            this.lblGameWinner.Name = "lblGameWinner";
-            this.lblGameWinner.Size = new System.Drawing.Size(794, 199);
-            this.lblGameWinner.TabIndex = 4;
-            this.lblGameWinner.Text = "Settings";
-            this.lblGameWinner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
-            this.tableLayoutPanel1.Controls.Add(this.btnHexofen, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btnMcCooey, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btnGlinksi, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 202);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(794, 193);
-            this.tableLayoutPanel1.TabIndex = 5;
-            // 
-            // label1
-            // 
-            this.label1.AccessibleRole = System.Windows.Forms.AccessibleRole.Client;
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
-            this.label1.Location = new System.Drawing.Point(265, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(263, 57);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Chess Variation";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel2
             // 
@@ -172,6 +123,40 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // lblGameWinner
+            // 
+            this.lblGameWinner.AccessibleRole = System.Windows.Forms.AccessibleRole.Client;
+            this.lblGameWinner.AutoSize = true;
+            this.lblGameWinner.BackColor = System.Drawing.Color.Transparent;
+            this.lblGameWinner.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblGameWinner.Font = new System.Drawing.Font("Sitka Text", 65.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.lblGameWinner.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
+            this.lblGameWinner.Location = new System.Drawing.Point(3, 0);
+            this.lblGameWinner.Name = "lblGameWinner";
+            this.lblGameWinner.Size = new System.Drawing.Size(794, 199);
+            this.lblGameWinner.TabIndex = 4;
+            this.lblGameWinner.Text = "Settings";
+            this.lblGameWinner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 3;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
+            this.tableLayoutPanel1.Controls.Add(this.btnHexofen, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.btnMcCooey, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.btnGlinksi, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label1, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 202);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(794, 193);
+            this.tableLayoutPanel1.TabIndex = 5;
+            // 
             // btnHexofen
             // 
             this.btnHexofen.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -182,13 +167,13 @@
             this.btnHexofen.FlatAppearance.BorderSize = 0;
             this.btnHexofen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHexofen.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHexofen.Location = new System.Drawing.Point(551, 94);
+            this.btnHexofen.Location = new System.Drawing.Point(551, 116);
             this.btnHexofen.Margin = new System.Windows.Forms.Padding(20);
             this.btnHexofen.Name = "btnHexofen";
             this.btnHexofen.OnHoverBorderColor = System.Drawing.Color.Gray;
             this.btnHexofen.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnHexofen.OnHoverTextColor = System.Drawing.Color.Gray;
-            this.btnHexofen.Size = new System.Drawing.Size(223, 61);
+            this.btnHexofen.Size = new System.Drawing.Size(223, 57);
             this.btnHexofen.TabIndex = 14;
             this.btnHexofen.Text = "Hexofen";
             this.btnHexofen.TextColor = System.Drawing.Color.White;
@@ -205,13 +190,13 @@
             this.btnMcCooey.FlatAppearance.BorderSize = 0;
             this.btnMcCooey.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMcCooey.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMcCooey.Location = new System.Drawing.Point(282, 94);
+            this.btnMcCooey.Location = new System.Drawing.Point(282, 116);
             this.btnMcCooey.Margin = new System.Windows.Forms.Padding(20);
             this.btnMcCooey.Name = "btnMcCooey";
             this.btnMcCooey.OnHoverBorderColor = System.Drawing.Color.Gray;
             this.btnMcCooey.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnMcCooey.OnHoverTextColor = System.Drawing.Color.Gray;
-            this.btnMcCooey.Size = new System.Drawing.Size(229, 61);
+            this.btnMcCooey.Size = new System.Drawing.Size(229, 57);
             this.btnMcCooey.TabIndex = 13;
             this.btnMcCooey.Text = " McCooey\'s";
             this.btnMcCooey.TextColor = System.Drawing.Color.White;
@@ -228,18 +213,33 @@
             this.btnGlinksi.FlatAppearance.BorderSize = 0;
             this.btnGlinksi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGlinksi.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGlinksi.Location = new System.Drawing.Point(20, 94);
+            this.btnGlinksi.Location = new System.Drawing.Point(20, 116);
             this.btnGlinksi.Margin = new System.Windows.Forms.Padding(20);
             this.btnGlinksi.Name = "btnGlinksi";
             this.btnGlinksi.OnHoverBorderColor = System.Drawing.Color.Gray;
             this.btnGlinksi.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnGlinksi.OnHoverTextColor = System.Drawing.Color.Gray;
-            this.btnGlinksi.Size = new System.Drawing.Size(222, 61);
+            this.btnGlinksi.Size = new System.Drawing.Size(222, 57);
             this.btnGlinksi.TabIndex = 12;
             this.btnGlinksi.Text = "Gliński\'s";
             this.btnGlinksi.TextColor = System.Drawing.SystemColors.Window;
             this.btnGlinksi.UseVisualStyleBackColor = false;
             this.btnGlinksi.Click += new System.EventHandler(this.btnGlinksi_Click);
+            // 
+            // label1
+            // 
+            this.label1.AccessibleRole = System.Windows.Forms.AccessibleRole.Client;
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
+            this.label1.Location = new System.Drawing.Point(274, 57);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(245, 39);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Chess Variation";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // customButton1
             // 
@@ -260,6 +260,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.BackgroundImage = global::Hexagonal_Chess.Properties.Resources.Settings;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(800, 599);
@@ -273,9 +274,9 @@
             this.Load += new System.EventHandler(this.FrmSettings_Load);
             this.layoutSettings.ResumeLayout(false);
             this.layoutSettings.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

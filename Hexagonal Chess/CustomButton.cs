@@ -14,7 +14,7 @@ namespace Hexagonal_Chess
         private Color _borderColor = Color.FromArgb(102, 133, 64);
         private Color _onHoverBorderColor = Color.FromArgb(102, 133, 64);
         private Color _buttonColor = Color.FromArgb(136, 171, 95);
-        private Color _onHoverButtonColor = Color.Gray;
+        private Color _onHoverButtonColor = Color.Transparent;
         private Color _textColor = Color.White;
         private Color _onHoverTextColor = Color.White;
 

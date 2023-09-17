@@ -349,7 +349,6 @@
             this.Name = "FrmBoard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.FrmBoard_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Board_Paint);
             this.pnlEvaluation.ResumeLayout(false);
             this.layoutEval.ResumeLayout(false);
             this.pnlEvalBottom.ResumeLayout(false);

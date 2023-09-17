@@ -10,18 +10,23 @@ using System.Windows.Forms;
 
 namespace Hexagonal_Chess
 {
+
+
     public partial class frmHome : Form
     {
+
         public frmHome()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Home_Load(object sender, EventArgs e)
         {
             lblSubitle.BackColor = Color.Transparent;
             lblTitle.BackColor = Color.Transparent;
             btnSettings.BackColor = Color.Transparent;
+
+            panel1.Location = new Point((this.Width - panel1.Width) / 2, (this.Height - panel1.Height) / 2 - 50);
         }
 
         private void btnSinglePlayer_Click(object sender, EventArgs e)
@@ -38,6 +43,10 @@ namespace Hexagonal_Chess
             //set the game type to Host
             Utils.userMode = 1;
 
+            FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
+            //local
+            //board.updateGameMode();
+
             //Swap Screens
             MDIParent.swapScreen("Board");
         }
@@ -45,10 +54,10 @@ namespace Hexagonal_Chess
         private void btnJoin_Click(object sender, EventArgs e)
         {
             //set the game type to client
-            Utils.userMode = 0;
+            Utils.userMode = 2;
 
-            //Swap Screens
-            MDIParent.swapScreen("Board");
+            FrmConnection frmConnection = new FrmConnection();
+            frmConnection.ShowDialog();
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -57,5 +66,13 @@ namespace Hexagonal_Chess
             frmSettings.ShowDialog();
         }
 
+        private void frmHome_Paint(object sender, PaintEventArgs e)
+        {
+        }
+
+        private void lblSubitle_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

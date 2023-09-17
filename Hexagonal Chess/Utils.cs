@@ -20,6 +20,8 @@ namespace Hexagonal_Chess
         // 2 = Client
         public static int userMode = 0;
 
+        public static string IP;
+
         public static Dictionary<char, string> pieceChars = new Dictionary<char, string>()
                 {
                      { 'P', "♙"},
@@ -37,6 +39,7 @@ namespace Hexagonal_Chess
             public int evaluation;
             public List<Piece>[] gameBoard;
             public bool whiteToPlay;
+            public Move prevMove;
 
             public Board()
             {
@@ -46,6 +49,11 @@ namespace Hexagonal_Chess
                 //negative evalution represents black, and postive white
                 this.evaluation = 0;
 
+                this.setBoard();
+            }
+
+            public void setBoard()
+            {
                 List<char>[] glinskiBoard = new List<char>[] {
                     new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
                     new List<char> { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
@@ -91,35 +99,22 @@ namespace Hexagonal_Chess
                 List<char>[] tempBoard;
                 switch (gameType)
                 {
-                    case 0 : 
-                        tempBoard = glinskiBoard; 
+                    case 0:
+                        tempBoard = glinskiBoard;
                         break;
-                    case 1 : 
+                    case 1:
                         tempBoard = mcCooeyBoard;
                         break;
                     case 2:
                         tempBoard = hexofenBoard;
-                        break ;
-                    default :
+                        break;
+                    default:
                         throw new Exception("Invalid Game Type");
                 }
 
 
-                //List<char>[] tempBoard = new List<char>[] {
-                //    new List<char> { 'P', ' ', 'P', ' ', ' ', ' ' },
-                //    new List<char> { ' ', 'p', ' ', ' ', ' ', ' ', ' ' } ,
-                //    new List<char> { 'R', ' ', ' ', 'k', 'N', ' ', ' ', 'r' },
-                //    new List<char> { 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'n' },
-                //    new List<char> { 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'q' },
-                //    new List<char> { ' ', ' ', ' ', 'p', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char>      { 'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'k' },
-                //    new List<char>           { 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'n' },
-                //    new List<char>                { 'R', ' ', ' ', ' ', 'Q', ' ', ' ', 'r' },
-                //    new List<char>                     { 'p', ' ', ' ', ' ', 'P', ' ', 'P' } ,
-                //    new List<char>                          { ' ', ' ', ' ', ' ', 'p', ' ' }
-                //};
 
-                //List<char>[] tempBoard = new List<char>[] {
+                //tempBoard = new List<char>[] {
                 //    new List<char> { ' ', ' ', 'P', ' ', ' ', ' ' },
                 //    new List<char> { ' ', ' ', ' ', 'p', ' ', ' ', ' ' } ,
                 //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
@@ -127,7 +122,7 @@ namespace Hexagonal_Chess
                 //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
                 //    new List<char> { ' ', ' ', ' ', ' ', ' ', 'R', ' ', ' ', ' ', ' ', ' ' },
                 //    new List<char>      { ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'R', ' ', ' ' },
-                //    new List<char>           { ' ', 'P', ' ', ' ', 'N', ' ', ' ', ' ', ' ' },
+                //    new List<char>           { ' ', 'N', ' ', ' ', 'N', ' ', ' ', ' ', ' ' },
                 //    new List<char>                { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
                 //    new List<char>                     { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
                 //    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
@@ -279,11 +274,13 @@ namespace Hexagonal_Chess
             public LocNotation endLocation;
             public readonly string moveNotation;
             public bool isCapture;
+            public bool enPassent;
 
-            public Move(Piece piece, LocNotation endLocation, bool isCapture)
+            public Move(Piece piece, LocNotation endLocation, bool isCapture, bool enPassant)
             {
                 this.piece = piece;
                 this.endLocation = endLocation;
+                this.enPassent = enPassant;
 
                 //build the chess move notation
                 this.moveNotation = piece.pieceType + (isCapture?"x":"") + endLocation.notation;
@@ -314,6 +311,42 @@ namespace Hexagonal_Chess
                 this.row = row;
                 this.notation = ((char)(this.col + 65)).ToString() + (row + 1).ToString();
             }
+        }
+        public class Hexagon
+        {
+            public Point location;
+            public Color color;
+            public int col;
+            public int row;
+
+            public Hexagon(Point location, Color color, int col, int row)
+            {
+                this.location = location;
+                this.color = color;
+                this.col = col;
+                this.row=row;
+            }
+
+            public static void DrawHexagon(Hexagon hexagon, PaintEventArgs e, int hexRadius)
+            {
+                var graphics = e.Graphics;
+
+                //Get the middle of the panel
+
+                var shape = new PointF[6];
+
+
+                //Create 6 points
+                for (int a = 0; a < 6; a++)
+                {
+                    shape[a] = new PointF(
+                        hexagon.location.X + hexRadius * (float)Math.Cos(a * 60 * Math.PI / 180f),
+                        hexagon.location.Y + hexRadius * (float)Math.Sin(a * 60 * Math.PI / 180f));
+                }
+
+                graphics.FillPolygon(new SolidBrush(hexagon.color), shape);
+            }
+
         }
     }
 }

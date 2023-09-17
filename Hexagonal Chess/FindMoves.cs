@@ -74,16 +74,17 @@ namespace Hexagonal_Chess
                 new int[2] { -1, -2 } //down and left
             };
 
-            if (piece.locNotation.col > 5)
-            {
-                //shift the row down by the number of columns it is right of center
-                int newRow = piece.locNotation.row - 5 + piece.locNotation.col;
-                //if we are off the board, continue to the next
-                if (newRow > 0)
-                {
-                    piece.locNotation.setRow(newRow);
-                }
-            }
+            ////Offset.
+            //if (piece.locNotation.col > 5)
+            //{
+            //    //shift the row up  by the number of columns it is right of center
+            //    int newRow = piece.locNotation.row - 5 + piece.locNotation.col;
+            //    //if we are off the board, continue to the next
+            //    if (newRow > 0)
+            //    {
+            //        piece.locNotation.setRow(newRow);
+            //    }
+            //}
 
             switch (piece.pieceType)
             {
@@ -185,12 +186,13 @@ namespace Hexagonal_Chess
                 tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
 
                 //offset the position 
-                tempLocation = offsetRightBoard(tempLocation);
+                //LocNotation offsetLocation = offsetRightBoard(tempLocation);
+                LocNotation offsetLocation = tempLocation;
 
                 try
                 {
                     //get the piece at the next square
-                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+                    selectedPiece = board.gameBoard[offsetLocation.col][offsetLocation.row];
                 }
                 catch (Exception)
                 {
@@ -202,7 +204,7 @@ namespace Hexagonal_Chess
                 if (selectedPiece == null)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, tempLocation, false));
+                    outputMoves.Add(new Move(piece, tempLocation, false, false));
 
                     //look at the next displacement
                     continue;
@@ -211,7 +213,7 @@ namespace Hexagonal_Chess
                 else if (selectedPiece.isWhite != piece.isWhite)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, tempLocation, true));
+                    outputMoves.Add(new Move(piece, tempLocation, true, false));
                 }
                 //Otherwise we are looking at one of our own pieces
             }
@@ -257,8 +259,8 @@ namespace Hexagonal_Chess
                 row += rowIncrement;
 
                 //offset the position 
-                newRow = offsetRightBoard(col, row);
-
+                //newRow = offsetRightBoard(col, row);
+                newRow = row;
 
                 try
                 {
@@ -276,7 +278,7 @@ namespace Hexagonal_Chess
                 if (selectedPiece == null)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, new LocNotation(col, newRow), false));
+                    outputMoves.Add(new Move(piece, new LocNotation(col, newRow), false, false));
 
                     //look at the next square 
                     continue;
@@ -285,7 +287,7 @@ namespace Hexagonal_Chess
                 else if (selectedPiece.isWhite != piece.isWhite)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, new LocNotation(col, newRow), true));
+                    outputMoves.Add(new Move(piece, new LocNotation(col, newRow), true, false));
 
                     //stop moving down the line
                     moving = false;
@@ -327,13 +329,33 @@ namespace Hexagonal_Chess
 
             int[][] displacements = piece.isWhite ? whitePawnDisplacers : blackPawnDisplacers;
 
+            LocNotation enPassantSquare = null;
+
+            //if there is a previous move
+            if (board.prevMove != null)
+            {
+                //if the previous move was a pawn double move
+                if (Math.Abs(board.prevMove.piece.locNotation.col - board.prevMove.endLocation.col) == 2)
+                {
+                    //find the square between your moves
+                    enPassantSquare = new LocNotation(board.prevMove.piece.isWhite ? board.prevMove.endLocation.col - 1  : board.prevMove.endLocation.col + 1 , board.prevMove.endLocation.row);
+                }
+            }
+
+
+
             for (int i = 0; i < displacements.Length; i++)
             {
                 //calculate the new position using the displacements
                 tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
 
                 //offset the position 
-                tempLocation = offsetRightBoard(tempLocation);
+                //tempLocation = offsetRightBoard(tempLocation);
+
+                if(tempLocation == enPassantSquare)
+                {
+                    outputMoves.Add(new Move(piece, tempLocation, true, true));
+                }
 
                 try
                 {
@@ -356,7 +378,7 @@ namespace Hexagonal_Chess
                 else if (selectedPiece.isWhite != piece.isWhite)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, tempLocation, true));
+                    outputMoves.Add(new Move(piece, tempLocation, true, false));
                 }
                 //Otherwise we are looking at one of our own pieces
             }
@@ -366,7 +388,7 @@ namespace Hexagonal_Chess
             tempLocation = new LocNotation(col, row + (piece.isWhite ? 1 : -1));
 
             //offset the position 
-            tempLocation = offsetRightBoard(tempLocation);
+            //tempLocation = offsetRightBoard(tempLocation);
 
             try
             {
@@ -386,7 +408,7 @@ namespace Hexagonal_Chess
                 return outputMoves;
             }
             //if the space is empty, add the move
-            outputMoves.Add(new Move(piece, tempLocation, false));
+            outputMoves.Add(new Move(piece, tempLocation, false, false));
 
             //If the piece is on a starting square
             if (isStartingPawn(piece))
@@ -395,7 +417,7 @@ namespace Hexagonal_Chess
                 tempLocation = new LocNotation(col, row + (piece.isWhite ? 2 : -2));
 
                 //offset the position 
-                tempLocation = offsetRightBoard(tempLocation);
+                //tempLocation = offsetRightBoard(tempLocation);
 
                 try
                 {
@@ -412,9 +434,10 @@ namespace Hexagonal_Chess
                 if (selectedPiece == null)
                 {
                     //add the move
-                    outputMoves.Add(new Move(piece, tempLocation, false));
+                    outputMoves.Add(new Move(piece, tempLocation, false, false));
                 }
             }
+
 
             return outputMoves;
         }
@@ -426,7 +449,7 @@ namespace Hexagonal_Chess
             int col = piece.locNotation.col;
             int row = piece.locNotation.row;
 
-            row = offsetRightBoard(col, row);
+            //row = offsetRightBoard(col, row);
 
             // 0 = Glinski,
             if (Utils.gameType == 0)

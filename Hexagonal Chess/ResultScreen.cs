@@ -59,5 +59,9 @@ namespace Hexagonal_Chess
             MDIParent.swapScreen("Home");
         }
 
+        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

@@ -31,9 +31,9 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.lblGameWinner = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblGameMoves = new System.Windows.Forms.Label();
             this.btnPlayAgain = new Hexagonal_Chess.CustomButton();
             this.btnHome = new Hexagonal_Chess.CustomButton();
+            this.lblGameMoves = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -86,18 +86,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(651, 143);
             this.tableLayoutPanel2.TabIndex = 4;
-            // 
-            // lblGameMoves
-            // 
-            this.lblGameMoves.AutoSize = true;
-            this.lblGameMoves.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblGameMoves.Font = new System.Drawing.Font("Microsoft YaHei", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblGameMoves.Location = new System.Drawing.Point(3, 196);
-            this.lblGameMoves.Name = "lblGameMoves";
-            this.lblGameMoves.Size = new System.Drawing.Size(651, 147);
-            this.lblGameMoves.TabIndex = 5;
-            this.lblGameMoves.Text = "Your game took : XX Moves";
-            this.lblGameMoves.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.tableLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
             // 
             // btnPlayAgain
             // 
@@ -142,6 +131,18 @@
             this.btnHome.TextColor = System.Drawing.Color.White;
             this.btnHome.UseVisualStyleBackColor = false;
             this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
+            // 
+            // lblGameMoves
+            // 
+            this.lblGameMoves.AutoSize = true;
+            this.lblGameMoves.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblGameMoves.Font = new System.Drawing.Font("Microsoft YaHei", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblGameMoves.Location = new System.Drawing.Point(3, 196);
+            this.lblGameMoves.Name = "lblGameMoves";
+            this.lblGameMoves.Size = new System.Drawing.Size(651, 147);
+            this.lblGameMoves.TabIndex = 5;
+            this.lblGameMoves.Text = "Your game took : XX Moves";
+            this.lblGameMoves.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ResultScreen
             // 
