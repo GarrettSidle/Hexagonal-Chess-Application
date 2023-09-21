@@ -40,15 +40,26 @@ namespace Hexagonal_Chess
 
         private void btnHost_Click(object sender, EventArgs e)
         {
-            //set the game type to Host
-            Utils.userMode = 1;
+            //start looking for a connection
+            FrmWaitingForPlayer frmWaitingForPlayer = new FrmWaitingForPlayer();
+            frmWaitingForPlayer.ShowDialog();
 
-            FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
-            //local
-            //board.updateGameMode();
+            //if we found a connection
+            if (Utils.gameFound)
+            {
+                //set the game type to Host
+                Utils.userMode = 1;
 
-            //Swap Screens
-            MDIParent.swapScreen("Board");
+                FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
+                //local
+                //board.updateGameMode();
+
+
+
+                //Swap Screens
+                MDIParent.swapScreen("Board");
+            }
+
         }
 
         private void btnJoin_Click(object sender, EventArgs e)

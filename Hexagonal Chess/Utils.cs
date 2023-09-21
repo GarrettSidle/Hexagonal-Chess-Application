@@ -20,6 +20,8 @@ namespace Hexagonal_Chess
         // 2 = Client
         public static int userMode = 0;
 
+        public static bool gameFound = false;
+
         public static string IP;
 
         public static Dictionary<char, string> pieceChars = new Dictionary<char, string>()

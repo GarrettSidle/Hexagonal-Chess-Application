@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net.NetworkInformation;
 
 using static Hexagonal_Chess.Utils;
 
@@ -34,16 +35,59 @@ namespace Hexagonal_Chess
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            Utils.IP = txtIP.Text;
-            this.Close();
+            //if the IP is not valid
+            if ((!PingHost(txtIP.Text)) || txtIP.Text == "")
+            {
+                //show and error message
+                MessageBox.Show($"Unable to locate {txtIP.Text}", "Error");
+            }
+            //if the ip is valid
+            else
+            {
+                //start the game
 
-            FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
-            //local
-            //board.updateGameMode();
+                Utils.IP = txtIP.Text;
+                this.Close();
+
+                FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
+
+                //local
+                //board.updateGameMode();
 
 
-            //Swap Screens
-            MDIParent.swapScreen("Board");
+                //Swap Screens
+                MDIParent.swapScreen("Board");
+            }
+        }
+
+        private static bool PingHost(string address)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+
+            bool pingable = false;
+            Ping pinger = null;
+
+            try
+            {
+                pinger = new Ping();
+                PingReply reply = pinger.Send(address);
+                pingable = reply.Status == IPStatus.Success;
+            }
+            catch (PingException)
+            {
+                // Discard PingExceptions and return false;
+            }
+            finally
+            {
+                if (pinger != null)
+                {
+                    pinger.Dispose();
+                }
+            }
+            Cursor.Current = Cursors.Default;
+
+            return pingable;
         }
     }
 }
