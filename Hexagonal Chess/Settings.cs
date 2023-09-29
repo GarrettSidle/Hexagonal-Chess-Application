@@ -34,6 +34,7 @@ namespace Hexagonal_Chess
         private void setGameType(int gameType)
         {
             currentGameType = gameType;
+            Utils.gameType = gameType;
 
             //set all buttons to inactive
             btnGlinksi.ButtonColor = inactiveButton;
@@ -65,6 +66,8 @@ namespace Hexagonal_Chess
 
             customButton.ButtonColor = activeButton;
             customButton.BorderColor = activeBorder;
+
+            Utils.board.setBoard();
         }
 
         private void btnGlinksi_Click(object sender, EventArgs e)

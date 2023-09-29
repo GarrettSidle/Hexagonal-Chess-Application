@@ -105,6 +105,59 @@ namespace Hexagonal_Chess
                     MessageBox.Show(ex.Message);
                 }
             }
+
+
+            resetBoard();
+
+
+        }
+
+        private void resetBoard()
+        {
+            
+
+
+            //The distance from the center of a hexagon to center of any of its lines
+            int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
+
+            //find the point that centers the board horizontally
+            int x = (int)Math.Round((pnlGame.Width / 2) + (hexRadius * 0.0)); //7.78
+            //find the point that centers the board vertical
+            int y = (int)Math.Round((pnlGame.Height / 2) + (hexRadius * 8.0)); //4.26
+
+            //Starting point of the entire board, this will be center of A1
+            Point startingPosition = new Point(x, y);
+
+            int rowMax = 5;
+
+            for (int col = 0; col < 11; col++)
+            {
+                for (int row = 0; row <= rowMax; row++)
+                {
+                    //Find the location of the next node
+                    Point tempLocation = new Point(
+                            (int)(Math.Round(startingPosition.X + (col * hexShortradius * (.9) * 2))),
+                        startingPosition.Y - (row * hexShortradius * 2) + ((col < 6 ? col : (10 - col)) * hexShortradius));
+
+
+                    //place the starting pieces
+                    placeStartingPieces(col, row, tempLocation);
+
+                }
+                //if we are in the first 6 rows
+                if (col < 5)
+                {
+                    //add another row
+                    rowMax++;
+                }
+                //otherwise
+                else
+                {
+                    //remove another row
+                    rowMax--;
+
+                }
+            }
         }
 
         private void MessageReceiver_DoWork(object sender, DoWorkEventArgs e)
@@ -178,9 +231,6 @@ namespace Hexagonal_Chess
 
                     //add hexagons to the collection
                     placeHexagons(rowColorCode, colColorCode, col, row, tempLocation);
-
-                    //place the starting pieces
-                    placeStartingPieces(col, row, tempLocation);
 
                     colColorCode++;
 
@@ -307,11 +357,11 @@ namespace Hexagonal_Chess
 
         private void Move_Click(object sender, EventArgs e, Move move)
         {
-            //Local
-            //if (Utils.userMode != 0)
-            //{
-            //    SendMove(move);
-            //}
+            //local
+            if (Utils.userMode != 0)
+            {
+                SendMove(move);
+            }
 
             makeMove(move, board, boardPieces, boardNodes, (FrmBoard)MDIParent.getScreen("Board"));
         }

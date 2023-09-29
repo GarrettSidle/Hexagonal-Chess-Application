@@ -34,6 +34,10 @@ namespace Hexagonal_Chess
             //set the game type to single player
             Utils.userMode = 0;
 
+            FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
+            //local
+            board.updateGameMode();
+
             //Swap Screens
             MDIParent.swapScreen("Board");
         }
