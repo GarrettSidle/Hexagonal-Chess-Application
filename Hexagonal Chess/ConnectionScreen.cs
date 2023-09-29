@@ -35,8 +35,14 @@ namespace Hexagonal_Chess
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
+            if(txtIP.Text == "")
+            {
+                MessageBox.Show("Invalid IP");
+                return;
+            }
+
             //if the IP is not valid
-            if ((!PingHost(txtIP.Text)) || txtIP.Text == "")
+            if ((!PingHost(txtIP.Text)))
             {
                 //show and error message
                 MessageBox.Show($"Unable to locate {txtIP.Text}", "Error");
@@ -52,11 +58,10 @@ namespace Hexagonal_Chess
                 FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
 
                 //local
-                //board.updateGameMode();
+                board.updateGameMode();
 
 
-                //Swap Screens
-                MDIParent.swapScreen("Board");
+
             }
         }
 

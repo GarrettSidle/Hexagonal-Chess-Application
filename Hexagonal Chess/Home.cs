@@ -52,7 +52,7 @@ namespace Hexagonal_Chess
 
                 FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
                 //local
-                //board.updateGameMode();
+                board.updateGameMode();
 
 
 

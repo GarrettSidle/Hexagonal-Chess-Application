@@ -5,6 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Net.Sockets;
+using System.Reflection;
+using System.ComponentModel;
+using System.Data;
+using System.Windows;
+using Hexagonal_Chess.Properties;
 
 namespace Hexagonal_Chess
 {
@@ -23,6 +29,14 @@ namespace Hexagonal_Chess
         public static bool gameFound = false;
 
         public static string IP;
+
+
+        public static BackgroundWorker MessageReceiver = new BackgroundWorker();
+
+        public static TcpListener server = null;
+        public static TcpClient client;
+
+        public static Socket sock;
 
         public static Dictionary<char, string> pieceChars = new Dictionary<char, string>()
                 {

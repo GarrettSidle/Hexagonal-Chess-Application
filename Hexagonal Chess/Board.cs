@@ -42,13 +42,6 @@ namespace Hexagonal_Chess
         private List<PictureBox> MovementButtons = new List<PictureBox>();
 
 
-        //private BackgroundWorker MessageReceiver = new BackgroundWorker();
-
-        //private TcpListener server = null;
-        //private TcpClient client;
-
-        //private Socket sock;
-
         public FrmBoard()
         {
             InitializeComponent();
@@ -85,69 +78,71 @@ namespace Hexagonal_Chess
             }
         }
 
-        //public void updateGameMode()
-        //{
-        //    //if we are the host
-        //    if (Utils.userMode == 1)
-        //    {
-        //        MessageReceiver.DoWork += MessageReceiver_DoWork;
+        public void updateGameMode()
+        {
+            //if we are the host
+            if (Utils.userMode == 1)
+            {
+                MessageReceiver.DoWork += MessageReceiver_DoWork;
 
-        //        server = new TcpListener(System.Net.IPAddress.Any, 5732);
-        //        server.Start();
-        //        sock = server.AcceptSocket();
-        //    }
-        //    else if (Utils.userMode == 2)
-        //    {
-        //        try
-        //        {
-        //            client = new TcpClient(Utils.IP, 5732);
-        //            sock = client.Client;
-        //            MessageReceiver.RunWorkerAsync();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show(ex.Message);
-        //            Close();
-        //        }
-        //    }
-        //}
+                server = new TcpListener(System.Net.IPAddress.Any, 5732);
+                server.Start();
+                sock = server.AcceptSocket();
+            }
+            else if (Utils.userMode == 2)
+            {
+                try
+                {
+                    client = new TcpClient(Utils.IP, 5732);
+                    sock = client.Client;
+                    MessageReceiver.RunWorkerAsync();
 
-        //private void MessageReceiver_DoWork(object sender, DoWorkEventArgs e)
-        //{
-        //    ReceiveMove();
-        //}
+                    //Swap Screens
+                    MDIParent.swapScreen("Board");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
 
-        //private void ReceiveMove()
-        //{
-        //    byte[] buffer = new byte[4];
-        //    sock.Receive(buffer);
+        private void MessageReceiver_DoWork(object sender, DoWorkEventArgs e)
+        {
+            ReceiveMove();
+        }
 
-        //    int atkPieceCol = buffer[0];
-        //    int atkPieceRow = buffer[1];
+        private void ReceiveMove()
+        {
+            byte[] buffer = new byte[4];
+            sock.Receive(buffer);
 
-        //    int capturedCol = buffer[2];
-        //    int capturedRow = buffer[3];
+            int atkPieceCol = buffer[0];
+            int atkPieceRow = buffer[1];
 
-        //    Piece movingPiece = board.gameBoard[atkPieceCol][atkPieceRow];
+            int capturedCol = buffer[2];
+            int capturedRow = buffer[3];
 
-        //    Piece capturedPiece = board.gameBoard[capturedCol][capturedRow];
+            Piece movingPiece = board.gameBoard[atkPieceCol][atkPieceRow];
 
-        //    Move move = new Move(movingPiece, new LocNotation(capturedCol, capturedRow), capturedPiece != null);
+            Piece capturedPiece = board.gameBoard[capturedCol][capturedRow];
 
-        //    makeMove(move, board, boardPieces , boardNodes, (FrmBoard)MDIParent.getScreen("Board"));
-        //}
+            Move move = new Move(movingPiece, new LocNotation(capturedCol, capturedRow), capturedPiece != null, false);
 
-        //private void SendMove(Move move)
-        //{
-        //    byte[] datas = { (byte)move.piece.locNotation.col, (byte)move.piece.locNotation.row, (byte)move.endLocation.col, (byte)move.endLocation.row };
-        //    sock.Send(datas);
-        //    MessageReceiver.DoWork += MessageReceiver_DoWork;
-        //    if (!MessageReceiver.IsBusy)
-        //    {
-        //        MessageReceiver.RunWorkerAsync();
-        //    }
-        //    board.swapTurns();
-        //}
+            makeMove(move, board, boardPieces, boardNodes, (FrmBoard)MDIParent.getScreen("Board"));
+        }
+
+        private void SendMove(Move move)
+        {
+            byte[] datas = { (byte)move.piece.locNotation.col, (byte)move.piece.locNotation.row, (byte)move.endLocation.col, (byte)move.endLocation.row };
+            sock.Send(datas);
+            MessageReceiver.DoWork += MessageReceiver_DoWork;
+            if (!MessageReceiver.IsBusy)
+            {
+                MessageReceiver.RunWorkerAsync();
+            }
+            board.swapTurns();
+        }
 
 
 

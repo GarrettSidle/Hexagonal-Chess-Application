@@ -305,142 +305,7 @@ namespace Hexagonal_Chess
             return outputMoves;
         }
 
-        private static List<Move> FindPawnMoves(Piece piece)
-        {
-            List<Move> outputMoves = new List<Move>();
-
-            //Horizontals
-            int[][] whitePawnDisplacers = new int[][] {
-                new int[2] { -1, 0 }, //up and left
-                new int[2] { 1, 1 } //up and right
-            };
-            int[][] blackPawnDisplacers = new int[][] {
-                new int[2] { -1, -1 }, //down and left
-                new int[2] {  1, 0 } //down and right
-            };
-
-            //Get the location of the piece we are moving
-            int col = piece.locNotation.col;
-            int row = piece.locNotation.row;
-
-            LocNotation tempLocation;
-
-            Piece selectedPiece;
-
-            int[][] displacements = piece.isWhite ? whitePawnDisplacers : blackPawnDisplacers;
-
-            LocNotation enPassantSquare = null;
-
-            //if there is a previous move
-            if (board.prevMove != null)
-            {
-                //if the previous move was a pawn double move
-                if (Math.Abs(board.prevMove.piece.locNotation.col - board.prevMove.endLocation.col) == 2)
-                {
-                    //find the square between your moves
-                    enPassantSquare = new LocNotation(board.prevMove.piece.isWhite ? board.prevMove.endLocation.col - 1  : board.prevMove.endLocation.col + 1 , board.prevMove.endLocation.row);
-                }
-            }
-
-
-
-            for (int i = 0; i < displacements.Length; i++)
-            {
-                //calculate the new position using the displacements
-                tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
-
-                //offset the position 
-                //tempLocation = offsetRightBoard(tempLocation);
-
-                if(tempLocation == enPassantSquare)
-                {
-                    outputMoves.Add(new Move(piece, tempLocation, true, true));
-                }
-
-                try
-                {
-                    //get the piece at the next square
-                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
-                }
-                catch (Exception)
-                {
-                    //we have moved outside the bounds of the board
-                    continue;
-                }
-
-                //if the square is empty
-                if (selectedPiece == null)
-                {
-                    //look at the next displacement
-                    continue;
-                }
-                //if the pieces are not the same color
-                else if (selectedPiece.isWhite != piece.isWhite)
-                {
-                    //add it as a potential move 
-                    outputMoves.Add(new Move(piece, tempLocation, true, false));
-                }
-                //Otherwise we are looking at one of our own pieces
-            }
-
-
-            //Look one square ahead
-            tempLocation = new LocNotation(col, row + (piece.isWhite ? 1 : -1));
-
-            //offset the position 
-            //tempLocation = offsetRightBoard(tempLocation);
-
-            try
-            {
-                //get the piece at the next square
-                selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
-            }
-            catch (Exception)
-            {
-                //we have moved outside the bounds of the board
-                return outputMoves;
-            }
-
-            //If space is not empty
-            if (!(selectedPiece == null))
-            {
-                //finish the function becuase there is no reason to look 2 squares ahead
-                return outputMoves;
-            }
-            //if the space is empty, add the move
-            outputMoves.Add(new Move(piece, tempLocation, false, false));
-
-            //If the piece is on a starting square
-            if (isStartingPawn(piece))
-            {
-                //Get the square two spaces ahead
-                tempLocation = new LocNotation(col, row + (piece.isWhite ? 2 : -2));
-
-                //offset the position 
-                //tempLocation = offsetRightBoard(tempLocation);
-
-                try
-                {
-                    //get the piece at the square
-                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
-                }
-                catch (Exception)
-                {
-                    //we have moved outside the bounds of the board
-                    return outputMoves;
-                }
-
-                //if the spot is empty
-                if (selectedPiece == null)
-                {
-                    //add the move
-                    outputMoves.Add(new Move(piece, tempLocation, false, false));
-                }
-            }
-
-
-            return outputMoves;
-        }
+      
 
 
         private static bool isStartingPawn(Piece piece)
@@ -542,5 +407,141 @@ namespace Hexagonal_Chess
             }
         }
 
+
+        private static List<Move> FindPawnMoves(Piece piece)
+        {
+            List<Move> outputMoves = new List<Move>();
+
+            //Horizontals
+            int[][] whitePawnDisplacers = new int[][] {
+                new int[2] { -1, 0 }, //up and left
+                new int[2] { 1, 1 } //up and right
+            };
+            int[][] blackPawnDisplacers = new int[][] {
+                new int[2] { -1, -1 }, //down and left
+                new int[2] {  1, 0 } //down and right
+            };
+            //select the corret displacement
+            int[][] displacements = piece.isWhite ? whitePawnDisplacers : blackPawnDisplacers;
+
+
+
+
+            LocNotation enPassantSquare = null;
+
+            //if there is a previous move
+            if (board.prevMove != null)
+            {
+                //if the previous move was a pawn double move
+                if (Math.Abs(board.prevMove.piece.locNotation.col - board.prevMove.endLocation.col) == 2)
+                {
+                    //find the square between your moves
+                    enPassantSquare = new LocNotation(board.prevMove.piece.isWhite ? board.prevMove.endLocation.col - 1 : board.prevMove.endLocation.col + 1, board.prevMove.endLocation.row);
+                }
+            }
+
+            //Get the location of the piece we are moving
+            int col = piece.locNotation.col;
+            int row = piece.locNotation.row;
+
+            Piece selectedPiece;
+            LocNotation tempLocation;
+            for (int i = 0; i < displacements.Length; i++)
+            {
+                //calculate the new position using the displacements
+                tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
+
+                //offset the position 
+                //tempLocation = offsetRightBoard(tempLocation);
+
+                if (tempLocation == enPassantSquare)
+                {
+                    outputMoves.Add(new Move(piece, tempLocation, true, true));
+                }
+
+                try
+                {
+                    //get the piece at the next square
+                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+                }
+                catch (Exception)
+                {
+                    //we have moved outside the bounds of the board
+                    continue;
+                }
+
+                //if the square is empty
+                if (selectedPiece == null)
+                {
+                    //look at the next displacement
+                    continue;
+                }
+                //if the pieces are not the same color
+                else if (selectedPiece.isWhite != piece.isWhite)
+                {
+                    //add it as a potential move 
+                    outputMoves.Add(new Move(piece, tempLocation, true, false));
+                }
+                //Otherwise we are looking at one of our own pieces
+            }
+
+
+            //Look one square ahead
+            tempLocation = new LocNotation(col, row + (piece.isWhite ? 1 : -1));
+
+            //offset the position 
+            //tempLocation = offsetRightBoard(tempLocation);
+
+            try
+            {
+                //get the piece at the next square
+                selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+            }
+            catch (Exception)
+            {
+                //we have moved outside the bounds of the board
+                return outputMoves;
+            }
+
+            //If space is not empty
+            if (!(selectedPiece == null))
+            {
+                //finish the function becuase there is no reason to look 2 squares ahead
+                return outputMoves;
+            }
+            //if the space is empty, add the move
+            outputMoves.Add(new Move(piece, tempLocation, false, false));
+
+            //If the piece is on a starting square
+            if (isStartingPawn(piece))
+            {
+                //Get the square two spaces ahead
+                tempLocation = new LocNotation(col, row + (piece.isWhite ? 2 : -2));
+
+                //offset the position 
+                //tempLocation = offsetRightBoard(tempLocation);
+
+                try
+                {
+                    //get the piece at the square
+                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+                }
+                catch (Exception)
+                {
+                    //we have moved outside the bounds of the board
+                    return outputMoves;
+                }
+
+                //if the spot is empty
+                if (selectedPiece == null)
+                {
+                    //add the move
+                    outputMoves.Add(new Move(piece, tempLocation, false, false));
+                }
+            }
+
+
+            return outputMoves;
+        }
     }
 }
