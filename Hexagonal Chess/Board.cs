@@ -40,6 +40,8 @@ namespace Hexagonal_Chess
         private IDictionary<string, PictureBox> boardPieces = new Dictionary<string, PictureBox>();
 
         private List<PictureBox> MovementButtons = new List<PictureBox>();
+        private List<PictureBox> CaptureButtons = new List<PictureBox>();
+
 
 
         public FrmBoard()
@@ -47,6 +49,7 @@ namespace Hexagonal_Chess
             InitializeComponent();
             buildBoard();
             CreateMovementButtons();
+            CreateCaptureButtons();
 
 
         }
@@ -76,6 +79,34 @@ namespace Hexagonal_Chess
 
                 tempImage.Visible = false;
             }
+        }
+
+        private void CreateCaptureButtons()
+        {
+            PictureBox tempImage;
+            //find the size of the dot based on the hexagon
+            int size = (int)Math.Round(hexRadius * 1.0);
+            for (int i = 0; i < 12; i++)
+            {
+                tempImage = new PictureBox();
+                tempImage.Size = new Size(size, size);
+                tempImage.Location = new Point(0, 0);
+                tempImage.Name = "MovementButton " + i;
+                tempImage.BackColor = Color.Transparent;
+                tempImage.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                //assign the image based on the move type
+                tempImage.Image = Resources.AvailableTake;
+
+                this.pnlGame.Controls.Add(tempImage);
+
+                //add it to the List for later removal
+                CaptureButtons.Add(tempImage);
+                tempImage.BringToFront();
+
+                tempImage.Visible = false;
+            }
+
         }
 
         public void updateGameMode()
@@ -374,6 +405,11 @@ namespace Hexagonal_Chess
                 image.Visible = false;
                 RemoveEvent(image, "EventClick");
             }
+            foreach (PictureBox image in CaptureButtons)
+            {
+                image.Visible = false;
+                RemoveEvent(image, "EventClick");
+            }
         }
 
         // Remove all event handlers from the control's named event.
@@ -409,6 +445,7 @@ namespace Hexagonal_Chess
 
 
             Point tempLocation;
+            int captureCount = 0;
 
             for (int i = 0; i < availableMoves.Count; i++)
             {
@@ -422,10 +459,19 @@ namespace Hexagonal_Chess
                 //Get the location of the hexagon on the screen
                 tempLocation = boardNodes[tempNotation.notation].location;
 
-                PictureBox tempImage = MovementButtons[i];
+                PictureBox tempImage;
+
+                if (move.isCapture)
+                {
+                    tempImage = CaptureButtons[captureCount];
+                    captureCount++;
+                }
+                else
+                {
+                    tempImage = MovementButtons[i];
+                }
 
                 //place movement buttons
-                tempImage.Image = move.isCapture ? Properties.Resources.AvailableTake : Properties.Resources.AvailableMove;
                 tempImage.Click += (sender, EventArgs) => { Move_Click(sender, EventArgs, move); };
                 tempImage.Location = new Point(tempLocation.X - tempImage.Width / 2, tempLocation.Y - tempImage.Height / 2);
                 tempImage.Visible = true;
