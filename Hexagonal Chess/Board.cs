@@ -85,18 +85,15 @@ namespace Hexagonal_Chess
         {
             PictureBox tempImage;
             //find the size of the dot based on the hexagon
-            int size = (int)Math.Round(hexRadius * 1.0);
+            int size = (int)Math.Round(hexRadius * .65);
             for (int i = 0; i < 12; i++)
             {
                 tempImage = new PictureBox();
                 tempImage.Size = new Size(size, size);
                 tempImage.Location = new Point(0, 0);
                 tempImage.Name = "MovementButton " + i;
-                tempImage.BackColor = Color.Transparent;
+                tempImage.BackColor = Color.Black;
                 tempImage.SizeMode = PictureBoxSizeMode.StretchImage;
-
-                //assign the image based on the move type
-                tempImage.Image = Resources.AvailableTake;
 
                 this.pnlGame.Controls.Add(tempImage);
 
