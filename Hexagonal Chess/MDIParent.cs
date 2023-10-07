@@ -47,11 +47,14 @@ namespace Hexagonal_Chess
             Utils.board = new Utils.Board();
 
             //close the existing board form
-            Form frmBoard = getScreen("Board");
-            frmBoard.Close();
+            FrmBoard frmBoard = (FrmBoard) getScreen("Board");
+            frmBoard.Dispose();
+
+            frmBoard = new FrmBoard();
 
             //create a new board form 
-            screens["Board"] = new FrmBoard();
+            screens["Board"] = frmBoard;
+            frmBoard.updateGameMode();
         }
 
         public static Form getScreen(string screenName)

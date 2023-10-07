@@ -308,7 +308,7 @@ namespace Hexagonal_Chess
             //input the custom values
             colLabel.Text = text;
             colLabel.Location = new Point(x,y);
-            colLabel.Width = 50;
+            colLabel.Width = 30;
             //add it to the board
             pnlGame.Controls.Add(colLabel);
         }
