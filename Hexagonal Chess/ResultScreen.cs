@@ -17,7 +17,7 @@ namespace Hexagonal_Chess
 
         public void setWinner(bool whiteIsWinner, int numOfMoves)
         { 
-
+            //set the winner text
             string tempWinner = whiteIsWinner ? "White" : "Black";
 
             //Find the semi colon in the text
@@ -57,11 +57,6 @@ namespace Hexagonal_Chess
 
             //Swap Screens
             MDIParent.swapScreen("Home");
-        }
-
-        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }

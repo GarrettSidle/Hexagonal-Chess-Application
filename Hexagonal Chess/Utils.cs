@@ -16,38 +16,34 @@ namespace Hexagonal_Chess
 {
     internal class Utils
     {
-        // 0 = Glinski,
-        // 1 = McCooey,
-        // 2 = Hexofen
-        public static int gameType = 2;
+        //Game Varient
+        public static int gameVarient = 0;        // 0 = Glinski, 1 = McCooey, 2 = Hexofen
 
-        // 0 = Single Player
-        // 1 = Host
-        // 2 = Client
-        public static int userMode = 0;
+        //User modes
+        public static int userMode = 0;        // 0 = Single Player,  1 = Host,  2 = Client
 
+        //network flags
         public static bool gameFound = false;
-
         public static string IP;
 
-
+        // Networking Components
         public static BackgroundWorker MessageReceiver = new BackgroundWorker();
-
         public static TcpListener server = null;
         public static TcpClient client;
-
         public static Socket sock;
 
+        // Unicode chess symbols for pieces
         public static Dictionary<char, string> pieceChars = new Dictionary<char, string>()
-                {
-                     { 'P', "♙"},
-                     { 'K', "♔"},
-                     { 'Q', "♕"},
-                     { 'R', "♖"},
-                     { 'B', "♗"},
-                     { 'N', "♘"},
-                };
+        { 
+            { 'P', "♙" }, // Pawn
+            { 'K', "♔" }, // King
+            { 'Q', "♕" }, // Queen
+            { 'R', "♖" }, // Rook
+            { 'B', "♗" }, // Bishop
+            { 'N', "♘" }  // Knight
+        };
 
+        // Current Game Board object
         public static Board board = new Board();
 
         public class Board
@@ -59,15 +55,15 @@ namespace Hexagonal_Chess
 
             public Board()
             {
+                //defualt state of a new board
                 this.whiteToPlay = true;
-
-                //evaluation for the starting board board
-                //negative evalution represents black, and postive white
                 this.evaluation = 0;
 
+                //add pieces based on the varient
                 this.setBoard();
             }
 
+            // Set up the initial game board based on the selected variant
             public void setBoard()
             {
                 List<char>[] glinskiBoard = new List<char>[] {
@@ -113,7 +109,8 @@ namespace Hexagonal_Chess
                 };
 
                 List<char>[] tempBoard;
-                switch (gameType)
+                //grab the correct board based on the game varient
+                switch (gameVarient)
                 {
                     case 0:
                         tempBoard = glinskiBoard;
@@ -129,35 +126,22 @@ namespace Hexagonal_Chess
                 }
 
 
-
-                //tempBoard = new List<char>[] {
-                //    new List<char> { ' ', ' ', 'P', ' ', ' ', ' ' },
-                //    new List<char> { ' ', ' ', ' ', 'p', ' ', ' ', ' ' } ,
-                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char> { ' ', ' ', ' ', ' ', ' ', 'R', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char>      { ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'R', ' ', ' ' },
-                //    new List<char>           { ' ', 'N', ' ', ' ', 'N', ' ', ' ', ' ', ' ' },
-                //    new List<char>                { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                //    new List<char>                     { ' ', ' ', ' ', ' ', ' ', ' ', ' ' } ,
-                //    new List<char>                          { ' ', ' ', ' ', ' ', ' ', ' ' }
-                //};
-
-
-
-
                 List<Piece>[] outputBoard = new List<Piece>[tempBoard.Length];
 
+                //for every col
                 for (int col = 0; col < tempBoard.Length; col++)
                 {
+                    //add a new row
                     outputBoard[col] = new List<Piece>();
+                    //for every row
                     for (int row = 0; row < tempBoard[col].Count; row++)
                     {
+                        //create either an empty hexagon
                         if (tempBoard[col][row] == ' ')
                         {
                             outputBoard[col].Add(null);
                         }
+                        //or create and append a piece
                         else
                         {
                             Piece tempPiece = new Piece(new LocNotation(col, row), tempBoard[col][row], char.IsUpper(tempBoard[col][row]));
@@ -237,7 +221,7 @@ namespace Hexagonal_Chess
                 this.whiteToPlay = !whiteToPlay;
             }
 
-         
+
         }
 
         public class Piece
@@ -251,7 +235,7 @@ namespace Hexagonal_Chess
                 this.locNotation = locNotation;
                 this.pieceType = char.ToUpper(pieceType);
                 this.isWhite = isWhite;
-
+                // add the correct value
                 switch (char.ToUpper(pieceType))
                 {
                     case 'P':
@@ -288,6 +272,7 @@ namespace Hexagonal_Chess
         {
             public Piece piece;
             public LocNotation endLocation;
+            public LocNotation startLocation;
             public readonly string moveNotation;
             public bool isCapture;
             public bool enPassent;
@@ -297,13 +282,15 @@ namespace Hexagonal_Chess
                 this.piece = piece;
                 this.endLocation = endLocation;
                 this.enPassent = enPassant;
+                this.startLocation = piece.locNotation;
 
                 //build the chess move notation
-                this.moveNotation = piece.pieceType + (isCapture?"x":"") + endLocation.notation;
+                this.moveNotation = piece.pieceType + (isCapture ? "x" : "") + endLocation.notation;
                 this.isCapture = isCapture;
             }
         }
 
+        // Represents location on the board in chess notation (e.g., A1, B2)
         public class LocNotation
         {
             public int col;
@@ -328,6 +315,7 @@ namespace Hexagonal_Chess
                 this.notation = ((char)(this.col + 65)).ToString() + (row + 1).ToString();
             }
         }
+        // Represents a hexagonal shape for GUI rendering
         public class Hexagon
         {
             public Point location;
@@ -340,26 +328,26 @@ namespace Hexagonal_Chess
                 this.location = location;
                 this.color = color;
                 this.col = col;
-                this.row=row;
+                this.row = row;
             }
 
             public static void DrawHexagon(Hexagon hexagon, PaintEventArgs e, int hexRadius)
             {
                 var graphics = e.Graphics;
 
-                //Get the middle of the panel
-
                 var shape = new PointF[6];
 
 
-                //Create 6 points
+                //Create the 6 points
                 for (int a = 0; a < 6; a++)
                 {
+                    //calculate each point, each hexRadius distance away from the center
                     shape[a] = new PointF(
                         hexagon.location.X + hexRadius * (float)Math.Cos(a * 60 * Math.PI / 180f),
                         hexagon.location.Y + hexRadius * (float)Math.Sin(a * 60 * Math.PI / 180f));
                 }
 
+                //color in the shape
                 graphics.FillPolygon(new SolidBrush(hexagon.color), shape);
             }
 

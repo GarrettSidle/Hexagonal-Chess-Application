@@ -35,7 +35,9 @@ namespace Hexagonal_Chess
 
         public static void swapScreen(string screenName)
         {
+            //get the new the screen
             screens.TryGetValue(screenName, out var screen);
+            //set it as the new active screen
             screen.MdiParent = mdiParent;
             screen.Dock = DockStyle.Fill;
             screen.Show();
@@ -59,6 +61,7 @@ namespace Hexagonal_Chess
 
         public static Form getScreen(string screenName)
         {
+            //get the form object based on the screen name
             screens.TryGetValue(screenName, out var screen);
             return screen;
         }

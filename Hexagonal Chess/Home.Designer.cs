@@ -30,25 +30,20 @@
         {
             this.lblSubitle = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
-            this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
-            this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
-            this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
-            this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             this.btnSinglePlayer = new Hexagonal_Chess.CustomButton();
             this.layoutHomeButtons = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutLowerButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnHost = new Hexagonal_Chess.CustomButton();
             this.btnJoin = new Hexagonal_Chess.CustomButton();
             this.pnlTitle = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutUpperButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnSettings = new Hexagonal_Chess.CustomButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlSelection = new System.Windows.Forms.Panel();
             this.layoutHomeButtons.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
+            this.layoutLowerButtons.SuspendLayout();
             this.pnlTitle.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.layoutUpperButtons.SuspendLayout();
+            this.pnlSelection.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblSubitle
@@ -61,7 +56,6 @@
             this.lblSubitle.Size = new System.Drawing.Size(212, 35);
             this.lblSubitle.TabIndex = 3;
             this.lblSubitle.Text = "Hexagonal Chess";
-            this.lblSubitle.Click += new System.EventHandler(this.lblSubitle_Click);
             // 
             // lblTitle
             // 
@@ -74,42 +68,6 @@
             this.lblTitle.Size = new System.Drawing.Size(389, 174);
             this.lblTitle.TabIndex = 2;
             this.lblTitle.Text = "cHEX";
-            // 
-            // BottomToolStripPanel
-            // 
-            this.BottomToolStripPanel.Location = new System.Drawing.Point(0, 0);
-            this.BottomToolStripPanel.Name = "BottomToolStripPanel";
-            this.BottomToolStripPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.BottomToolStripPanel.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.BottomToolStripPanel.Size = new System.Drawing.Size(0, 0);
-            // 
-            // TopToolStripPanel
-            // 
-            this.TopToolStripPanel.Location = new System.Drawing.Point(0, 0);
-            this.TopToolStripPanel.Name = "TopToolStripPanel";
-            this.TopToolStripPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.TopToolStripPanel.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.TopToolStripPanel.Size = new System.Drawing.Size(0, 0);
-            // 
-            // RightToolStripPanel
-            // 
-            this.RightToolStripPanel.Location = new System.Drawing.Point(0, 0);
-            this.RightToolStripPanel.Name = "RightToolStripPanel";
-            this.RightToolStripPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.RightToolStripPanel.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.RightToolStripPanel.Size = new System.Drawing.Size(0, 0);
-            // 
-            // LeftToolStripPanel
-            // 
-            this.LeftToolStripPanel.Location = new System.Drawing.Point(0, 0);
-            this.LeftToolStripPanel.Name = "LeftToolStripPanel";
-            this.LeftToolStripPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.LeftToolStripPanel.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.LeftToolStripPanel.Size = new System.Drawing.Size(0, 0);
-            // 
-            // ContentPanel
-            // 
-            this.ContentPanel.Size = new System.Drawing.Size(150, 150);
             // 
             // btnSinglePlayer
             // 
@@ -138,9 +96,9 @@
             // 
             this.layoutHomeButtons.ColumnCount = 1;
             this.layoutHomeButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.layoutHomeButtons.Controls.Add(this.tableLayoutPanel3, 0, 2);
+            this.layoutHomeButtons.Controls.Add(this.layoutLowerButtons, 0, 2);
             this.layoutHomeButtons.Controls.Add(this.pnlTitle, 0, 0);
-            this.layoutHomeButtons.Controls.Add(this.tableLayoutPanel1, 0, 1);
+            this.layoutHomeButtons.Controls.Add(this.layoutUpperButtons, 0, 1);
             this.layoutHomeButtons.Location = new System.Drawing.Point(0, -31);
             this.layoutHomeButtons.Name = "layoutHomeButtons";
             this.layoutHomeButtons.RowCount = 3;
@@ -150,20 +108,20 @@
             this.layoutHomeButtons.Size = new System.Drawing.Size(808, 558);
             this.layoutHomeButtons.TabIndex = 9;
             // 
-            // tableLayoutPanel3
+            // layoutLowerButtons
             // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.btnHost, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.btnJoin, 1, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 375);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(802, 180);
-            this.tableLayoutPanel3.TabIndex = 2;
+            this.layoutLowerButtons.ColumnCount = 2;
+            this.layoutLowerButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutLowerButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutLowerButtons.Controls.Add(this.btnHost, 0, 0);
+            this.layoutLowerButtons.Controls.Add(this.btnJoin, 1, 0);
+            this.layoutLowerButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutLowerButtons.Location = new System.Drawing.Point(3, 375);
+            this.layoutLowerButtons.Name = "layoutLowerButtons";
+            this.layoutLowerButtons.RowCount = 1;
+            this.layoutLowerButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutLowerButtons.Size = new System.Drawing.Size(802, 180);
+            this.layoutLowerButtons.TabIndex = 2;
             // 
             // btnHost
             // 
@@ -223,20 +181,20 @@
             this.pnlTitle.Size = new System.Drawing.Size(402, 169);
             this.pnlTitle.TabIndex = 10;
             // 
-            // tableLayoutPanel1
+            // layoutUpperButtons
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.btnSettings, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.btnSinglePlayer, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 189);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(802, 180);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.layoutUpperButtons.ColumnCount = 2;
+            this.layoutUpperButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutUpperButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutUpperButtons.Controls.Add(this.btnSettings, 1, 0);
+            this.layoutUpperButtons.Controls.Add(this.btnSinglePlayer, 0, 0);
+            this.layoutUpperButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutUpperButtons.Location = new System.Drawing.Point(3, 189);
+            this.layoutUpperButtons.Name = "layoutUpperButtons";
+            this.layoutUpperButtons.RowCount = 1;
+            this.layoutUpperButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutUpperButtons.Size = new System.Drawing.Size(802, 180);
+            this.layoutUpperButtons.TabIndex = 0;
             // 
             // btnSettings
             // 
@@ -261,15 +219,15 @@
             this.btnSettings.UseVisualStyleBackColor = false;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
-            // panel1
+            // pnlSelection
             // 
-            this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.panel1.BackColor = System.Drawing.Color.Transparent;
-            this.panel1.Controls.Add(this.layoutHomeButtons);
-            this.panel1.Location = new System.Drawing.Point(235, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(808, 527);
-            this.panel1.TabIndex = 11;
+            this.pnlSelection.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pnlSelection.BackColor = System.Drawing.Color.Transparent;
+            this.pnlSelection.Controls.Add(this.layoutHomeButtons);
+            this.pnlSelection.Location = new System.Drawing.Point(235, 12);
+            this.pnlSelection.Name = "pnlSelection";
+            this.pnlSelection.Size = new System.Drawing.Size(808, 527);
+            this.pnlSelection.TabIndex = 11;
             // 
             // frmHome
             // 
@@ -280,19 +238,18 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1219, 665);
             this.ControlBox = false;
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlSelection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmHome";
             this.Load += new System.EventHandler(this.Home_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmHome_Paint);
             this.layoutHomeButtons.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
+            this.layoutLowerButtons.ResumeLayout(false);
             this.pnlTitle.ResumeLayout(false);
             this.pnlTitle.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
+            this.layoutUpperButtons.ResumeLayout(false);
+            this.pnlSelection.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -300,20 +257,15 @@
         #endregion
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Label lblSubitle;
-        private System.Windows.Forms.ToolStripPanel BottomToolStripPanel;
-        private System.Windows.Forms.ToolStripPanel TopToolStripPanel;
-        private System.Windows.Forms.ToolStripPanel RightToolStripPanel;
-        private System.Windows.Forms.ToolStripPanel LeftToolStripPanel;
-        private System.Windows.Forms.ToolStripContentPanel ContentPanel;
         private CustomButton btnSinglePlayer;
         private System.Windows.Forms.TableLayoutPanel layoutHomeButtons;
         private CustomButton btnSettings;
         private CustomButton btnJoin;
         private CustomButton btnHost;
         private System.Windows.Forms.Panel pnlTitle;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TableLayoutPanel layoutLowerButtons;
+        private System.Windows.Forms.TableLayoutPanel layoutUpperButtons;
+        private System.Windows.Forms.Panel pnlSelection;
     }
 }
 

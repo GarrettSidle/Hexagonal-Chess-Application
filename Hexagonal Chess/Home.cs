@@ -22,11 +22,8 @@ namespace Hexagonal_Chess
 
         private void Home_Load(object sender, EventArgs e)
         {
-            lblSubitle.BackColor = Color.Transparent;
-            lblTitle.BackColor = Color.Transparent;
-            btnSettings.BackColor = Color.Transparent;
-
-            panel1.Location = new Point((this.Width - panel1.Width) / 2, (this.Height - panel1.Height) / 2 - 50);
+            //center the selection panel
+            pnlSelection.Location = new Point((this.Width - pnlSelection.Width) / 2, (this.Height - pnlSelection.Height) / 2 - 50);
         }
 
         private void btnSinglePlayer_Click(object sender, EventArgs e)
@@ -35,7 +32,7 @@ namespace Hexagonal_Chess
             Utils.userMode = 0;
 
             FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
-            //local
+            //regenerate the board
             board.updateGameMode();
 
             //Swap Screens
@@ -55,10 +52,8 @@ namespace Hexagonal_Chess
                 Utils.userMode = 1;
 
                 FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
-                //local
+                //regenerate the board
                 board.updateGameMode();
-
-
 
                 //Swap Screens
                 MDIParent.swapScreen("Board");
@@ -71,23 +66,16 @@ namespace Hexagonal_Chess
             //set the game type to client
             Utils.userMode = 2;
 
+            //open the connection form
             FrmConnection frmConnection = new FrmConnection();
             frmConnection.ShowDialog();
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
+            //show to settigns form
             FrmSettings frmSettings = new FrmSettings();
             frmSettings.ShowDialog();
-        }
-
-        private void frmHome_Paint(object sender, PaintEventArgs e)
-        {
-        }
-
-        private void lblSubitle_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

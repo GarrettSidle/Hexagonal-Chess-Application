@@ -86,6 +86,7 @@ namespace Hexagonal_Chess
             //    }
             //}
 
+            //select the appropriate moves based on the piece type
             switch (piece.pieceType)
             {
                 case 'P':
@@ -121,50 +122,7 @@ namespace Hexagonal_Chess
         }
 
 
-        public static LocNotation offsetRightBoard(LocNotation origLocNotation)
-        {
-
-            LocNotation locNotation = new LocNotation(origLocNotation.col, origLocNotation.row);
-
-            //if the move is right of the centerline
-            if (locNotation.col > 5)
-            {
-                //shift the row down by the number of columns it is right of center
-                int newRow = locNotation.row + 5 - locNotation.col;
-                //if we are off the board, continue to the next
-                if (newRow >= 0)
-                {
-                    locNotation.setRow(newRow);
-                }
-            }
-            return locNotation;
-
-        }
-
-        private static int offsetRightBoard(int col, int row)
-        {
-
-
-            //if the move is right of the centerline
-            if (col > 5)
-            {
-
-                //shift the row down by the number of columns it is right of center
-                //int newRow = row - 1;
-                int newRow = row + 5 - col;
-                //if we are off the board, continue to the next
-                if (newRow >= 0)
-                {
-                    return newRow;
-                }
-            }
-            return row;
-
-        }
-
-
-
-
+        
         private static List<Move> FindDisplacement(Piece piece, int[][] displacements)
         {
             List<Move> outputMoves = new List<Move>();
@@ -176,7 +134,7 @@ namespace Hexagonal_Chess
 
             LocNotation tempLocation;
 
-            //This represents the square we are trying to move to 
+            //represents the square we are trying to move to 
             Piece selectedPiece;
 
             //For each potential move
@@ -187,6 +145,7 @@ namespace Hexagonal_Chess
 
                 //offset the position 
                 //LocNotation offsetLocation = offsetRightBoard(tempLocation);
+
                 LocNotation offsetLocation = tempLocation;
 
                 try
@@ -220,6 +179,7 @@ namespace Hexagonal_Chess
             return outputMoves;
         }
 
+        //used when calculating both horizontal and diaganal moves
         private static List<Move> FindStraightMoves(Piece piece, int[][] incrementors)
         {
             //Get the moves for each direction
@@ -236,7 +196,7 @@ namespace Hexagonal_Chess
             return outputMoves;
         }
 
-
+        //return the moves when looking in on specific direction
         private static List<Move> FindStraightLine(Piece piece, int colIncrement, int rowIncrement)
         {
 
@@ -250,7 +210,7 @@ namespace Hexagonal_Chess
 
             Piece selectedPiece;
 
-
+            //while we are still on the board, and haven't hit a piece
             while (moving)
             {
 
@@ -302,12 +262,13 @@ namespace Hexagonal_Chess
 
             }
 
+            //return the found moves
             return outputMoves;
         }
 
       
 
-
+        //calculates if a piece is standing on a startinng hex
         private static bool isStartingPawn(Piece piece)
         {
 
@@ -317,7 +278,7 @@ namespace Hexagonal_Chess
             //row = offsetRightBoard(col, row);
 
             // 0 = Glinski,
-            if (Utils.gameType == 0)
+            if (Utils.gameVarient == 0)
             {
                 if (piece.isWhite)
                 {
@@ -340,7 +301,7 @@ namespace Hexagonal_Chess
             }
 
             // 1 = McCooey,
-            if (Utils.gameType == 1)
+            if (Utils.gameVarient == 1)
             {
                 if (piece.isWhite)
                 {
@@ -364,7 +325,7 @@ namespace Hexagonal_Chess
             // 2 = Hexofen
             else
             {
-                Dictionary<int, int> whitePawns = new Dictionary<int, int>
+                Dictionary<int, int> whiteStartingPawns = new Dictionary<int, int>
                 {
                     { 0, 0 },
                     { 1, 0 },
@@ -379,7 +340,7 @@ namespace Hexagonal_Chess
                     { 10, 0 }
                 };
 
-                Dictionary<int, int> blackPawns = new Dictionary<int, int>
+                Dictionary<int, int> blackStartingPawns = new Dictionary<int, int>
                 {
                     { 0, 5 },
                     { 1, 6 },
@@ -394,15 +355,14 @@ namespace Hexagonal_Chess
                     { 10, 5 }
                 };
 
-                int[] search = new int[2] { col, row };
-
+                //return true, if the piece matches the preset array
                 if (piece.isWhite)
                 {
-                    return whitePawns[col] == row;
+                    return whiteStartingPawns[col] == row;
                 }
                 else //if piece is black
                 {
-                    return blackPawns[col] == row;
+                    return blackStartingPawns[col] == row;
                 }
             }
         }
@@ -412,7 +372,6 @@ namespace Hexagonal_Chess
         {
             List<Move> outputMoves = new List<Move>();
 
-            //Horizontals
             int[][] whitePawnDisplacers = new int[][] {
                 new int[2] { -1, 0 }, //up and left
                 new int[2] { 1, 1 } //up and right
@@ -424,39 +383,26 @@ namespace Hexagonal_Chess
             //select the corret displacement
             int[][] displacements = piece.isWhite ? whitePawnDisplacers : blackPawnDisplacers;
 
+            //find the en passent square
+            string enPassantSquareNotation = findEnPassentSquare();
 
-
-
-            LocNotation enPassantSquare = null;
-
-            //if there is a previous move
-            if (board.prevMove != null)
-            {
-                //if the previous move was a pawn double move
-                if (Math.Abs(board.prevMove.piece.locNotation.col - board.prevMove.endLocation.col) == 2)
-                {
-                    //find the square between your moves
-                    enPassantSquare = new LocNotation(board.prevMove.piece.isWhite ? board.prevMove.endLocation.col - 1 : board.prevMove.endLocation.col + 1, board.prevMove.endLocation.row);
-                }
-            }
-
-            //Get the location of the piece we are moving
-            int col = piece.locNotation.col;
-            int row = piece.locNotation.row;
 
             Piece selectedPiece;
             LocNotation tempLocation;
-            for (int i = 0; i < displacements.Length; i++)
+            foreach (int[] displacement in displacements)
             {
                 //calculate the new position using the displacements
-                tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
+                tempLocation = new LocNotation(piece.locNotation.col + displacement[0], piece.locNotation.row + displacement[1]);
 
                 //offset the position 
                 //tempLocation = offsetRightBoard(tempLocation);
-
-                if (tempLocation == enPassantSquare)
+                
+                //if we are looking at an en passent square
+                if (tempLocation.notation == enPassantSquareNotation)
                 {
+                    //add the move
                     outputMoves.Add(new Move(piece, tempLocation, true, true));
+                    continue;
                 }
 
                 try
@@ -487,7 +433,7 @@ namespace Hexagonal_Chess
 
 
             //Look one square ahead
-            tempLocation = new LocNotation(col, row + (piece.isWhite ? 1 : -1));
+            tempLocation = new LocNotation(piece.locNotation.col, piece.locNotation.row + (piece.isWhite ? 1 : -1));
 
             //offset the position 
             //tempLocation = offsetRightBoard(tempLocation);
@@ -516,7 +462,7 @@ namespace Hexagonal_Chess
             if (isStartingPawn(piece))
             {
                 //Get the square two spaces ahead
-                tempLocation = new LocNotation(col, row + (piece.isWhite ? 2 : -2));
+                tempLocation = new LocNotation(piece.locNotation.col, piece.locNotation.row + (piece.isWhite ? 2 : -2));
 
                 //offset the position 
                 //tempLocation = offsetRightBoard(tempLocation);
@@ -542,6 +488,65 @@ namespace Hexagonal_Chess
 
 
             return outputMoves;
+        }
+
+        private static string findEnPassentSquare()
+        {
+            //if there is a previous move
+            if (board.prevMove != null)
+            {
+                var temp = board.prevMove;  
+                //if the previous move was a pawn double move
+                if (Math.Abs(board.prevMove.startLocation.row - board.prevMove.endLocation.row) == 2 && board.prevMove.piece.pieceType == 'P')
+                {
+                    
+                    //find the square between your moves
+                    return new LocNotation(board.prevMove.endLocation.col, board.prevMove.piece.isWhite ? board.prevMove.endLocation.row - 1 : board.prevMove.endLocation.row+ 1).notation;
+                }
+            }
+            return null;
+        }
+
+
+        public static LocNotation offsetRightBoard(LocNotation origLocNotation)
+        {
+
+            LocNotation locNotation = new LocNotation(origLocNotation.col, origLocNotation.row);
+
+            //if the move is right of the centerline
+            if (locNotation.col > 5)
+            {
+                //shift the row down by the number of columns it is right of center
+                int newRow = locNotation.row + 5 - locNotation.col;
+                //if we are off the board, continue to the next
+                if (newRow >= 0)
+                {
+                    locNotation.setRow(newRow);
+                }
+            }
+            return locNotation;
+
+        }
+
+        private static int offsetRightBoard(int col, int row)
+        {
+
+
+            //if the move is right of the centerline
+            if (col > 5)
+            {
+
+                //shift the row down by the number of columns it is right of center
+                //int newRow = row - 1;
+                int newRow = row + 5 - col;
+                //if we are off the board, continue to the next
+                if (newRow >= 0)
+                {
+                    return newRow;
+                }
+            }
+            return row;
+
         }
     }
 }

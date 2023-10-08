@@ -29,23 +29,23 @@
         private void InitializeComponent()
         {
             this.layoutConnection = new System.Windows.Forms.TableLayoutPanel();
-            this.pnlIP = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnCancel = new Hexagonal_Chess.CustomButton();
             this.btnConnect = new Hexagonal_Chess.CustomButton();
-            this.txtIP = new System.Windows.Forms.TextBox();
+            this.pnlIPAddress = new System.Windows.Forms.Panel();
             this.lblGameMoves = new System.Windows.Forms.Label();
+            this.txtIP = new System.Windows.Forms.TextBox();
             this.layoutConnection.SuspendLayout();
-            this.pnlIP.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.layoutButtons.SuspendLayout();
+            this.pnlIPAddress.SuspendLayout();
             this.SuspendLayout();
             // 
             // layoutConnection
             // 
             this.layoutConnection.ColumnCount = 1;
             this.layoutConnection.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.layoutConnection.Controls.Add(this.tableLayoutPanel2, 0, 1);
-            this.layoutConnection.Controls.Add(this.pnlIP, 0, 0);
+            this.layoutConnection.Controls.Add(this.layoutButtons, 0, 1);
+            this.layoutConnection.Controls.Add(this.pnlIPAddress, 0, 0);
             this.layoutConnection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutConnection.Location = new System.Drawing.Point(0, 0);
             this.layoutConnection.Name = "layoutConnection";
@@ -55,31 +55,20 @@
             this.layoutConnection.Size = new System.Drawing.Size(800, 450);
             this.layoutConnection.TabIndex = 11;
             // 
-            // pnlIP
+            // layoutButtons
             // 
-            this.pnlIP.BackColor = System.Drawing.Color.Transparent;
-            this.pnlIP.Controls.Add(this.lblGameMoves);
-            this.pnlIP.Controls.Add(this.txtIP);
-            this.pnlIP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlIP.Location = new System.Drawing.Point(3, 3);
-            this.pnlIP.Name = "pnlIP";
-            this.pnlIP.Size = new System.Drawing.Size(794, 219);
-            this.pnlIP.TabIndex = 0;
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.btnCancel, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.btnConnect, 1, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 228);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(794, 219);
-            this.tableLayoutPanel2.TabIndex = 5;
+            this.layoutButtons.ColumnCount = 2;
+            this.layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutButtons.Controls.Add(this.btnCancel, 0, 0);
+            this.layoutButtons.Controls.Add(this.btnConnect, 1, 0);
+            this.layoutButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutButtons.Location = new System.Drawing.Point(3, 228);
+            this.layoutButtons.Name = "layoutButtons";
+            this.layoutButtons.RowCount = 1;
+            this.layoutButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutButtons.Size = new System.Drawing.Size(794, 219);
+            this.layoutButtons.TabIndex = 5;
             // 
             // btnCancel
             // 
@@ -125,13 +114,16 @@
             this.btnConnect.UseVisualStyleBackColor = false;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
-            // txtIP
+            // pnlIPAddress
             // 
-            this.txtIP.Font = new System.Drawing.Font("Microsoft YaHei", 20.25F);
-            this.txtIP.Location = new System.Drawing.Point(347, 76);
-            this.txtIP.Name = "txtIP";
-            this.txtIP.Size = new System.Drawing.Size(287, 43);
-            this.txtIP.TabIndex = 0;
+            this.pnlIPAddress.BackColor = System.Drawing.Color.Transparent;
+            this.pnlIPAddress.Controls.Add(this.lblGameMoves);
+            this.pnlIPAddress.Controls.Add(this.txtIP);
+            this.pnlIPAddress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlIPAddress.Location = new System.Drawing.Point(3, 3);
+            this.pnlIPAddress.Name = "pnlIPAddress";
+            this.pnlIPAddress.Size = new System.Drawing.Size(794, 219);
+            this.pnlIPAddress.TabIndex = 0;
             // 
             // lblGameMoves
             // 
@@ -144,6 +136,14 @@
             this.lblGameMoves.Text = "IP Address :";
             this.lblGameMoves.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // txtIP
+            // 
+            this.txtIP.Font = new System.Drawing.Font("Microsoft YaHei", 20.25F);
+            this.txtIP.Location = new System.Drawing.Point(347, 76);
+            this.txtIP.Name = "txtIP";
+            this.txtIP.Size = new System.Drawing.Size(287, 43);
+            this.txtIP.TabIndex = 0;
+            // 
             // FrmConnection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -155,17 +155,17 @@
             this.Name = "FrmConnection";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.layoutConnection.ResumeLayout(false);
-            this.pnlIP.ResumeLayout(false);
-            this.pnlIP.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
+            this.layoutButtons.ResumeLayout(false);
+            this.pnlIPAddress.ResumeLayout(false);
+            this.pnlIPAddress.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private System.Windows.Forms.TableLayoutPanel layoutConnection;
-        private System.Windows.Forms.Panel pnlIP;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Panel pnlIPAddress;
+        private System.Windows.Forms.TableLayoutPanel layoutButtons;
         private CustomButton btnCancel;
         private CustomButton btnConnect;
         private System.Windows.Forms.TextBox txtIP;

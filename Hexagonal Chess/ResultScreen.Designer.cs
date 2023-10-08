@@ -28,34 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutContent = new System.Windows.Forms.TableLayoutPanel();
             this.lblGameWinner = new System.Windows.Forms.Label();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnPlayAgain = new Hexagonal_Chess.CustomButton();
             this.btnHome = new Hexagonal_Chess.CustomButton();
             this.lblGameMoves = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.layoutContent.SuspendLayout();
+            this.layoutButtons.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // layoutContent
             // 
-            this.tableLayoutPanel1.BackColor = System.Drawing.Color.Transparent;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.lblGameWinner, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lblGameMoves, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(657, 492);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.layoutContent.BackColor = System.Drawing.Color.Transparent;
+            this.layoutContent.ColumnCount = 1;
+            this.layoutContent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutContent.Controls.Add(this.lblGameWinner, 0, 0);
+            this.layoutContent.Controls.Add(this.layoutButtons, 0, 2);
+            this.layoutContent.Controls.Add(this.lblGameMoves, 0, 1);
+            this.layoutContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutContent.Location = new System.Drawing.Point(0, 0);
+            this.layoutContent.Name = "layoutContent";
+            this.layoutContent.RowCount = 3;
+            this.layoutContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.layoutContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.layoutContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.layoutContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.layoutContent.Size = new System.Drawing.Size(657, 492);
+            this.layoutContent.TabIndex = 0;
             // 
             // lblGameWinner
             // 
@@ -72,21 +72,20 @@
             this.lblGameWinner.Text = "COLOR WINS!!!";
             this.lblGameWinner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tableLayoutPanel2
+            // layoutButtons
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.btnPlayAgain, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.btnHome, 1, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 346);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(651, 143);
-            this.tableLayoutPanel2.TabIndex = 4;
-            this.tableLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
+            this.layoutButtons.ColumnCount = 2;
+            this.layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutButtons.Controls.Add(this.btnPlayAgain, 0, 0);
+            this.layoutButtons.Controls.Add(this.btnHome, 1, 0);
+            this.layoutButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutButtons.Location = new System.Drawing.Point(3, 346);
+            this.layoutButtons.Name = "layoutButtons";
+            this.layoutButtons.RowCount = 1;
+            this.layoutButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutButtons.Size = new System.Drawing.Size(651, 143);
+            this.layoutButtons.TabIndex = 4;
             // 
             // btnPlayAgain
             // 
@@ -152,23 +151,23 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(657, 492);
             this.ControlBox = false;
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.layoutContent);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ResultScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
+            this.layoutContent.ResumeLayout(false);
+            this.layoutContent.PerformLayout();
+            this.layoutButtons.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel layoutContent;
         private System.Windows.Forms.Label lblGameWinner;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel layoutButtons;
         private CustomButton btnPlayAgain;
         private CustomButton btnHome;
         private System.Windows.Forms.Label lblGameMoves;

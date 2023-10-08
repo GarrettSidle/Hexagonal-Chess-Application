@@ -50,18 +50,14 @@ namespace Hexagonal_Chess
             //if the ip is valid
             else
             {
-                //start the game
-
+                //updeate the Ip
                 Utils.IP = txtIP.Text;
                 this.Close();
 
                 FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
 
-                //local
+                //start the game
                 board.updateGameMode();
-
-
-
             }
         }
 
@@ -75,6 +71,7 @@ namespace Hexagonal_Chess
 
             try
             {
+                //attempt a ping
                 pinger = new Ping();
                 PingReply reply = pinger.Send(address);
                 pingable = reply.Status == IPStatus.Success;
@@ -85,11 +82,13 @@ namespace Hexagonal_Chess
             }
             finally
             {
+                //discard inactive pings
                 if (pinger != null)
                 {
                     pinger.Dispose();
                 }
             }
+            //reset the curser
             Cursor.Current = Cursors.Default;
 
             return pingable;

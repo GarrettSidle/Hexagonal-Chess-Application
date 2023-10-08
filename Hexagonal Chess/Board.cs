@@ -19,108 +19,95 @@ namespace Hexagonal_Chess
 {
     public partial class FrmBoard : Form
     {
-
-        int hexRadius = 43;
+        //find the size of each hexagon based on the screen size
+        int hexRadius = (int) Math.Round(Screen.PrimaryScreen.Bounds.Height / 25.0);
 
         private void FrmBoard_Load(object sender, EventArgs e)
         {
+            //reset the board
             lblBottomEval.Text = "";
             lblTopEval.Text = "";
-
-            hexRadius = (int)Math.Round(Screen.PrimaryScreen.Bounds.Height / 25.0);
-
-            Utils.board.setBoard();
+            board.setBoard();
         }
 
-
-
-
+        //stores the location for each hexagon based on its location notation on the board
         private IDictionary<string, Hexagon> boardNodes = new Dictionary<string, Hexagon>();
 
+        //stores each piece based on its location notation within the board
         private IDictionary<string, PictureBox> boardPieces = new Dictionary<string, PictureBox>();
 
+        //stores the action buttons for later retrival 
         private List<PictureBox> MovementButtons = new List<PictureBox>();
         private List<PictureBox> CaptureButtons = new List<PictureBox>();
-
-
 
         public FrmBoard()
         {
             InitializeComponent();
             buildBoard();
-            CreateMovementButtons();
-            CreateCaptureButtons();
-
-
+            popultateActionButtons();
         }
 
-        private void CreateMovementButtons()
+        private void popultateActionButtons()
         {
-            PictureBox tempImage;
-            //find the size of the dot based on the hexagon
-            int size = (int)Math.Round(hexRadius * 1.0);
+            //create the max of 37 movement buttons
             for (int i = 0; i <  37; i++)
             {
-                tempImage = new PictureBox();
-                tempImage.Size = new Size(size, size);
-                tempImage.Location = new Point(0,0);
-                tempImage.Name = "MovementButton " + i;
-                tempImage.BackColor = Color.Transparent;
-                tempImage.SizeMode = PictureBoxSizeMode.StretchImage;
-
-                //assign the image based on the move type
-                tempImage.Image =  Resources.AvailableMove;
-
-                this.pnlGame.Controls.Add(tempImage);
-
-                //add it to the List for later removal
-                MovementButtons.Add(tempImage);
-                tempImage.BringToFront();
-
-                tempImage.Visible = false;
+                createActionButton(true, i);
+            }
+            //create the max of 9 capture buttons
+            for (int i = 0; i < 9; i++)
+            {
+                createActionButton(false, i);
             }
         }
 
-        private void CreateCaptureButtons()
+        private void createActionButton(bool isMovementButton, int index) 
         {
             PictureBox tempImage;
-            //find the size of the dot based on the hexagon
-            int size = (int)Math.Round(hexRadius * .65);
-            for (int i = 0; i < 12; i++)
+
+            //calculate the size for the photobox
+            int size = (int)Math.Round(hexRadius * (isMovementButton ? 1.0 : .65));
+
+            //initialize the photobox settings
+            tempImage = new PictureBox();
+            tempImage.Size = new Size(size, size);
+            tempImage.Location = new Point(0, 0);
+            tempImage.Name = isMovementButton?"MovementButton ":"CaptureButton" + index;
+            tempImage.BackColor = isMovementButton ? Color.Transparent: Color.Black;
+            tempImage.SizeMode = PictureBoxSizeMode.StretchImage;
+
+            //if this is a movement button
+            if (isMovementButton)
             {
-                tempImage = new PictureBox();
-                tempImage.Size = new Size(size, size);
-                tempImage.Location = new Point(0, 0);
-                tempImage.Name = "MovementButton " + i;
-                tempImage.BackColor = Color.Black;
-                tempImage.SizeMode = PictureBoxSizeMode.StretchImage;
-
-                this.pnlGame.Controls.Add(tempImage);
-
-                //add it to the List for later removal
-                CaptureButtons.Add(tempImage);
-                tempImage.BringToFront();
-
-                tempImage.Visible = false;
+                //add the movement button image
+                tempImage.Image = Resources.AvailableMove;
             }
 
+            //place the image on screen
+            this.pnlGame.Controls.Add(tempImage);
+            tempImage.BringToFront();
+            tempImage.Visible = false;
+
+            //add it to the appropriate List for later retrieval
+            (isMovementButton?MovementButtons:CaptureButtons).Add(tempImage);
         }
 
+        //swap the board to a new player mode
         public void updateGameMode()
         {
-            //if we are the host
-            if (Utils.userMode == 1)
-            {
+            if (userMode == 1)//Host mode
+            { 
+                //start listening for new moves
                 MessageReceiver.DoWork += MessageReceiver_DoWork;
-
                 server = new TcpListener(System.Net.IPAddress.Any, 5732);
                 server.Start();
                 sock = server.AcceptSocket();
             }
-            else if (Utils.userMode == 2)
+            else if (userMode == 2) //client mode
             {
                 try
                 {
+                    //start listening for new moves
                     client = new TcpClient(Utils.IP, 5732);
                     sock = client.Client;
                     MessageReceiver.RunWorkerAsync();
@@ -134,17 +121,12 @@ namespace Hexagonal_Chess
                 }
             }
 
-
+            //reset the board
             resetBoard();
-
-
         }
 
         private void resetBoard()
         {
-            
-
-
             //The distance from the center of a hexagon to center of any of its lines
             int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
 
@@ -195,38 +177,42 @@ namespace Hexagonal_Chess
 
         private void ReceiveMove()
         {
+            //retrieve the last sent byte array
             byte[] buffer = new byte[4];
             sock.Receive(buffer);
 
+            //decode them into their indivual meanings
             int atkPieceCol = buffer[0];
             int atkPieceRow = buffer[1];
 
             int capturedCol = buffer[2];
             int capturedRow = buffer[3];
 
-            Piece movingPiece = board.gameBoard[atkPieceCol][atkPieceRow];
+            //create a new move based on the recieved data
+            Move move = new Move(board.gameBoard[atkPieceCol][atkPieceRow], new LocNotation(capturedCol, capturedRow), board.gameBoard[capturedCol][capturedRow] != null, false);
 
-            Piece capturedPiece = board.gameBoard[capturedCol][capturedRow];
-
-            Move move = new Move(movingPiece, new LocNotation(capturedCol, capturedRow), capturedPiece != null, false);
-
+            //execute the data
             makeMove(move, board, boardPieces, boardNodes, (FrmBoard)MDIParent.getScreen("Board"));
         }
+        
 
         private void SendMove(Move move)
         {
+            //create the byte array to send
             byte[] datas = { (byte)move.piece.locNotation.col, (byte)move.piece.locNotation.row, (byte)move.endLocation.col, (byte)move.endLocation.row };
             sock.Send(datas);
+
+            //restart listening
             MessageReceiver.DoWork += MessageReceiver_DoWork;
+            //if the reciever has already been issues
             if (!MessageReceiver.IsBusy)
             {
+                //create a new reciever thread
                 MessageReceiver.RunWorkerAsync();
             }
+            //swap turns
             board.swapTurns();
         }
-
-
-
 
         private void buildBoard()
         {
@@ -244,10 +230,12 @@ namespace Hexagonal_Chess
 
             int rowMax = 5;
 
+            //used for calculating each hexagons colors
             int rowColorCode = 0;
             int colColorCode = 0;
 
 
+            //for each hexagon on the board
             for (int col = 0; col < 11; col++)
             {
                 for (int row = 0; row <= rowMax; row++)
@@ -260,11 +248,13 @@ namespace Hexagonal_Chess
                     //add hexagons to the collection
                     placeHexagons(rowColorCode, colColorCode, col, row, tempLocation);
 
+                    //increase the color code
                     colColorCode++;
 
                     //if we are in the first hexagon of the row
                     if (col == 0 || (row - col == 5 && col > 0 && col < 6))
                     {
+                        //place the row labels
                         placeLabel(
                             (row + 1).ToString(),
                             (int)Math.Round(startingPosition.X + (col * hexShortradius * (.9) * 2)) - hexRadius - 15,
@@ -288,8 +278,10 @@ namespace Hexagonal_Chess
                     rowColorCode--;
 
                 }
+                //reset the col code for each new column
                 colColorCode = 0;
 
+                //place a column label under the first hexagon in each column
                 placeLabel(
                     ((char)(col + 65)).ToString(),
                     (int)(Math.Round(startingPosition.X + (col * hexShortradius * (.9) * 2))) - 10,
@@ -305,23 +297,27 @@ namespace Hexagonal_Chess
             colLabel.Font = new Font("Microsoft YaHei", 12F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             colLabel.ForeColor = Color.Black;
             colLabel.BackColor = Color.Transparent;
+            colLabel.Width = 30;
             //input the custom values
             colLabel.Text = text;
             colLabel.Location = new Point(x,y);
-            colLabel.Width = 30;
             //add it to the board
             pnlGame.Controls.Add(colLabel);
         }
 
         private void placeStartingPieces(int col, int row, Point tempLocation)
         {
+
             Piece piece = board.gameBoard[col][row];
 
+            //if the square is empty
             if (piece == null)
-            {
+            { 
+                //end the function
                 return;
             }
-
+            
+            //find the piece image based on the piece type
             Image pieceImage;
             switch (char.ToUpper(piece.pieceType))
             {
@@ -353,16 +349,19 @@ namespace Hexagonal_Chess
                     pieceImage = null;
                     break;
             }
-
+            //set the defualt image values
             int size = (int)Math.Round(hexRadius * 1.55);
             PictureBox pictureBox = new PictureBox();
             pictureBox.Size = new Size(size, size);
-            pictureBox.Location = new Point(tempLocation.X - size / 2, tempLocation.Y - size / 2);
             pictureBox.Image = pieceImage;
-            pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            pictureBox.Name = piece.pieceType + piece.locNotation.notation;
+            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox.BackColor = Color.Transparent;
+            //input the piece specific values
+            pictureBox.Name = piece.pieceType + piece.locNotation.notation;
+            pictureBox.Location = new Point(tempLocation.X - size / 2, tempLocation.Y - size / 2);
+            //create the click even for adding action buttons
             pictureBox.Click += (sender, EventArgs) => { Piece_Click(sender, EventArgs, piece); };
+            //add the image to the screen
             this.pnlGame.Controls.Add(pictureBox);
 
             LocNotation tempNotation = piece.locNotation;
@@ -379,24 +378,27 @@ namespace Hexagonal_Chess
             //    }
             //}
 
-
+            //add the piece to the piece dictionary for later retrieval
             boardPieces.Add(tempNotation.notation, pictureBox);
         }
 
         private void Move_Click(object sender, EventArgs e, Move move)
         {
-            //local
+            //if we are not in single player
             if (Utils.userMode != 0)
-            {
+            {   
+                //send the move to the other player
                 SendMove(move);
             }
 
+            //make the move
             makeMove(move, board, boardPieces, boardNodes, (FrmBoard)MDIParent.getScreen("Board"));
         }
 
 
-        public void removeMovementIcons()
+        public void removeActionButtons()
         {
+            //for each action button remove the click event and hide the button
             foreach (PictureBox image in MovementButtons)
             {
                 image.Visible = false;
@@ -424,6 +426,7 @@ namespace Hexagonal_Chess
             event_handlers.RemoveHandler(obj, event_handlers[obj]);
         }
 
+
         private void Piece_Click(object s, EventArgs e, Piece piece)
         {
             //if it is not the pieces turn to move
@@ -432,18 +435,21 @@ namespace Hexagonal_Chess
                 //ignore the click   
                 return;
             }
-
-            removeMovementIcons();
+            //remove all the active action buttons
+            removeActionButtons();
 
             List<Move> availableMoves;
             //get all of the available moves for the selected piece
-            availableMoves = FindMoves.FindPieceMoves(piece);
+            availableMoves = FindPieceMoves(piece);
 
 
 
             Point tempLocation;
+            
+            //keeps track of the current capture button index
             int captureCount = 0;
 
+            //for each available move
             for (int i = 0; i < availableMoves.Count; i++)
             {
 
@@ -458,18 +464,22 @@ namespace Hexagonal_Chess
 
                 PictureBox tempImage;
 
+                //if we are taking a piece
                 if (move.isCapture)
                 {
+                    //use a capture button 
                     tempImage = CaptureButtons[captureCount];
                     captureCount++;
                 }
                 else
                 {
+                    //otherwise, show a movement button
                     tempImage = MovementButtons[i];
                 }
+                //add the click event to the button
+                tempImage.Click += (sender, EventArgs) => { Move_Click(sender, EventArgs, move); };
 
                 //place movement buttons
-                tempImage.Click += (sender, EventArgs) => { Move_Click(sender, EventArgs, move); };
                 tempImage.Location = new Point(tempLocation.X - tempImage.Width / 2, tempLocation.Y - tempImage.Height / 2);
                 tempImage.Visible = true;
 
@@ -479,7 +489,8 @@ namespace Hexagonal_Chess
         }
         private void makeMove(Move move, Board board, IDictionary<string, PictureBox> boardPieces, IDictionary<string, Hexagon> boardNodes, FrmBoard frmBoard)
         {
-            frmBoard.removeMovementIcons();
+            //remove all visiable action buttons
+            removeActionButtons();
 
             LocNotation startLocation = move.piece.locNotation;
             LocNotation endLocation = move.endLocation;
@@ -523,7 +534,7 @@ namespace Hexagonal_Chess
                 if (move.enPassent)
                 {
                     
-                    LocNotation enPassantLocation = new LocNotation(endLocation.col + (move.piece.isWhite ? -1 : 1), endLocation.row);
+                    LocNotation enPassantLocation = new LocNotation(endLocation.col, endLocation.row + (move.piece.isWhite ? -1 : 1));
 
                     //get the piece object that is being captured
                     capturedPiece = board.gameBoard[enPassantLocation.col][enPassantLocation.row];
@@ -587,6 +598,7 @@ namespace Hexagonal_Chess
             board.gameBoard[startLocation.col][startLocation.row] = null;
             board.gameBoard[endLocation.col][endLocation.row] = move.piece;
 
+            //add the move to the move table
             updateMoveTable(move, board, frmBoard);
 
 
@@ -594,10 +606,13 @@ namespace Hexagonal_Chess
             board.swapTurns();
 
 
+            //if the king has been captured
             if (endGame)
             {
+                //find the number of moves in the game
                 int numOfMoves = dgMoves.Rows.Count + (move.piece.isWhite ? 1 : 0);
-
+                
+                //initialize and show the results screen
                 ResultScreen resultScreen = new ResultScreen();
                 resultScreen.setWinner(true, numOfMoves);
                 resultScreen.ShowDialog();
@@ -721,8 +736,10 @@ namespace Hexagonal_Chess
 
         private void pnlGame_Paint(object sender, PaintEventArgs e)
         {
+            //for each calculated hexagon location
             foreach (KeyValuePair<string, Hexagon> node in boardNodes)
             {
+                //draw the hexagon
                 Hexagon.DrawHexagon(node.Value, e, hexRadius);
             }
         }
@@ -731,6 +748,7 @@ namespace Hexagonal_Chess
         {
             Color hexColor;
 
+            //find the hexaogns color 
             switch ((rowColorCode + colColorCode) % 3)
             {
                 //Light
@@ -751,6 +769,7 @@ namespace Hexagonal_Chess
                     break;
             }
 
+            //add the 
             boardNodes.Add(((char)(col + 65)).ToString() + (row + 1).ToString(), new Hexagon(tempLocation, hexColor, col , row));
         }
 

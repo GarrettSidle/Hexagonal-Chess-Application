@@ -23,18 +23,22 @@ namespace Hexagonal_Chess
             Utils.gameFound = false;
             this.Close();
 
+            //start the listening function
             Utils.MessageReceiver.DoWork += MessageReceiver_DoWork;
         }
 
         private void MessageReceiver_DoWork(object sender, DoWorkEventArgs e)
         {
+            //actively search for an intializing ping
             byte[] buffer = new byte[1];
             Utils.sock.Receive(buffer);
 
             Utils.gameFound = BitConverter.ToBoolean(buffer,0);
 
+            //if we found a game
             if (Utils.gameFound)
             {
+                //close this form
                 this.Close();
             }
         }

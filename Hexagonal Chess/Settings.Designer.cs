@@ -29,19 +29,18 @@
         private void InitializeComponent()
         {
             this.layoutSettings = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutFormButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnSave = new Hexagonal_Chess.CustomButton();
             this.btnClose = new Hexagonal_Chess.CustomButton();
             this.lblGameWinner = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.layoutVariationButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnHexofen = new Hexagonal_Chess.CustomButton();
             this.btnMcCooey = new Hexagonal_Chess.CustomButton();
             this.btnGlinksi = new Hexagonal_Chess.CustomButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.customButton1 = new Hexagonal_Chess.CustomButton();
+            this.lblVariation = new System.Windows.Forms.Label();
             this.layoutSettings.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.layoutFormButtons.SuspendLayout();
+            this.layoutVariationButtons.SuspendLayout();
             this.SuspendLayout();
             // 
             // layoutSettings
@@ -49,9 +48,9 @@
             this.layoutSettings.BackColor = System.Drawing.Color.Transparent;
             this.layoutSettings.ColumnCount = 1;
             this.layoutSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.layoutSettings.Controls.Add(this.tableLayoutPanel2, 0, 2);
+            this.layoutSettings.Controls.Add(this.layoutFormButtons, 0, 2);
             this.layoutSettings.Controls.Add(this.lblGameWinner, 0, 0);
-            this.layoutSettings.Controls.Add(this.tableLayoutPanel1, 0, 1);
+            this.layoutSettings.Controls.Add(this.layoutVariationButtons, 0, 1);
             this.layoutSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutSettings.Location = new System.Drawing.Point(0, 0);
             this.layoutSettings.Name = "layoutSettings";
@@ -62,20 +61,21 @@
             this.layoutSettings.Size = new System.Drawing.Size(800, 599);
             this.layoutSettings.TabIndex = 1;
             // 
-            // tableLayoutPanel2
+            // layoutFormButtons
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.btnSave, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.btnClose, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 401);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(794, 195);
-            this.tableLayoutPanel2.TabIndex = 6;
+            this.layoutFormButtons.BackColor = System.Drawing.Color.Transparent;
+            this.layoutFormButtons.ColumnCount = 2;
+            this.layoutFormButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutFormButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutFormButtons.Controls.Add(this.btnSave, 1, 0);
+            this.layoutFormButtons.Controls.Add(this.btnClose, 0, 0);
+            this.layoutFormButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutFormButtons.Location = new System.Drawing.Point(3, 401);
+            this.layoutFormButtons.Name = "layoutFormButtons";
+            this.layoutFormButtons.RowCount = 1;
+            this.layoutFormButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.layoutFormButtons.Size = new System.Drawing.Size(794, 195);
+            this.layoutFormButtons.TabIndex = 6;
             // 
             // btnSave
             // 
@@ -138,24 +138,25 @@
             this.lblGameWinner.Text = "Settings";
             this.lblGameWinner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tableLayoutPanel1
+            // layoutVariationButtons
             // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
-            this.tableLayoutPanel1.Controls.Add(this.btnHexofen, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btnMcCooey, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btnGlinksi, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 202);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(794, 193);
-            this.tableLayoutPanel1.TabIndex = 5;
+            this.layoutVariationButtons.BackColor = System.Drawing.Color.Transparent;
+            this.layoutVariationButtons.ColumnCount = 3;
+            this.layoutVariationButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
+            this.layoutVariationButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34F));
+            this.layoutVariationButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
+            this.layoutVariationButtons.Controls.Add(this.btnHexofen, 2, 1);
+            this.layoutVariationButtons.Controls.Add(this.btnMcCooey, 1, 1);
+            this.layoutVariationButtons.Controls.Add(this.btnGlinksi, 0, 1);
+            this.layoutVariationButtons.Controls.Add(this.lblVariation, 1, 0);
+            this.layoutVariationButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutVariationButtons.Location = new System.Drawing.Point(3, 202);
+            this.layoutVariationButtons.Name = "layoutVariationButtons";
+            this.layoutVariationButtons.RowCount = 2;
+            this.layoutVariationButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutVariationButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.layoutVariationButtons.Size = new System.Drawing.Size(794, 193);
+            this.layoutVariationButtons.TabIndex = 5;
             // 
             // btnHexofen
             // 
@@ -226,35 +227,20 @@
             this.btnGlinksi.UseVisualStyleBackColor = false;
             this.btnGlinksi.Click += new System.EventHandler(this.btnGlinksi_Click);
             // 
-            // label1
+            // lblVariation
             // 
-            this.label1.AccessibleRole = System.Windows.Forms.AccessibleRole.Client;
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
-            this.label1.Location = new System.Drawing.Point(274, 57);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(245, 39);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Chess Variation";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // customButton1
-            // 
-            this.customButton1.BorderColor = System.Drawing.Color.Silver;
-            this.customButton1.ButtonColor = System.Drawing.Color.Red;
-            this.customButton1.Location = new System.Drawing.Point(452, 312);
-            this.customButton1.Name = "customButton1";
-            this.customButton1.OnHoverBorderColor = System.Drawing.Color.Gray;
-            this.customButton1.OnHoverButtonColor = System.Drawing.Color.Yellow;
-            this.customButton1.OnHoverTextColor = System.Drawing.Color.Gray;
-            this.customButton1.Size = new System.Drawing.Size(8, 8);
-            this.customButton1.TabIndex = 0;
-            this.customButton1.Text = "customButton1";
-            this.customButton1.TextColor = System.Drawing.Color.White;
-            this.customButton1.UseVisualStyleBackColor = true;
+            this.lblVariation.AccessibleRole = System.Windows.Forms.AccessibleRole.Client;
+            this.lblVariation.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblVariation.AutoSize = true;
+            this.lblVariation.BackColor = System.Drawing.Color.Transparent;
+            this.lblVariation.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.lblVariation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
+            this.lblVariation.Location = new System.Drawing.Point(274, 57);
+            this.lblVariation.Name = "lblVariation";
+            this.lblVariation.Size = new System.Drawing.Size(245, 39);
+            this.lblVariation.TabIndex = 6;
+            this.lblVariation.Text = "Chess Variation";
+            this.lblVariation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FrmSettings
             // 
@@ -266,7 +252,6 @@
             this.ClientSize = new System.Drawing.Size(800, 599);
             this.ControlBox = false;
             this.Controls.Add(this.layoutSettings);
-            this.Controls.Add(this.customButton1);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FrmSettings";
@@ -274,25 +259,23 @@
             this.Load += new System.EventHandler(this.FrmSettings_Load);
             this.layoutSettings.ResumeLayout(false);
             this.layoutSettings.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.layoutFormButtons.ResumeLayout(false);
+            this.layoutVariationButtons.ResumeLayout(false);
+            this.layoutVariationButtons.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private CustomButton customButton1;
         private System.Windows.Forms.TableLayoutPanel layoutSettings;
         private CustomButton btnSave;
         private CustomButton btnClose;
         private System.Windows.Forms.Label lblGameWinner;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel layoutVariationButtons;
         private CustomButton btnHexofen;
         private CustomButton btnMcCooey;
         private CustomButton btnGlinksi;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Label lblVariation;
+        private System.Windows.Forms.TableLayoutPanel layoutFormButtons;
     }
 }
