@@ -632,16 +632,16 @@ namespace Hexagonal_Chess
             //if we are white
             if (move.piece.isWhite)
             {
-                //if we are on the right side of the board
-                if (col > 5)
-                {
-                    //find final row for left side
-                    return row - col == 5;
-                }
                 //if we are on the left side of the board
-                else
+                if (col <= 5)
                 {
                     //find final row for right side
+                    return row - col == 5;
+                }
+                //if we are on the right side of the board
+                else
+                {
+                    //find final row for left side
                     return col + row == 15;
                 }
             }
