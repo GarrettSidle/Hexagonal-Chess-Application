@@ -20,7 +20,7 @@ namespace Hexagonal_Chess
     public partial class FrmBoard : Form
     {
         //find the size of each hexagon based on the screen size
-        int hexRadius = (int) Math.Round(Screen.PrimaryScreen.Bounds.Height / 25.0);
+        readonly int hexRadius = (int) Math.Round(Screen.PrimaryScreen.Bounds.Height / 25.0);
 
         private void FrmBoard_Load(object sender, EventArgs e)
         {
@@ -31,14 +31,14 @@ namespace Hexagonal_Chess
         }
 
         //stores the location for each hexagon based on its location notation on the board
-        private IDictionary<string, Hexagon> boardNodes = new Dictionary<string, Hexagon>();
+        private readonly IDictionary<string, Hexagon> boardNodes = new Dictionary<string, Hexagon>();
 
         //stores each piece based on its location notation within the board
-        private IDictionary<string, PictureBox> boardPieces = new Dictionary<string, PictureBox>();
+        private readonly IDictionary<string, PictureBox> boardPieces = new Dictionary<string, PictureBox>();
 
         //stores the action buttons for later retrival 
-        private List<PictureBox> MovementButtons = new List<PictureBox>();
-        private List<PictureBox> CaptureButtons = new List<PictureBox>();
+        private readonly List<PictureBox> MovementButtons = new List<PictureBox>();
+        private readonly List<PictureBox> CaptureButtons = new List<PictureBox>();
 
         public FrmBoard()
         {

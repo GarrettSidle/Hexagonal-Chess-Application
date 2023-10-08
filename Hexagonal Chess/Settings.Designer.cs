@@ -32,7 +32,7 @@
             this.layoutFormButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnSave = new Hexagonal_Chess.CustomButton();
             this.btnClose = new Hexagonal_Chess.CustomButton();
-            this.lblGameWinner = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.layoutVariationButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnHexofen = new Hexagonal_Chess.CustomButton();
             this.btnMcCooey = new Hexagonal_Chess.CustomButton();
@@ -49,7 +49,7 @@
             this.layoutSettings.ColumnCount = 1;
             this.layoutSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.layoutSettings.Controls.Add(this.layoutFormButtons, 0, 2);
-            this.layoutSettings.Controls.Add(this.lblGameWinner, 0, 0);
+            this.layoutSettings.Controls.Add(this.lblTitle, 0, 0);
             this.layoutSettings.Controls.Add(this.layoutVariationButtons, 0, 1);
             this.layoutSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutSettings.Location = new System.Drawing.Point(0, 0);
@@ -123,20 +123,20 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // lblGameWinner
+            // lblTitle
             // 
-            this.lblGameWinner.AccessibleRole = System.Windows.Forms.AccessibleRole.Client;
-            this.lblGameWinner.AutoSize = true;
-            this.lblGameWinner.BackColor = System.Drawing.Color.Transparent;
-            this.lblGameWinner.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblGameWinner.Font = new System.Drawing.Font("Sitka Text", 65.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.lblGameWinner.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
-            this.lblGameWinner.Location = new System.Drawing.Point(3, 0);
-            this.lblGameWinner.Name = "lblGameWinner";
-            this.lblGameWinner.Size = new System.Drawing.Size(794, 199);
-            this.lblGameWinner.TabIndex = 4;
-            this.lblGameWinner.Text = "Settings";
-            this.lblGameWinner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblTitle.AccessibleRole = System.Windows.Forms.AccessibleRole.Client;
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.BackColor = System.Drawing.Color.Transparent;
+            this.lblTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTitle.Font = new System.Drawing.Font("Sitka Text", 65.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
+            this.lblTitle.Location = new System.Drawing.Point(3, 0);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(794, 199);
+            this.lblTitle.TabIndex = 4;
+            this.lblTitle.Text = "Settings";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // layoutVariationButtons
             // 
@@ -270,7 +270,7 @@
         private System.Windows.Forms.TableLayoutPanel layoutSettings;
         private CustomButton btnSave;
         private CustomButton btnClose;
-        private System.Windows.Forms.Label lblGameWinner;
+        private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.TableLayoutPanel layoutVariationButtons;
         private CustomButton btnHexofen;
         private CustomButton btnMcCooey;
