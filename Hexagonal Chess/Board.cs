@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -43,12 +43,19 @@ namespace Hexagonal_Chess
         public FrmBoard()
         {
             InitializeComponent();
+
+            // Enable double buffering to reduce flicker during repaints
+            typeof(Control).GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.SetValue(pnlGame, true);
+
             buildBoard();
             popultateActionButtons();
         }
 
         private void popultateActionButtons()
         {
+            pnlGame.SuspendLayout();
+
             //create the max of 37 movement buttons
             for (int i = 0; i <  37; i++)
             {
@@ -59,6 +66,8 @@ namespace Hexagonal_Chess
             {
                 createActionButton(false, i);
             }
+
+            pnlGame.ResumeLayout(false);
         }
 
         private void createActionButton(bool isMovementButton, int index) 
@@ -127,6 +136,8 @@ namespace Hexagonal_Chess
 
         private void resetBoard()
         {
+            pnlGame.SuspendLayout();
+
             //The distance from the center of a hexagon to center of any of its lines
             int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
 
@@ -168,6 +179,8 @@ namespace Hexagonal_Chess
 
                 }
             }
+
+            pnlGame.ResumeLayout(false);
         }
 
         private void MessageReceiver_DoWork(object sender, DoWorkEventArgs e)
@@ -216,6 +229,7 @@ namespace Hexagonal_Chess
 
         private void buildBoard()
         {
+            pnlGame.SuspendLayout();
 
             //The distance from the center of a hexagon to center of any of its lines
             int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
@@ -288,6 +302,8 @@ namespace Hexagonal_Chess
                     startingPosition.Y + ((col < 6 ? col : (10 - col)) * hexShortradius + (hexRadius))
                 );
             }
+
+            pnlGame.ResumeLayout(false);
         }
 
         private void placeLabel(string text, int x, int y)

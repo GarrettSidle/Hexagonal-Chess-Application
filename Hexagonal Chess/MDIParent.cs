@@ -22,12 +22,9 @@ namespace Hexagonal_Chess
             this.Opacity = 0;
             this.Shown += MDIParent_Shown;
 
-            //initialize each screen and add it to 
+            // Initialize Home only - Board is lazy loaded when user starts a game
             frmHome home = new frmHome();
             screens.Add("Home", home);
-
-            FrmBoard board = new FrmBoard();
-            screens.Add("Board", board);
 
             mdiParent = this;
 
@@ -76,6 +73,13 @@ namespace Hexagonal_Chess
 
         public static Form getScreen(string screenName)
         {
+            // Lazy load Board on first access - it's the heaviest screen
+            if (screenName == "Board" && !screens.ContainsKey("Board"))
+            {
+                var board = new FrmBoard();
+                screens.Add("Board", board);
+            }
+
             //get the form object based on the screen name
             screens.TryGetValue(screenName, out var screen);
             return screen;
