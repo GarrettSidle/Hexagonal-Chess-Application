@@ -67,6 +67,8 @@ namespace Hexagonal_Chess
         private Image _sharedMovementButtonImage;
         // Reused font for all board labels (saves GDI handles and allocations)
         private Font _boardLabelFont;
+        // Board labels for repositioning on resize
+        private readonly List<(Label label, int col, int row, bool isColumn)> _boardLabels = new List<(Label, int, int, bool)>(22);
 
         public FrmBoard()
         {
@@ -77,12 +79,14 @@ namespace Hexagonal_Chess
             typeof(Control).GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
                 ?.SetValue(pnlGame, true);
 
+            pnlGame.Resize += pnlGame_Resize;
             buildBoard();
             popultateActionButtons();
         }
 
         private void FrmBoard_FormClosing(object sender, FormClosingEventArgs e)
         {
+            pnlGame.Resize -= pnlGame_Resize;
             // Unsubscribe from static MessageReceiver so this form can be GC'd (fixes memory leak when starting a new game)
             MessageReceiver.DoWork -= MessageReceiver_DoWork;
             MessageReceiver.RunWorkerCompleted -= MessageReceiver_RunWorkerCompleted;
@@ -224,27 +228,14 @@ namespace Hexagonal_Chess
             boardPieces.Clear();
             dgMoves.Rows.Clear();
 
-            //The distance from the center of a hexagon to center of any of its lines
-            int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
-
-            //find the point that centers the board horizontally
-            int x = (int)Math.Round((pnlGame.Width / 2) + (hexRadius * 0.0)); //7.78
-            //find the point that centers the board vertical
-            int y = (int)Math.Round((pnlGame.Height / 2) + (hexRadius * 8.0)); //4.26
-
-            //Starting point of the entire board, this will be center of A1
-            Point startingPosition = new Point(x, y);
-
+            Point startingPosition = GetCenteredStartingPosition();
             int rowMax = 5;
 
             for (int col = 0; col < 11; col++)
             {
                 for (int row = 0; row <= rowMax; row++)
                 {
-                    //Find the location of the next node
-                    Point tempLocation = new Point(
-                            (int)(Math.Round(startingPosition.X + (col * hexShortradius * (.9) * 2))),
-                        startingPosition.Y - (row * hexShortradius * 2) + ((col < 6 ? col : (10 - col)) * hexShortradius));
+                    Point tempLocation = GetHexLocation(col, row, startingPosition);
 
 
                     //place the starting pieces
@@ -347,24 +338,71 @@ namespace Hexagonal_Chess
             board.swapTurns();
         }
 
+        private Point GetCenteredStartingPosition()
+        {
+            int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
+            // Board spans 11 columns; horizontal center is 9 * hexShortradius from left edge
+            int centerXOffset = 9 * hexShortradius;
+            // Board vertical center is 5 * hexShortradius below A1
+            int centerYOffset = 5 * hexShortradius;
+            int x = (int)Math.Round((pnlGame.Width / 2.0) - centerXOffset);
+            int y = (int)Math.Round((pnlGame.Height / 2.0) + centerYOffset);
+            return new Point(x, y);
+        }
+
+        private Point GetHexLocation(int col, int row, Point startingPosition)
+        {
+            int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
+            return new Point(
+                (int)Math.Round(startingPosition.X + (col * hexShortradius * 0.9 * 2)),
+                startingPosition.Y - (row * hexShortradius * 2) + ((col < 6 ? col : (10 - col)) * hexShortradius));
+        }
+
+        private void pnlGame_Resize(object sender, EventArgs e)
+        {
+            if (boardNodes.Count == 0) return;
+            Point start = GetCenteredStartingPosition();
+            int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
+
+            foreach (var kvp in boardNodes)
+            {
+                var hex = kvp.Value;
+                hex.location = GetHexLocation(hex.col, hex.row, start);
+            }
+            foreach (var kvp in boardPieces)
+            {
+                var notation = kvp.Key;
+                var pb = kvp.Value;
+                if (boardNodes.TryGetValue(notation, out var hex))
+                {
+                    int size = (int)Math.Round(hexRadius * 1.55);
+                    pb.Location = new Point(hex.location.X - size / 2, hex.location.Y - size / 2);
+                }
+            }
+            foreach (var (label, col, row, isColumn) in _boardLabels)
+            {
+                if (isColumn)
+                    label.Location = new Point(
+                        (int)Math.Round(start.X + (col * hexShortradius * 0.9 * 2)) - 10,
+                        start.Y + ((col < 6 ? col : (10 - col)) * hexShortradius + hexRadius));
+                else
+                    label.Location = new Point(
+                        (int)Math.Round(start.X + (col * hexShortradius * 0.9 * 2)) - hexRadius - 15,
+                        start.Y - (row * hexShortradius * 2) + ((col < 6 ? col : (10 - col)) * hexShortradius) - hexShortradius);
+            }
+            pnlGame.Invalidate();
+        }
+
         private void buildBoard()
         {
             pnlGame.SuspendLayout();
+            _boardLabels.Clear();
 
             if (_boardLabelFont == null)
                 _boardLabelFont = new Font("Segoe UI Semibold", 11F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
 
-            //The distance from the center of a hexagon to center of any of its lines
+            Point startingPosition = GetCenteredStartingPosition();
             int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
-
-            //find the point that centers the board horizontally
-            int x = (int)Math.Round((pnlGame.Width / 2) + (hexRadius * 0.0)); //7.78
-            //find the point that centers the board vertical
-            int y = (int)Math.Round((pnlGame.Height / 2) + (hexRadius * 8.0)); //4.26
-
-            //Starting point of the entire board, this will be center of A1
-            Point startingPosition = new Point(x, y);
-
             int rowMax = 5;
 
             //used for calculating each hexagons colors
@@ -377,28 +415,12 @@ namespace Hexagonal_Chess
             {
                 for (int row = 0; row <= rowMax; row++)
                 {
-                    //Find the location of the next node
-                    Point tempLocation = new Point(
-                            (int)(Math.Round(startingPosition.X + (col * hexShortradius * (.9) * 2))),
-                        startingPosition.Y - (row * hexShortradius * 2) + ((col < 6 ? col : (10 - col)) * hexShortradius));
-
-                    //add hexagons to the collection
+                    Point tempLocation = GetHexLocation(col, row, startingPosition);
                     placeHexagons(rowColorCode, colColorCode, col, row, tempLocation);
-
-                    //increase the color code
                     colColorCode++;
 
-                    //if we are in the first hexagon of the row
                     if (col == 0 || (row - col == 5 && col > 0 && col < 6))
-                    {
-                        //place the row labels
-                        placeLabel(
-                            (row + 1).ToString(),
-                            (int)Math.Round(startingPosition.X + (col * hexShortradius * (.9) * 2)) - hexRadius - 15,
-                            startingPosition.Y - (row * hexShortradius * 2) + ((col < 6 ? col : (10 - col)) * hexShortradius) - hexShortradius
-                            );
-                    }
-
+                        placeLabel((row + 1).ToString(), tempLocation.X - hexRadius - 15, tempLocation.Y - hexShortradius, col, row, false);
                 }
                 //if we are in the first 6 rows
                 if (col < 5)
@@ -419,28 +441,26 @@ namespace Hexagonal_Chess
                 colColorCode = 0;
 
                 //place a column label under the first hexagon in each column
-                placeLabel(
-                    ((char)(col + 65)).ToString(),
-                    (int)(Math.Round(startingPosition.X + (col * hexShortradius * (.9) * 2))) - 10,
-                    startingPosition.Y + ((col < 6 ? col : (10 - col)) * hexShortradius + (hexRadius))
-                );
+                placeLabel(((char)(col + 65)).ToString(),
+                    (int)Math.Round(startingPosition.X + (col * hexShortradius * 0.9 * 2)) - 10,
+                    startingPosition.Y + ((col < 6 ? col : (10 - col)) * hexShortradius + hexRadius),
+                    col, 0, true);
             }
 
             pnlGame.ResumeLayout(false);
         }
 
-        private void placeLabel(string text, int x, int y)
+        private void placeLabel(string text, int x, int y, int col, int row, bool isColumn)
         {
-            Label colLabel = new Label();
-            colLabel.Font = _boardLabelFont;
-            colLabel.ForeColor = Color.FromArgb(80, 70, 60);
-            colLabel.BackColor = Color.Transparent;
-            colLabel.Width = 30;
-            //input the custom values
-            colLabel.Text = text;
-            colLabel.Location = new Point(x,y);
-            //add it to the board
-            pnlGame.Controls.Add(colLabel);
+            Label lbl = new Label();
+            lbl.Font = _boardLabelFont;
+            lbl.ForeColor = Color.FromArgb(80, 70, 60);
+            lbl.BackColor = Color.Transparent;
+            lbl.Width = 30;
+            lbl.Text = text;
+            lbl.Location = new Point(x, y);
+            pnlGame.Controls.Add(lbl);
+            _boardLabels.Add((lbl, col, row, isColumn));
         }
 
         private void placeStartingPieces(int col, int row, Point tempLocation)
