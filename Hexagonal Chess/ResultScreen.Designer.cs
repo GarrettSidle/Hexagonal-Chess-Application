@@ -1,4 +1,4 @@
-﻿namespace Hexagonal_Chess
+namespace Hexagonal_Chess
 {
     partial class ResultScreen
     {

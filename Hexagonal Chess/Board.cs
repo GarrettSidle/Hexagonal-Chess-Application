@@ -28,6 +28,25 @@ namespace Hexagonal_Chess
             lblBottomEval.Text = "";
             lblTopEval.Text = "";
             board.setBoard();
+            updateTurnIndicator();
+        }
+
+        private void updateTurnIndicator()
+        {
+
+            var activeColor = Color.FromArgb(136, 171, 95);
+            var inactiveColor = Color.Transparent;
+
+            if (board.whiteToPlay)
+            {
+                pnlTurnIndicatorWhite.BackColor = activeColor;
+                pnlTurnIndicatorBlack.BackColor = inactiveColor;
+            }
+            else
+            {
+                pnlTurnIndicatorBlack.BackColor = activeColor;
+                pnlTurnIndicatorWhite.BackColor = inactiveColor;
+            }
         }
 
         //stores the location for each hexagon based on its location notation on the board
@@ -185,6 +204,7 @@ namespace Hexagonal_Chess
             }
 
             pnlGame.ResumeLayout(false);
+            updateTurnIndicator();
         }
 
         private void MessageReceiver_DoWork(object sender, DoWorkEventArgs e)
@@ -314,8 +334,8 @@ namespace Hexagonal_Chess
         {
             //create a label
             Label colLabel = new Label();
-            colLabel.Font = new Font("Microsoft YaHei", 12F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            colLabel.ForeColor = Color.Black;
+            colLabel.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            colLabel.ForeColor = Color.FromArgb(80, 70, 60);
             colLabel.BackColor = Color.Transparent;
             colLabel.Width = 30;
             //input the custom values
@@ -631,7 +651,7 @@ namespace Hexagonal_Chess
 
             //change it to the opposing teams move
             board.swapTurns();
-
+            updateTurnIndicator();
 
             //if the king has been captured
             if (endGame)

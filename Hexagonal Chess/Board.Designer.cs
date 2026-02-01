@@ -41,10 +41,12 @@ namespace Hexagonal_Chess
             this.pnlEvalTop = new System.Windows.Forms.Panel();
             this.lblTopEval = new System.Windows.Forms.Label();
             this.pnlTopUser = new System.Windows.Forms.Panel();
+            this.pnlTurnIndicatorBlack = new System.Windows.Forms.Panel();
             this.imgTopUser = new System.Windows.Forms.PictureBox();
             this.lblTopUserEval = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
             this.pnlBottomUser = new System.Windows.Forms.Panel();
+            this.pnlTurnIndicatorWhite = new System.Windows.Forms.Panel();
             this.imgBottomUser = new System.Windows.Forms.PictureBox();
             this.lblBottomUserEval = new System.Windows.Forms.Label();
             this.lblBottomName = new System.Windows.Forms.Label();
@@ -74,6 +76,7 @@ namespace Hexagonal_Chess
             // 
             // pnlEvaluation
             // 
+            this.pnlEvaluation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(243)))), ((int)(((byte)(232)))));
             this.pnlEvaluation.Controls.Add(this.layoutEval);
             this.pnlEvaluation.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlEvaluation.Location = new System.Drawing.Point(0, 0);
@@ -100,7 +103,7 @@ namespace Hexagonal_Chess
             // 
             // pnlEvalBottom
             // 
-            this.pnlEvalBottom.BackColor = System.Drawing.Color.White;
+            this.pnlEvalBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(245)))));
             this.pnlEvalBottom.Controls.Add(this.lblBottomEval);
             this.pnlEvalBottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlEvalBottom.Location = new System.Drawing.Point(13, 348);
@@ -113,8 +116,8 @@ namespace Hexagonal_Chess
             this.lblBottomEval.AutoSize = true;
             this.lblBottomEval.BackColor = System.Drawing.Color.Transparent;
             this.lblBottomEval.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblBottomEval.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBottomEval.ForeColor = System.Drawing.Color.Black;
+            this.lblBottomEval.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBottomEval.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(50)))), ((int)(((byte)(45)))));
             this.lblBottomEval.Location = new System.Drawing.Point(0, 297);
             this.lblBottomEval.Name = "lblBottomEval";
             this.lblBottomEval.Padding = new System.Windows.Forms.Padding(3, 0, 0, 10);
@@ -124,7 +127,7 @@ namespace Hexagonal_Chess
             // 
             // pnlEvalTop
             // 
-            this.pnlEvalTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pnlEvalTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.pnlEvalTop.Controls.Add(this.lblTopEval);
             this.pnlEvalTop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlEvalTop.Location = new System.Drawing.Point(13, 13);
@@ -136,7 +139,7 @@ namespace Hexagonal_Chess
             // 
             this.lblTopEval.AutoSize = true;
             this.lblTopEval.BackColor = System.Drawing.Color.Transparent;
-            this.lblTopEval.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTopEval.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTopEval.ForeColor = System.Drawing.Color.White;
             this.lblTopEval.Location = new System.Drawing.Point(0, 0);
             this.lblTopEval.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
@@ -148,21 +151,33 @@ namespace Hexagonal_Chess
             // 
             // pnlTopUser
             // 
+            this.pnlTopUser.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.pnlTopUser.Controls.Add(this.pnlTurnIndicatorBlack);
             this.pnlTopUser.Controls.Add(this.imgTopUser);
             this.pnlTopUser.Controls.Add(this.lblTopUserEval);
             this.pnlTopUser.Controls.Add(this.lblUser);
             this.pnlTopUser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTopUser.Location = new System.Drawing.Point(3, 3);
             this.pnlTopUser.Name = "pnlTopUser";
+            this.pnlTopUser.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
             this.pnlTopUser.Size = new System.Drawing.Size(889, 66);
             this.pnlTopUser.TabIndex = 1;
+            // 
+            // pnlTurnIndicatorBlack
+            // 
+            this.pnlTurnIndicatorBlack.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(171)))), ((int)(((byte)(95)))));
+            this.pnlTurnIndicatorBlack.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlTurnIndicatorBlack.Location = new System.Drawing.Point(16, 0);
+            this.pnlTurnIndicatorBlack.Name = "pnlTurnIndicatorBlack";
+            this.pnlTurnIndicatorBlack.Size = new System.Drawing.Size(5, 66);
+            this.pnlTurnIndicatorBlack.TabIndex = 5;
             // 
             // imgTopUser
             // 
             this.imgTopUser.Image = global::Hexagonal_Chess.Properties.Resources.BlackPawn;
-            this.imgTopUser.Location = new System.Drawing.Point(19, 3);
+            this.imgTopUser.Location = new System.Drawing.Point(40, 8);
             this.imgTopUser.Name = "imgTopUser";
-            this.imgTopUser.Size = new System.Drawing.Size(60, 49);
+            this.imgTopUser.Size = new System.Drawing.Size(52, 50);
             this.imgTopUser.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.imgTopUser.TabIndex = 4;
             this.imgTopUser.TabStop = false;
@@ -170,26 +185,28 @@ namespace Hexagonal_Chess
             // lblTopUserEval
             // 
             this.lblTopUserEval.AutoSize = true;
-            this.lblTopUserEval.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTopUserEval.ForeColor = System.Drawing.Color.Black;
-            this.lblTopUserEval.Location = new System.Drawing.Point(87, 40);
+            this.lblTopUserEval.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTopUserEval.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(230)))), ((int)(((byte)(210)))));
+            this.lblTopUserEval.Location = new System.Drawing.Point(108, 38);
             this.lblTopUserEval.Name = "lblTopUserEval";
-            this.lblTopUserEval.Size = new System.Drawing.Size(0, 21);
+            this.lblTopUserEval.Size = new System.Drawing.Size(0, 20);
             this.lblTopUserEval.TabIndex = 3;
             // 
             // lblUser
             // 
             this.lblUser.AutoSize = true;
-            this.lblUser.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUser.ForeColor = System.Drawing.Color.Black;
-            this.lblUser.Location = new System.Drawing.Point(85, 9);
+            this.lblUser.Font = new System.Drawing.Font("Segoe UI Semibold", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUser.ForeColor = System.Drawing.Color.White;
+            this.lblUser.Location = new System.Drawing.Point(108, 9);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(77, 31);
+            this.lblUser.Size = new System.Drawing.Size(64, 30);
             this.lblUser.TabIndex = 2;
             this.lblUser.Text = "Black";
             // 
             // pnlBottomUser
             // 
+            this.pnlBottomUser.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(245)))));
+            this.pnlBottomUser.Controls.Add(this.pnlTurnIndicatorWhite);
             this.pnlBottomUser.Controls.Add(this.imgBottomUser);
             this.pnlBottomUser.Controls.Add(this.lblBottomUserEval);
             this.pnlBottomUser.Controls.Add(this.lblBottomName);
@@ -197,15 +214,25 @@ namespace Hexagonal_Chess
             this.pnlBottomUser.Location = new System.Drawing.Point(0, 618);
             this.pnlBottomUser.Margin = new System.Windows.Forms.Padding(0);
             this.pnlBottomUser.Name = "pnlBottomUser";
+            this.pnlBottomUser.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
             this.pnlBottomUser.Size = new System.Drawing.Size(895, 72);
             this.pnlBottomUser.TabIndex = 2;
+            // 
+            // pnlTurnIndicatorWhite
+            // 
+            this.pnlTurnIndicatorWhite.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(171)))), ((int)(((byte)(95)))));
+            this.pnlTurnIndicatorWhite.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlTurnIndicatorWhite.Location = new System.Drawing.Point(16, 0);
+            this.pnlTurnIndicatorWhite.Name = "pnlTurnIndicatorWhite";
+            this.pnlTurnIndicatorWhite.Size = new System.Drawing.Size(5, 72);
+            this.pnlTurnIndicatorWhite.TabIndex = 5;
             // 
             // imgBottomUser
             // 
             this.imgBottomUser.Image = global::Hexagonal_Chess.Properties.Resources.WhitePawn;
-            this.imgBottomUser.Location = new System.Drawing.Point(19, 3);
+            this.imgBottomUser.Location = new System.Drawing.Point(40, 8);
             this.imgBottomUser.Name = "imgBottomUser";
-            this.imgBottomUser.Size = new System.Drawing.Size(60, 49);
+            this.imgBottomUser.Size = new System.Drawing.Size(52, 50);
             this.imgBottomUser.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.imgBottomUser.TabIndex = 4;
             this.imgBottomUser.TabStop = false;
@@ -213,21 +240,21 @@ namespace Hexagonal_Chess
             // lblBottomUserEval
             // 
             this.lblBottomUserEval.AutoSize = true;
-            this.lblBottomUserEval.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBottomUserEval.ForeColor = System.Drawing.Color.Black;
-            this.lblBottomUserEval.Location = new System.Drawing.Point(87, 40);
+            this.lblBottomUserEval.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBottomUserEval.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(70)))), ((int)(((byte)(60)))));
+            this.lblBottomUserEval.Location = new System.Drawing.Point(108, 38);
             this.lblBottomUserEval.Name = "lblBottomUserEval";
-            this.lblBottomUserEval.Size = new System.Drawing.Size(0, 21);
+            this.lblBottomUserEval.Size = new System.Drawing.Size(0, 20);
             this.lblBottomUserEval.TabIndex = 3;
             // 
             // lblBottomName
             // 
             this.lblBottomName.AutoSize = true;
-            this.lblBottomName.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBottomName.ForeColor = System.Drawing.Color.Black;
-            this.lblBottomName.Location = new System.Drawing.Point(85, 9);
+            this.lblBottomName.Font = new System.Drawing.Font("Segoe UI Semibold", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBottomName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(50)))), ((int)(((byte)(45)))));
+            this.lblBottomName.Location = new System.Drawing.Point(108, 9);
             this.lblBottomName.Name = "lblBottomName";
-            this.lblBottomName.Size = new System.Drawing.Size(87, 31);
+            this.lblBottomName.Size = new System.Drawing.Size(72, 30);
             this.lblBottomName.TabIndex = 2;
             this.lblBottomName.Text = "White";
             // 
@@ -349,6 +376,7 @@ namespace Hexagonal_Chess
             // 
             // pnlBoard
             // 
+            this.pnlBoard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(243)))), ((int)(((byte)(232)))));
             this.pnlBoard.Controls.Add(this.layoutGame);
             this.pnlBoard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlBoard.Location = new System.Drawing.Point(86, 0);
@@ -358,6 +386,7 @@ namespace Hexagonal_Chess
             // 
             // layoutGame
             // 
+            this.layoutGame.BackColor = System.Drawing.Color.Transparent;
             this.layoutGame.ColumnCount = 1;
             this.layoutGame.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.layoutGame.Controls.Add(this.pnlBottomUser, 0, 2);
@@ -375,6 +404,7 @@ namespace Hexagonal_Chess
             // 
             // pnlGame
             // 
+            this.pnlGame.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(243)))), ((int)(((byte)(232)))));
             this.pnlGame.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlGame.Location = new System.Drawing.Point(3, 75);
             this.pnlGame.Name = "pnlGame";
@@ -386,12 +416,13 @@ namespace Hexagonal_Chess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(243)))), ((int)(((byte)(232)))));
             this.ClientSize = new System.Drawing.Size(1304, 690);
             this.ControlBox = false;
             this.Controls.Add(this.pnlBoard);
             this.Controls.Add(this.pnlMoves);
             this.Controls.Add(this.pnlEvaluation);
-            this.ForeColor = System.Drawing.Color.Transparent;
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(50)))), ((int)(((byte)(45)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FrmBoard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -421,6 +452,8 @@ namespace Hexagonal_Chess
 
         private System.Windows.Forms.Panel pnlEvaluation;
         private System.Windows.Forms.Panel pnlTopUser;
+        private System.Windows.Forms.Panel pnlTurnIndicatorBlack;
+        private System.Windows.Forms.Panel pnlTurnIndicatorWhite;
         private System.Windows.Forms.PictureBox imgTopUser;
         public System.Windows.Forms.Label lblTopUserEval;
         private System.Windows.Forms.Label lblUser;
