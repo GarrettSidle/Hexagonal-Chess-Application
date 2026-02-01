@@ -36,9 +36,9 @@ namespace Hexagonal_Chess
         //stores each piece based on its location notation within the board
         private readonly IDictionary<string, PictureBox> boardPieces = new Dictionary<string, PictureBox>();
 
-        //stores the action buttons for later retrival 
-        private readonly List<PictureBox> MovementButtons = new List<PictureBox>();
-        private readonly List<PictureBox> CaptureButtons = new List<PictureBox>();
+        //stores the action buttons for later retrival (Panel = hitbox, PictureBox inside = icon)
+        private readonly List<Panel> MovementButtons = new List<Panel>();
+        private readonly List<Panel> CaptureButtons = new List<Panel>();
 
         public FrmBoard()
         {
@@ -72,33 +72,37 @@ namespace Hexagonal_Chess
 
         private void createActionButton(bool isMovementButton, int index) 
         {
-            PictureBox tempImage;
+            // Icon size (visible) - same as before
+            int iconSize = (int)Math.Round(hexRadius * (isMovementButton ? 1.0 : .65));
+            // Hitbox size - ~1.1x larger for easier clicking
+            int hitboxSize = (int)Math.Round(iconSize * 1.3);
 
-            //calculate the size for the photobox
-            int size = (int)Math.Round(hexRadius * (isMovementButton ? 1.0 : .65));
+            // Panel = large invisible hitbox
+            Panel hitbox = new Panel();
+            hitbox.Size = new Size(hitboxSize, hitboxSize);
+            hitbox.Location = new Point(0, 0);
+            hitbox.Name = isMovementButton ? "MovementButton " : "CaptureButton" + index;
+            hitbox.BackColor = Color.Transparent;
 
-            //initialize the photobox settings
-            tempImage = new PictureBox();
-            tempImage.Size = new Size(size, size);
-            tempImage.Location = new Point(0, 0);
-            tempImage.Name = isMovementButton?"MovementButton ":"CaptureButton" + index;
-            tempImage.BackColor = isMovementButton ? Color.Transparent: Color.Black;
+            // PictureBox = icon at original size, centered in hitbox
+            PictureBox tempImage = new PictureBox();
+            tempImage.Size = new Size(iconSize, iconSize);
+            tempImage.Location = new Point((hitboxSize - iconSize) / 2, (hitboxSize - iconSize) / 2);
+            tempImage.BackColor = isMovementButton ? Color.Transparent : Color.Black;
             tempImage.SizeMode = PictureBoxSizeMode.StretchImage;
 
-            //if this is a movement button
             if (isMovementButton)
             {
-                //add the movement button image
                 tempImage.Image = Resources.AvailableMove;
             }
 
-            //place the image on screen
-            this.pnlGame.Controls.Add(tempImage);
-            tempImage.BringToFront();
-            tempImage.Visible = false;
+            hitbox.Controls.Add(tempImage);
+            hitbox.Cursor = Cursors.Hand;
+            this.pnlGame.Controls.Add(hitbox);
+            hitbox.BringToFront();
+            hitbox.Visible = false;
 
-            //add it to the appropriate List for later retrieval
-            (isMovementButton?MovementButtons:CaptureButtons).Add(tempImage);
+            (isMovementButton ? MovementButtons : CaptureButtons).Add(hitbox);
         }
 
         //swap the board to a new player mode
@@ -415,15 +419,19 @@ namespace Hexagonal_Chess
         public void removeActionButtons()
         {
             //for each action button remove the click event and hide the button
-            foreach (PictureBox image in MovementButtons)
+            foreach (Panel hitbox in MovementButtons)
             {
-                image.Visible = false;
-                RemoveEvent(image, "EventClick");
+                hitbox.Visible = false;
+                RemoveEvent(hitbox, "EventClick");
+                if (hitbox.Controls.Count > 0)
+                    RemoveEvent(hitbox.Controls[0], "EventClick");
             }
-            foreach (PictureBox image in CaptureButtons)
+            foreach (Panel hitbox in CaptureButtons)
             {
-                image.Visible = false;
-                RemoveEvent(image, "EventClick");
+                hitbox.Visible = false;
+                RemoveEvent(hitbox, "EventClick");
+                if (hitbox.Controls.Count > 0)
+                    RemoveEvent(hitbox.Controls[0], "EventClick");
             }
         }
 
@@ -481,23 +489,26 @@ namespace Hexagonal_Chess
                 PictureBox tempImage;
 
                 //if we are taking a piece
+                Panel hitbox;
                 if (move.isCapture)
                 {
                     //use a capture button 
-                    tempImage = CaptureButtons[captureCount];
+                    hitbox = CaptureButtons[captureCount];
                     captureCount++;
                 }
                 else
                 {
                     //otherwise, show a movement button
-                    tempImage = MovementButtons[i];
+                    hitbox = MovementButtons[i];
                 }
-                //add the click event to the button
-                tempImage.Click += (sender, EventArgs) => { Move_Click(sender, EventArgs, move); };
+                //add the click event to both hitbox and icon (icon is hitbox.Controls[0])
+                EventHandler moveHandler = (sender, ev) => Move_Click(sender, ev, move);
+                hitbox.Click += moveHandler;
+                hitbox.Controls[0].Click += moveHandler;
 
-                //place movement buttons
-                tempImage.Location = new Point(tempLocation.X - tempImage.Width / 2, tempLocation.Y - tempImage.Height / 2);
-                tempImage.Visible = true;
+                //place movement buttons (center the hitbox on the hex)
+                hitbox.Location = new Point(tempLocation.X - hitbox.Width / 2, tempLocation.Y - hitbox.Height / 2);
+                hitbox.Visible = true;
 
             }
 
