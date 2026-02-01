@@ -57,18 +57,26 @@ namespace Hexagonal_Chess
 
         public static void regenerateBoard()
         {
-            //reset them board
+            //reset the board state
             Utils.board = new Utils.Board();
 
-            //close the existing board form
-            FrmBoard frmBoard = (FrmBoard) getScreen("Board");
-            frmBoard.Dispose();
+            FrmBoard oldBoard = (FrmBoard)getScreen("Board");
 
-            frmBoard = new FrmBoard();
+            // Create and register the new board BEFORE tearing down the old one.
+            // This ensures getScreen("Board") never returns the old board during teardown
+            // (e.g. from FormClosing/Dispose), so nothing can hold a reference to the first board.
+            FrmBoard newBoard = new FrmBoard();
+            screens["Board"] = newBoard;
 
-            //create a new board form 
-            screens["Board"] = frmBoard;
-            frmBoard.updateGameMode();
+            // Tear down old board: detach from MDI (and remove from parent Controls explicitly),
+            // close so FormClosing unsubscribes, then dispose.
+            oldBoard.MdiParent = null;
+            if (mdiParent != null && mdiParent.Controls.Contains(oldBoard))
+                mdiParent.Controls.Remove(oldBoard);
+            oldBoard.Close();
+            oldBoard.Dispose();
+
+            newBoard.updateGameMode();
         }
 
         public static Form getScreen(string screenName)

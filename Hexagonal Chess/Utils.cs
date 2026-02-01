@@ -334,24 +334,26 @@ namespace Hexagonal_Chess
                 this.row = row;
             }
 
+            // Reused buffer to avoid allocating 91 PointF[] per paint (paint is UI-thread only)
+            private static readonly PointF[] HexShapeBuffer = new PointF[6];
+
             public static void DrawHexagon(Hexagon hexagon, PaintEventArgs e, int hexRadius)
             {
                 var graphics = e.Graphics;
 
-                var shape = new PointF[6];
-
-
-                //Create the 6 points
+                //Create the 6 points (reuse buffer to reduce GC pressure)
                 for (int a = 0; a < 6; a++)
                 {
-                    //calculate each point, each hexRadius distance away from the center
-                    shape[a] = new PointF(
+                    HexShapeBuffer[a] = new PointF(
                         hexagon.location.X + hexRadius * (float)Math.Cos(a * 60 * Math.PI / 180f),
                         hexagon.location.Y + hexRadius * (float)Math.Sin(a * 60 * Math.PI / 180f));
                 }
 
-                //color in the shape
-                graphics.FillPolygon(new SolidBrush(hexagon.color), shape);
+                //color in the shape (dispose brush to avoid GDI leak on every repaint)
+                using (var brush = new SolidBrush(hexagon.color))
+                {
+                    graphics.FillPolygon(brush, HexShapeBuffer);
+                }
             }
 
         }

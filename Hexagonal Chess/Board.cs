@@ -24,6 +24,10 @@ namespace Hexagonal_Chess
 
         private void FrmBoard_Load(object sender, EventArgs e)
         {
+            // Use cloned images so disposing this form does not dispose shared Resources (fixes leak/corruption when starting new game)
+            imgTopUser.Image = (Image)Resources.BlackPawn.Clone();
+            imgBottomUser.Image = (Image)Resources.WhitePawn.Clone();
+
             //reset the board
             lblBottomEval.Text = "";
             lblTopEval.Text = "";
@@ -49,15 +53,20 @@ namespace Hexagonal_Chess
             }
         }
 
-        //stores the location for each hexagon based on its location notation on the board
-        private readonly IDictionary<string, Hexagon> boardNodes = new Dictionary<string, Hexagon>();
+        //stores the location for each hexagon based on its location notation on the board (capacity 91 hex cells)
+        private readonly IDictionary<string, Hexagon> boardNodes = new Dictionary<string, Hexagon>(91);
 
-        //stores each piece based on its location notation within the board
-        private readonly IDictionary<string, PictureBox> boardPieces = new Dictionary<string, PictureBox>();
+        //stores each piece based on its location notation within the board (max ~32 pieces)
+        private readonly IDictionary<string, PictureBox> boardPieces = new Dictionary<string, PictureBox>(40);
 
         //stores the action buttons for later retrival (Panel = hitbox, PictureBox inside = icon)
-        private readonly List<Panel> MovementButtons = new List<Panel>();
-        private readonly List<Panel> CaptureButtons = new List<Panel>();
+        private readonly List<Panel> MovementButtons = new List<Panel>(37);
+        private readonly List<Panel> CaptureButtons = new List<Panel>(9);
+
+        // One shared image for all movement buttons (saves 36 bitmap copies); cleared in FormClosing before dispose
+        private Image _sharedMovementButtonImage;
+        // Reused font for all board labels (saves GDI handles and allocations)
+        private Font _boardLabelFont;
 
         public FrmBoard()
         {
@@ -74,8 +83,24 @@ namespace Hexagonal_Chess
 
         private void FrmBoard_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // Unsubscribe from static MessageReceiver so this form can be GC'd (fixes memory leak when starting a new game)
+            MessageReceiver.DoWork -= MessageReceiver_DoWork;
+            MessageReceiver.RunWorkerCompleted -= MessageReceiver_RunWorkerCompleted;
             if (userMode != 0)
                 CleanupMultiplayer();
+            // Clear shared movement button image from all PictureBoxes so we can dispose it (they would otherwise dispose it)
+            if (_sharedMovementButtonImage != null)
+            {
+                foreach (Panel p in MovementButtons)
+                {
+                    if (p.Controls.Count > 0 && p.Controls[0] is PictureBox pb)
+                        pb.Image = null;
+                }
+                _sharedMovementButtonImage.Dispose();
+                _sharedMovementButtonImage = null;
+            }
+            _boardLabelFont?.Dispose();
+            _boardLabelFont = null;
         }
 
         private static void CleanupMultiplayer()
@@ -131,11 +156,10 @@ namespace Hexagonal_Chess
 
             if (isMovementButton)
             {
-                // Clone the image so each PictureBox owns its copy. Otherwise, when the Board
-                // is disposed (e.g. going home then starting a new game), PictureBox.Dispose
-                // disposes the shared Resources.AvailableMove bitmap, and the next Board gets
-                // an invalid disposed image → "Parameter is not valid".
-                tempImage.Image = (Image)Resources.AvailableMove.Clone();
+                // One shared clone for all 37 movement buttons (saves memory); cleared in FormClosing before dispose
+                if (_sharedMovementButtonImage == null)
+                    _sharedMovementButtonImage = (Image)Resources.AvailableMove.Clone();
+                tempImage.Image = _sharedMovementButtonImage;
             }
 
             hitbox.Controls.Add(tempImage);
@@ -327,6 +351,9 @@ namespace Hexagonal_Chess
         {
             pnlGame.SuspendLayout();
 
+            if (_boardLabelFont == null)
+                _boardLabelFont = new Font("Segoe UI Semibold", 11F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
+
             //The distance from the center of a hexagon to center of any of its lines
             int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
 
@@ -404,9 +431,8 @@ namespace Hexagonal_Chess
 
         private void placeLabel(string text, int x, int y)
         {
-            //create a label
             Label colLabel = new Label();
-            colLabel.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            colLabel.Font = _boardLabelFont;
             colLabel.ForeColor = Color.FromArgb(80, 70, 60);
             colLabel.BackColor = Color.Transparent;
             colLabel.Width = 30;
@@ -632,9 +658,11 @@ namespace Hexagonal_Chess
                     capturedPieceImage = boardPieces[endLocation.notation];
                 }
 
-                //remove the pieces image
+                //remove the pieces image and dispose to avoid memory leak
                 capturedPieceImage.Visible = false;
-                frmBoard.Controls.Remove(capturedPieceImage);
+                frmBoard.pnlGame.Controls.Remove(capturedPieceImage);
+                capturedPieceImage.Image?.Dispose();
+                capturedPieceImage.Dispose();
 
                 //remove the piece from the dictionary
                 boardPieces.Remove(endLocation.notation);
