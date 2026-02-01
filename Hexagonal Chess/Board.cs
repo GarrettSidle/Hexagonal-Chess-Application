@@ -62,6 +62,7 @@ namespace Hexagonal_Chess
         public FrmBoard()
         {
             InitializeComponent();
+            this.FormClosing += FrmBoard_FormClosing;
 
             // Enable double buffering to reduce flicker during repaints
             typeof(Control).GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -69,6 +70,24 @@ namespace Hexagonal_Chess
 
             buildBoard();
             popultateActionButtons();
+        }
+
+        private void FrmBoard_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (userMode != 0)
+                CleanupMultiplayer();
+        }
+
+        private static void CleanupMultiplayer()
+        {
+            try { sock?.Close(); sock = null; } catch { }
+            try { client?.Close(); client = null; } catch { }
+            try { server?.Stop(); server = null; } catch { }
+        }
+
+        internal static void CleanupMultiplayerStatic()
+        {
+            CleanupMultiplayer();
         }
 
         private void popultateActionButtons()
@@ -127,33 +146,38 @@ namespace Hexagonal_Chess
         //swap the board to a new player mode
         public void updateGameMode()
         {
-            if (userMode == 1)//Host mode
-            { 
-                //start listening for new moves
+            if (userMode == 1) // Host mode
+            {
+                if (sock == null)
+                    return;
+                MessageReceiver.DoWork -= MessageReceiver_DoWork;
                 MessageReceiver.DoWork += MessageReceiver_DoWork;
-                server = new TcpListener(System.Net.IPAddress.Any, 5732);
-                server.Start();
-                sock = server.AcceptSocket();
+                MessageReceiver.RunWorkerCompleted -= MessageReceiver_RunWorkerCompleted;
+                MessageReceiver.RunWorkerCompleted += MessageReceiver_RunWorkerCompleted;
+                if (!MessageReceiver.IsBusy)
+                    MessageReceiver.RunWorkerAsync();
             }
-            else if (userMode == 2) //client mode
+            else if (userMode == 2) // Client mode
             {
                 try
                 {
-                    //start listening for new moves
-                    client = new TcpClient(Utils.IP, 5732);
+                    client = new TcpClient(Utils.IP, Utils.GamePort);
                     sock = client.Client;
+                    byte[] ready = new byte[] { 0x01 };
+                    sock.Send(ready);
+                    MessageReceiver.DoWork -= MessageReceiver_DoWork;
+                    MessageReceiver.DoWork += MessageReceiver_DoWork;
+                    MessageReceiver.RunWorkerCompleted -= MessageReceiver_RunWorkerCompleted;
+                    MessageReceiver.RunWorkerCompleted += MessageReceiver_RunWorkerCompleted;
                     MessageReceiver.RunWorkerAsync();
-
-                    //Swap Screens
                     MDIParent.swapScreen("Board");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    throw;
                 }
             }
 
-            //reset the board
             resetBoard();
         }
 
@@ -214,40 +238,73 @@ namespace Hexagonal_Chess
 
         private void ReceiveMove()
         {
-            //retrieve the last sent byte array
-            byte[] buffer = new byte[4];
-            sock.Receive(buffer);
+            FrmBoard frmBoard = (FrmBoard)MDIParent.getScreen("Board");
+            byte[] buffer;
+            try
+            {
+                buffer = new byte[5];
+                int received = sock.Receive(buffer);
+                if (received <= 0)
+                {
+                    InvokeConnectionLost(frmBoard);
+                    return;
+                }
+            }
+            catch (SocketException)
+            {
+                InvokeConnectionLost(frmBoard);
+                return;
+            }
+            catch (ObjectDisposedException)
+            {
+                return;
+            }
 
-            //decode them into their indivual meanings
             int atkPieceCol = buffer[0];
             int atkPieceRow = buffer[1];
-
             int capturedCol = buffer[2];
             int capturedRow = buffer[3];
+            byte flags = buffer.Length > 4 ? buffer[4] : (byte)0;
+            bool enPassant = (flags & 0x01) != 0;
+            bool isCapture = enPassant || (board.gameBoard[capturedCol] != null && capturedRow < board.gameBoard[capturedCol].Count && board.gameBoard[capturedCol][capturedRow] != null);
 
-            //create a new move based on the recieved data
-            Move move = new Move(board.gameBoard[atkPieceCol][atkPieceRow], new LocNotation(capturedCol, capturedRow), board.gameBoard[capturedCol][capturedRow] != null, false);
+            Piece piece = board.gameBoard[atkPieceCol][atkPieceRow];
+            if (piece == null)
+                return;
+            Move move = new Move(piece, new LocNotation(capturedCol, capturedRow), isCapture, enPassant);
 
-            //execute the data
-            makeMove(move, board, boardPieces, boardNodes, (FrmBoard)MDIParent.getScreen("Board"));
+            // Marshal makeMove to UI thread
+            if (frmBoard.InvokeRequired)
+                frmBoard.Invoke(new Action(() => makeMove(move, board, boardPieces, boardNodes, frmBoard)));
+            else
+                makeMove(move, board, boardPieces, boardNodes, frmBoard);
         }
-        
+
+        private void MessageReceiver_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (userMode != 0 && sock != null && sock.Connected && !MessageReceiver.IsBusy)
+                MessageReceiver.RunWorkerAsync();
+        }
+
+        private void InvokeConnectionLost(FrmBoard frmBoard)
+        {
+            CleanupMultiplayer();
+            if (frmBoard.IsHandleCreated)
+                frmBoard.Invoke(new Action(() =>
+                {
+                    MessageBox.Show("Connection lost.", "Connection");
+                    MDIParent.swapScreen("Home");
+                }));
+        }
 
         private void SendMove(Move move)
         {
-            //create the byte array to send
-            byte[] datas = { (byte)move.piece.locNotation.col, (byte)move.piece.locNotation.row, (byte)move.endLocation.col, (byte)move.endLocation.row };
+            byte flags = (byte)(move.enPassent ? 0x01 : 0x00);
+            byte[] datas = { (byte)move.piece.locNotation.col, (byte)move.piece.locNotation.row, (byte)move.endLocation.col, (byte)move.endLocation.row, flags };
             sock.Send(datas);
 
-            //restart listening
-            MessageReceiver.DoWork += MessageReceiver_DoWork;
-            //if the reciever has already been issues
             if (!MessageReceiver.IsBusy)
-            {
-                //create a new reciever thread
                 MessageReceiver.RunWorkerAsync();
-            }
-            //swap turns
             board.swapTurns();
         }
 
@@ -406,17 +463,6 @@ namespace Hexagonal_Chess
 
             LocNotation tempNotation = piece.locNotation;
 
-            ////Offset.
-            //if (piece.locNotation.col > 5)
-            //{
-            //    //shift the row up by the number of columns it is right of center
-            //    int newRow = piece.locNotation.row - 5 + piece.locNotation.col;
-            //    //if we are off the board, continue to the next
-            //    if (newRow > 0)
-            //    {
-            //        tempNotation = new LocNotation(piece.locNotation.col, newRow);
-            //    }
-            //}
 
             //add the piece to the piece dictionary for later retrieval
             boardPieces.Add(tempNotation.notation, pictureBox);
@@ -546,31 +592,6 @@ namespace Hexagonal_Chess
 
             LocNotation tempEndLocation = endLocation;
             LocNotation eendLocation = endLocation;
-
-            ////Offset.
-            //if (endLocation.col > 5)
-            //{
-            //    //shift the row up by the number of columns it is right of center
-            //    int newRow = endLocation.row - 5 + endLocation.col;
-            //    //if we are off the board, continue to the next
-            //    if (newRow > 0)
-            //    {
-            //        eendLocation = new LocNotation(endLocation.col, newRow);
-            //    }
-            //}
-            ////Offset.
-            //if (tempEndLocation.col > 5)
-            //{
-            //    //shift the row up by the number of columns it is right of center
-            //    int newRow = tempEndLocation.row + 5 - tempEndLocation.col;
-            //    //if we are off the board, continue to the next
-            //    if (newRow > 0)
-            //    {
-            //        tempEndLocation = new LocNotation(tempEndLocation.col, newRow);
-            //    }
-            //}
-
-
 
             //if a piece was taken
             if (move.isCapture)

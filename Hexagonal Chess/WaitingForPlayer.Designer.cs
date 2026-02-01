@@ -30,6 +30,7 @@ namespace Hexagonal_Chess
         {
             this.imgLoading = new System.Windows.Forms.PictureBox();
             this.lblPleaseWait = new System.Windows.Forms.Label();
+            this.lblHostIP = new System.Windows.Forms.Label();
             this.btnCancel = new Hexagonal_Chess.CustomButton();
             ((System.ComponentModel.ISupportInitialize)(this.imgLoading)).BeginInit();
             this.SuspendLayout();
@@ -55,6 +56,18 @@ namespace Hexagonal_Chess
             this.lblPleaseWait.TabIndex = 7;
             this.lblPleaseWait.Text = "Please wait for the other player to join";
             this.lblPleaseWait.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblHostIP
+            // 
+            this.lblHostIP.AutoSize = true;
+            this.lblHostIP.BackColor = System.Drawing.Color.Transparent;
+            this.lblHostIP.Font = new System.Drawing.Font("Microsoft YaHei", 14.25F);
+            this.lblHostIP.Location = new System.Drawing.Point(137, 395);
+            this.lblHostIP.Name = "lblHostIP";
+            this.lblHostIP.Size = new System.Drawing.Size(100, 25);
+            this.lblHostIP.TabIndex = 8;
+            this.lblHostIP.Text = "Your IP: ...";
+            this.lblHostIP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnCancel
             // 
@@ -85,10 +98,12 @@ namespace Hexagonal_Chess
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.ControlBox = false;
+            this.Controls.Add(this.lblHostIP);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.imgLoading);
             this.Controls.Add(this.lblPleaseWait);
             this.DoubleBuffered = true;
+            this.Load += new System.EventHandler(this.FrmWaitingForPlayer_Load);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.ImeMode = System.Windows.Forms.ImeMode.Close;
             this.Name = "FrmWaitingForPlayer";
@@ -102,6 +117,7 @@ namespace Hexagonal_Chess
         #endregion
 
         private System.Windows.Forms.Label lblPleaseWait;
+        private System.Windows.Forms.Label lblHostIP;
         private System.Windows.Forms.PictureBox imgLoading;
         private CustomButton btnCancel;
     }

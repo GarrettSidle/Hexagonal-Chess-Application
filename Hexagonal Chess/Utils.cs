@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +25,9 @@ namespace Hexagonal_Chess
         //network flags
         public static bool gameFound = false;
         public static string IP;
+
+        /// <summary>TCP port for multiplayer (host listen and client connect).</summary>
+        public const int GamePort = 5732;
 
         // Networking Components
         public static BackgroundWorker MessageReceiver = new BackgroundWorker();

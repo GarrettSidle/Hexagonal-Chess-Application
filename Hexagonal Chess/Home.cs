@@ -1,9 +1,11 @@
-﻿  using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -41,32 +43,54 @@ namespace Hexagonal_Chess
 
         private void btnHost_Click(object sender, EventArgs e)
         {
-            //start looking for a connection
-            FrmWaitingForPlayer frmWaitingForPlayer = new FrmWaitingForPlayer();
-            frmWaitingForPlayer.ShowDialog();
-
-            //if we found a connection
-            if (Utils.gameFound)
+            FrmBoard.CleanupMultiplayerStatic();
+            Utils.gameFound = false;
+            Utils.sock = null;
+            try
             {
-                //set the game type to Host
-                Utils.userMode = 1;
-
-                FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
-                //regenerate the board
-                board.updateGameMode();
-
-                //Swap Screens
-                MDIParent.swapScreen("Board");
+                Utils.server = new TcpListener(IPAddress.Any, Utils.GamePort);
+                Utils.server.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not start server: {ex.Message}", "Error");
+                return;
             }
 
+            FrmWaitingForPlayer frmWaitingForPlayer = new FrmWaitingForPlayer();
+            Task.Run(() =>
+            {
+                try
+                {
+                    Utils.sock = Utils.server.AcceptSocket();
+                    byte[] ready = new byte[1];
+                    if (Utils.sock.Receive(ready) >= 1)
+                    {
+                        Utils.gameFound = true;
+                        if (frmWaitingForPlayer.IsHandleCreated)
+                            frmWaitingForPlayer.Invoke((Action)(() => frmWaitingForPlayer.Close()));
+                    }
+                }
+                catch (ObjectDisposedException) { }
+                catch (SocketException) { }
+                catch (Exception) { }
+            });
+
+            frmWaitingForPlayer.ShowDialog();
+
+            if (Utils.gameFound)
+            {
+                Utils.userMode = 1;
+                FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
+                board.updateGameMode();
+                MDIParent.swapScreen("Board");
+            }
         }
 
         private void btnJoin_Click(object sender, EventArgs e)
         {
-            //set the game type to client
             Utils.userMode = 2;
-
-            //open the connection form
+            FrmBoard.CleanupMultiplayerStatic();
             FrmConnection frmConnection = new FrmConnection();
             frmConnection.ShowDialog();
         }

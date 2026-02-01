@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Net.NetworkInformation;
 
 using static Hexagonal_Chess.Utils;
 
@@ -23,75 +22,30 @@ namespace Hexagonal_Chess
         private void btnCancel_Click(object sender, EventArgs e)
         {
             FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
-
-            //create a new board
             MDIParent.regenerateBoard();
-            //close the results screen
             this.Close();
-
-            //Swap Screens
             MDIParent.swapScreen("Home");
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if(txtIP.Text == "")
+            if (string.IsNullOrWhiteSpace(txtIP.Text))
             {
-                MessageBox.Show("Invalid IP");
+                MessageBox.Show("Please enter an IP address.", "Invalid IP");
                 return;
             }
 
-            //if the IP is not valid
-            if ((!PingHost(txtIP.Text)))
-            {
-                //show and error message
-                MessageBox.Show($"Unable to locate {txtIP.Text}", "Error");
-            }
-            //if the ip is valid
-            else
-            {
-                //updeate the Ip
-                Utils.IP = txtIP.Text;
-                this.Close();
-
-                FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
-
-                //start the game
-                board.updateGameMode();
-            }
-        }
-
-        private static bool PingHost(string address)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-
-
-            bool pingable = false;
-            Ping pinger = null;
-
+            Utils.IP = txtIP.Text.Trim();
+            this.Close();
+            FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
             try
             {
-                //attempt a ping
-                pinger = new Ping();
-                PingReply reply = pinger.Send(address);
-                pingable = reply.Status == IPStatus.Success;
+                board.updateGameMode();
             }
-            catch (PingException)
+            catch (Exception ex)
             {
-                // Discard PingExceptions and return false;
+                MessageBox.Show($"Unable to connect. Make sure the host is waiting for a player.\n\n{ex.Message}", "Connection failed");
             }
-            finally
-            {
-                //discard inactive pings
-                if (pinger != null)
-                {
-                    pinger.Dispose();
-                }
-            }
-            //reset the curser
-            Cursor.Current = Cursors.Default;
-
-            return pingable;
         }
     }
 }
