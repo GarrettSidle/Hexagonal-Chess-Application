@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -127,10 +127,10 @@ namespace Hexagonal_Chess
         {
             List<Move> outputMoves = new List<Move>();
 
-            //Get the location of the piece we are moving
+            //Get the location of the piece we are moving (storage coords)
             int col = piece.locNotation.col;
             int row = piece.locNotation.row;
-
+            int logicalRow = GetLogicalRow(col, row);
 
             LocNotation tempLocation;
 
@@ -140,18 +140,18 @@ namespace Hexagonal_Chess
             //For each potential move
             for (int i = 0; i < displacements.Length; i++)
             {
-                //calculate the new position using the displacements
-                tempLocation = new LocNotation(col + displacements[i][0], row + displacements[i][1]);
+                int dc = displacements[i][0];
+                int dr = displacements[i][1];
+                int newCol = col + dc;
+                int newLogicalRow = logicalRow + dr;
+                int newStorageRow = GetStorageRow(newCol, newLogicalRow);
 
-                //offset the position 
-                //LocNotation offsetLocation = offsetRightBoard(tempLocation);
-
-                LocNotation offsetLocation = tempLocation;
+                tempLocation = new LocNotation(newCol, newStorageRow);
 
                 try
                 {
-                    //get the piece at the next square
-                    selectedPiece = board.gameBoard[offsetLocation.col][offsetLocation.row];
+                    //get the piece at the next square (use storage row for array index)
+                    selectedPiece = board.gameBoard[newCol][newStorageRow];
                 }
                 catch (Exception)
                 {
@@ -205,8 +205,9 @@ namespace Hexagonal_Chess
 
             int col = piece.locNotation.col;
             int row = piece.locNotation.row;
+            int logicalRow = GetLogicalRow(col, row);
 
-            int newRow;
+            int storageRow;
 
             Piece selectedPiece;
 
@@ -214,18 +215,15 @@ namespace Hexagonal_Chess
             while (moving)
             {
 
-                //move in the selected direction
+                //move in the selected direction (in logical row space)
                 col += colIncrement;
-                row += rowIncrement;
-
-                //offset the position 
-                //newRow = offsetRightBoard(col, row);
-                newRow = row;
+                logicalRow += rowIncrement;
+                storageRow = GetStorageRow(col, logicalRow);
 
                 try
                 {
-                    //get the piece at the next square
-                    selectedPiece = board.gameBoard[col][newRow];
+                    //get the piece at the next square (use storage row for array index)
+                    selectedPiece = board.gameBoard[col][storageRow];
                 }
                 catch (Exception)
                 {
@@ -238,7 +236,7 @@ namespace Hexagonal_Chess
                 if (selectedPiece == null)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, new LocNotation(col, newRow), false, false));
+                    outputMoves.Add(new Move(piece, new LocNotation(col, storageRow), false, false));
 
                     //look at the next square 
                     continue;
@@ -247,7 +245,7 @@ namespace Hexagonal_Chess
                 else if (selectedPiece.isWhite != piece.isWhite)
                 {
                     //add it as a potential move 
-                    outputMoves.Add(new Move(piece, new LocNotation(col, newRow), true, false));
+                    outputMoves.Add(new Move(piece, new LocNotation(col, storageRow), true, false));
 
                     //stop moving down the line
                     moving = false;
@@ -372,6 +370,10 @@ namespace Hexagonal_Chess
         {
             List<Move> outputMoves = new List<Move>();
 
+            int col = piece.locNotation.col;
+            int row = piece.locNotation.row;
+            int logicalRow = GetLogicalRow(col, row);
+
             int[][] whitePawnDisplacers = new int[][] {
                 new int[2] { -1, 0 }, //up and left
                 new int[2] { 1, 1 } //up and right
@@ -391,11 +393,10 @@ namespace Hexagonal_Chess
             LocNotation tempLocation;
             foreach (int[] displacement in displacements)
             {
-                //calculate the new position using the displacements
-                tempLocation = new LocNotation(piece.locNotation.col + displacement[0], piece.locNotation.row + displacement[1]);
-
-                //offset the position 
-                //tempLocation = offsetRightBoard(tempLocation);
+                int newCol = col + displacement[0];
+                int newLogicalRow = logicalRow + displacement[1];
+                int newStorageRow = GetStorageRow(newCol, newLogicalRow);
+                tempLocation = new LocNotation(newCol, newStorageRow);
                 
                 //if we are looking at an en passent square
                 if (tempLocation.notation == enPassantSquareNotation)
@@ -407,8 +408,8 @@ namespace Hexagonal_Chess
 
                 try
                 {
-                    //get the piece at the next square
-                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+                    //get the piece at the next square (use storage row for array index)
+                    selectedPiece = board.gameBoard[newCol][newStorageRow];
                 }
                 catch (Exception)
                 {
@@ -432,16 +433,15 @@ namespace Hexagonal_Chess
             }
 
 
-            //Look one square ahead
-            tempLocation = new LocNotation(piece.locNotation.col, piece.locNotation.row + (piece.isWhite ? 1 : -1));
-
-            //offset the position 
-            //tempLocation = offsetRightBoard(tempLocation);
+            //Look one square ahead (in logical row)
+            int forwardLogicalRow = logicalRow + (piece.isWhite ? 1 : -1);
+            int forwardStorageRow = GetStorageRow(col, forwardLogicalRow);
+            tempLocation = new LocNotation(col, forwardStorageRow);
 
             try
             {
                 //get the piece at the next square
-                selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+                selectedPiece = board.gameBoard[col][forwardStorageRow];
             }
             catch (Exception)
             {
@@ -461,16 +461,15 @@ namespace Hexagonal_Chess
             //If the piece is on a starting square
             if (isStartingPawn(piece))
             {
-                //Get the square two spaces ahead
-                tempLocation = new LocNotation(piece.locNotation.col, piece.locNotation.row + (piece.isWhite ? 2 : -2));
-
-                //offset the position 
-                //tempLocation = offsetRightBoard(tempLocation);
+                //Get the square two spaces ahead (in logical row)
+                int doubleForwardLogicalRow = logicalRow + (piece.isWhite ? 2 : -2);
+                int doubleForwardStorageRow = GetStorageRow(col, doubleForwardLogicalRow);
+                tempLocation = new LocNotation(col, doubleForwardStorageRow);
 
                 try
                 {
                     //get the piece at the square
-                    selectedPiece = board.gameBoard[tempLocation.col][tempLocation.row];
+                    selectedPiece = board.gameBoard[col][doubleForwardStorageRow];
                 }
                 catch (Exception)
                 {
@@ -507,6 +506,26 @@ namespace Hexagonal_Chess
             return null;
         }
 
+
+        /// <summary>
+        /// Converts storage row (array index) to logical row for move direction math.
+        /// On the right side of the board (col > 5), columns have fewer rows, so the same
+        /// logical "horizontal line" has a higher logical row index.
+        /// </summary>
+        private static int GetLogicalRow(int col, int storageRow)
+        {
+            if (col <= 5) return storageRow;
+            return storageRow + col - 5;
+        }
+
+        /// <summary>
+        /// Converts logical row (from move direction math) to storage row (array index).
+        /// </summary>
+        private static int GetStorageRow(int col, int logicalRow)
+        {
+            if (col <= 5) return logicalRow;
+            return logicalRow + 5 - col;
+        }
 
         public static LocNotation offsetRightBoard(LocNotation origLocNotation)
         {

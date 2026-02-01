@@ -15,3 +15,20 @@ C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Ch
 C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.FrmSettings.resources
 C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.FrmConnection.resources
 C:\Users\garre\source\personal\Hexagons\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.FrmWaitingForPlayer.resources
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\bin\Debug\Hexagonal Chess.exe.config
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\bin\Debug\Hexagonal Chess.exe
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\bin\Debug\Hexagonal Chess.pdb
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.csproj.AssemblyReference.cache
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.exe.config
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.FrmBoard.resources
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.FrmConnection.resources
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.frmHome.resources
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.MDIParent.resources
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.Properties.Resources.resources
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.ResultScreen.resources
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.FrmSettings.resources
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal_Chess.FrmWaitingForPlayer.resources
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.csproj.GenerateResource.cache
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.csproj.CoreCompileInputs.cache
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.exe
+C:\dev\repos\Hexagonal-Chess-Application\Hexagonal Chess\obj\Debug\Hexagonal Chess.pdb
