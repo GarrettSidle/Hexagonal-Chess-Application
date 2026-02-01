@@ -694,10 +694,6 @@ namespace Hexagonal_Chess
 
             int currentRow = movesTable.Rows.Count;
 
-            movesTable.ForeColor = Color.Black;
-            movesTable.Font = frmBoard.lblMovesTableRef.Font;
-
-
             //if it was whites move
             if (board.whiteToPlay)
             {
@@ -728,6 +724,12 @@ namespace Hexagonal_Chess
                 movesTable.Rows[currentRow - 1].Selected = true;
             }
 
+            // Scroll to show the most recent move
+            int lastRowIndex = movesTable.Rows.Count - 1;
+            if (lastRowIndex >= 0)
+            {
+                movesTable.FirstDisplayedScrollingRowIndex = lastRowIndex;
+            }
         }
 
         public static void stripEval()

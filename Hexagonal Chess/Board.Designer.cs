@@ -1,4 +1,4 @@
-﻿namespace Hexagonal_Chess
+namespace Hexagonal_Chess
 {
     partial class FrmBoard
     {
@@ -32,6 +32,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlEvaluation = new System.Windows.Forms.Panel();
             this.layoutEval = new System.Windows.Forms.TableLayoutPanel();
             this.pnlEvalBottom = new System.Windows.Forms.Panel();
@@ -47,6 +49,7 @@
             this.lblBottomUserEval = new System.Windows.Forms.Label();
             this.lblBottomName = new System.Windows.Forms.Label();
             this.pnlMoves = new System.Windows.Forms.Panel();
+            this.lblMovesTitle = new System.Windows.Forms.Label();
             this.lblMovesTableRef = new System.Windows.Forms.Label();
             this.dgMoves = new System.Windows.Forms.DataGridView();
             this.colMoveNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -230,14 +233,29 @@
             // 
             // pnlMoves
             // 
+            this.pnlMoves.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(243)))), ((int)(((byte)(232)))));
+            this.pnlMoves.Controls.Add(this.lblMovesTitle);
             this.pnlMoves.Controls.Add(this.lblMovesTableRef);
             this.pnlMoves.Controls.Add(this.dgMoves);
             this.pnlMoves.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlMoves.Location = new System.Drawing.Point(981, 0);
             this.pnlMoves.Name = "pnlMoves";
-            this.pnlMoves.Padding = new System.Windows.Forms.Padding(30);
+            this.pnlMoves.Padding = new System.Windows.Forms.Padding(20);
             this.pnlMoves.Size = new System.Drawing.Size(323, 690);
             this.pnlMoves.TabIndex = 3;
+            // 
+            // lblMovesTitle
+            // 
+            this.lblMovesTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblMovesTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMovesTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
+            this.lblMovesTitle.Location = new System.Drawing.Point(20, 20);
+            this.lblMovesTitle.Name = "lblMovesTitle";
+            this.lblMovesTitle.Padding = new System.Windows.Forms.Padding(0, 0, 0, 12);
+            this.lblMovesTitle.Size = new System.Drawing.Size(283, 40);
+            this.lblMovesTitle.TabIndex = 4;
+            this.lblMovesTitle.Text = "Moves";
+            this.lblMovesTitle.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // lblMovesTableRef
             // 
@@ -253,24 +271,53 @@
             // 
             this.dgMoves.AllowUserToAddRows = false;
             this.dgMoves.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dgMoves.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(245)))));
+            this.dgMoves.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgMoves.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgMoves.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(251)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(50)))), ((int)(((byte)(45)))));
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(171)))), ((int)(((byte)(95)))));
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgMoves.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
-            this.dgMoves.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(234)))));
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(50)))), ((int)(((byte)(45)))));
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(171)))), ((int)(((byte)(95)))));
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.Color.White;
+            this.dgMoves.DefaultCellStyle = dataGridViewCellStyle17;
+            this.dgMoves.EnableHeadersVisualStyles = false;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle18.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgMoves.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle18;
+            this.dgMoves.ColumnHeadersHeight = 36;
+            this.dgMoves.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgMoves.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colMoveNumber,
             this.colWhite,
             this.colBlack});
             this.dgMoves.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgMoves.Location = new System.Drawing.Point(30, 30);
+            this.dgMoves.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(218)))), ((int)(((byte)(200)))));
+            this.dgMoves.Location = new System.Drawing.Point(20, 20);
             this.dgMoves.Name = "dgMoves";
             this.dgMoves.ReadOnly = true;
-            this.dgMoves.Size = new System.Drawing.Size(263, 630);
+            this.dgMoves.RowHeadersVisible = false;
+            this.dgMoves.RowTemplate.Height = 32;
+            this.dgMoves.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgMoves.Size = new System.Drawing.Size(283, 650);
             this.dgMoves.TabIndex = 0;
             // 
             // colMoveNumber
             // 
             dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.colMoveNumber.DefaultCellStyle = dataGridViewCellStyle14;
             this.colMoveNumber.HeaderText = "Move";
             this.colMoveNumber.Name = "colMoveNumber";
@@ -282,7 +329,7 @@
             // 
             this.colWhite.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.colWhite.DefaultCellStyle = dataGridViewCellStyle15;
             this.colWhite.FillWeight = 100.6803F;
             this.colWhite.HeaderText = "White";
@@ -293,7 +340,7 @@
             // 
             this.colBlack.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.colBlack.DefaultCellStyle = dataGridViewCellStyle16;
             this.colBlack.FillWeight = 99.31973F;
             this.colBlack.HeaderText = "Black";
@@ -382,6 +429,7 @@
         public System.Windows.Forms.Label lblBottomUserEval;
         private System.Windows.Forms.Label lblBottomName;
         private System.Windows.Forms.Panel pnlMoves;
+        private System.Windows.Forms.Label lblMovesTitle;
         public System.Windows.Forms.DataGridView dgMoves;
         private System.Windows.Forms.Panel pnlBoard;
         public System.Windows.Forms.TableLayoutPanel layoutEval;
