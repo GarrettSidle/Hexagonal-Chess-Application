@@ -131,7 +131,11 @@ namespace Hexagonal_Chess
 
             if (isMovementButton)
             {
-                tempImage.Image = Resources.AvailableMove;
+                // Clone the image so each PictureBox owns its copy. Otherwise, when the Board
+                // is disposed (e.g. going home then starting a new game), PictureBox.Dispose
+                // disposes the shared Resources.AvailableMove bitmap, and the next Board gets
+                // an invalid disposed image → "Parameter is not valid".
+                tempImage.Image = (Image)Resources.AvailableMove.Clone();
             }
 
             hitbox.Controls.Add(tempImage);
@@ -184,6 +188,17 @@ namespace Hexagonal_Chess
         private void resetBoard()
         {
             pnlGame.SuspendLayout();
+
+            // Remove old piece PictureBoxes and clear dictionary (Board form is reused when starting a new game)
+            foreach (var kvp in boardPieces.ToList())
+            {
+                var pb = kvp.Value;
+                pnlGame.Controls.Remove(pb);
+                pb.Image?.Dispose();
+                pb.Dispose();
+            }
+            boardPieces.Clear();
+            dgMoves.Rows.Clear();
 
             //The distance from the center of a hexagon to center of any of its lines
             int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
@@ -450,7 +465,9 @@ namespace Hexagonal_Chess
             int size = (int)Math.Round(hexRadius * 1.55);
             PictureBox pictureBox = new PictureBox();
             pictureBox.Size = new Size(size, size);
-            pictureBox.Image = pieceImage;
+            // Clone so each PictureBox owns its copy. Shared Resources get disposed when the previous
+            // Board's piece PictureBoxes are disposed (e.g. going home → new game).
+            pictureBox.Image = pieceImage != null ? (Image)pieceImage.Clone() : null;
             pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox.BackColor = Color.Transparent;
             //input the piece specific values
@@ -657,8 +674,9 @@ namespace Hexagonal_Chess
                 //promote the pawn to a queen
                 move.piece = new Piece(move.piece.locNotation, 'Q', move.piece.isWhite);
 
-                //update the image
-                pieceImage.Image = move.piece.isWhite ? Properties.Resources.WhiteQueen : Properties.Resources.BlackQueen;
+                //update the image (clone to avoid disposing shared Resources when Board is disposed)
+                var queenRes = move.piece.isWhite ? Properties.Resources.WhiteQueen : Properties.Resources.BlackQueen;
+                pieceImage.Image = queenRes != null ? (Image)queenRes.Clone() : null;
                 pieceImage.Click += (sender, EventArgs) => { Piece_Click(sender, EventArgs, move.piece); };
             }
 
