@@ -155,7 +155,7 @@ namespace Hexagonal_Chess
                 }
                 catch (Exception)
                 {
-                    //we have moved outside the bounds of the board
+                    //we have moved outside the  bounds of the board
                     continue;
                 }
 

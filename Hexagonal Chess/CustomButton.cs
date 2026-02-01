@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +21,13 @@ namespace Hexagonal_Chess
         private int _borderThickness = 6;
         private int _borderThicknessByTwo = 3;
 
+        public CustomButton()
+        {
+            // Prevent the default rectangular hover highlight so only our custom pill shape highlights
+            FlatAppearance.MouseOverBackColor = Color.Transparent;
+            FlatAppearance.MouseDownBackColor = Color.Transparent;
+            Button_WOC();
+        }
 
         public void Button_WOC()
         {
