@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,6 +18,10 @@ namespace Hexagonal_Chess
         {
             InitializeComponent();
 
+            // Hide window until fully loaded to prevent elements popping in
+            this.Opacity = 0;
+            this.Shown += MDIParent_Shown;
+
             //initialize each screen and add it to 
             frmHome home = new frmHome();
             screens.Add("Home", home);
@@ -30,6 +34,17 @@ namespace Hexagonal_Chess
             home.MdiParent = this;
             home.Dock = DockStyle.Fill;
             home.Show();
+        }
+
+        private void MDIParent_Shown(object sender, EventArgs e)
+        {
+            this.Shown -= MDIParent_Shown;
+            // Defer until after layout and paint complete, then reveal the window
+            this.BeginInvoke(new Action(() =>
+            {
+                Application.DoEvents();
+                this.Opacity = 1;
+            }));
         }
 
 
