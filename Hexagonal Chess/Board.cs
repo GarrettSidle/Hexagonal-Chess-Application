@@ -398,13 +398,16 @@ namespace Hexagonal_Chess
 
         private void SendMove(Move move)
         {
-            byte flags = (byte)(move.enPassent ? 0x01 : 0x00);
-            byte[] datas = { (byte)move.piece.locNotation.col, (byte)move.piece.locNotation.row, (byte)move.endLocation.col, (byte)move.endLocation.row, flags };
-            sock.Send(datas);
-
-            if (!MessageReceiver.IsBusy)
-                MessageReceiver.RunWorkerAsync();
-            board.swapTurns();
+            // Only send over network for Host (1) or Client (2). Pass and Play (3) is local only.
+            if (userMode == 1 || userMode == 2)
+            {
+                byte flags = (byte)(move.enPassent ? 0x01 : 0x00);
+                byte[] datas = { (byte)move.piece.locNotation.col, (byte)move.piece.locNotation.row, (byte)move.endLocation.col, (byte)move.endLocation.row, flags };
+                sock.Send(datas);
+                if (!MessageReceiver.IsBusy)
+                    MessageReceiver.RunWorkerAsync();
+            }
+            // Turn is swapped in makeMove(); do not swap here or we double-swap (turn would stay the same).
         }
 
         private void buildBoard()
@@ -891,10 +894,11 @@ namespace Hexagonal_Chess
 
             int currentRow = movesTable.Rows.Count;
 
-            //if it was whites move
-            if (board.whiteToPlay)
-            {
+            // Use the piece color to decide white vs black (not board.whiteToPlay, which may already be swapped)
+            bool wasWhitesMove = move.piece.isWhite;
 
+            if (wasWhitesMove)
+            {
                 string[] strRow = new string[] { "", "", "" };
 
                 movesTable.Rows.Add(strRow);
@@ -908,15 +912,14 @@ namespace Hexagonal_Chess
                 movesTable.ClearSelection();
                 movesTable.Rows[currentRow].Selected = true;
             }
-            //if it was blacks move
             else
             {
-                //find the first row
+                // Black's move: fill in the last row (must exist from white's move)
+                if (currentRow <= 0)
+                    return; // guard: no row to fill (should not happen in normal play)
                 row = movesTable.Rows[currentRow - 1];
-                //input blacks last move
                 row.Cells[2].Value = moveNotation;
 
-                //select the row
                 movesTable.ClearSelection();
                 movesTable.Rows[currentRow - 1].Selected = true;
             }
