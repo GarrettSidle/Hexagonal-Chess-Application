@@ -20,7 +20,10 @@ namespace Hexagonal_Chess
         public static int gameVarient = 0;        // 0 = Glinski, 1 = McCooey, 2 = Hexofen
 
         //User modes
-        public static int userMode = 0;        // 0 = Single Player,  1 = Host,  2 = Client
+        public static int userMode = 0;        // 0 = Play vs Bot,  1 = Host,  2 = Client,  3 = Pass and Play
+
+        /// <summary>Play vs Bot: true = local player is white, false = local player is black (randomized at game start).</summary>
+        public static bool localPlayerIsWhite = true;
 
         //network flags
         public static bool gameFound = false;

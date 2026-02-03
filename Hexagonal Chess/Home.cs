@@ -30,14 +30,20 @@ namespace Hexagonal_Chess
 
         private void btnSinglePlayer_Click(object sender, EventArgs e)
         {
-            //set the game type to single player
-            Utils.userMode = 0;
+            Utils.userMode = 0; // Play vs Bot
+            Utils.localPlayerIsWhite = new Random().Next(2) == 0; // randomize who is white
 
             FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
-            //regenerate the board
             board.updateGameMode();
+            MDIParent.swapScreen("Board");
+        }
 
-            //Swap Screens
+        private void btnPassAndPlay_Click(object sender, EventArgs e)
+        {
+            Utils.userMode = 3; // Pass and Play (two players, same device)
+
+            FrmBoard board = (FrmBoard)MDIParent.getScreen("Board");
+            board.updateGameMode();
             MDIParent.swapScreen("Board");
         }
 

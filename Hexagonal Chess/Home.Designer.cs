@@ -1,4 +1,4 @@
-﻿namespace Hexagonal_Chess
+namespace Hexagonal_Chess
 {
     partial class frmHome
     {
@@ -31,6 +31,7 @@
             this.lblSubitle = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnSinglePlayer = new Hexagonal_Chess.CustomButton();
+            this.btnPassAndPlay = new Hexagonal_Chess.CustomButton();
             this.layoutHomeButtons = new System.Windows.Forms.TableLayoutPanel();
             this.layoutLowerButtons = new System.Windows.Forms.TableLayoutPanel();
             this.btnHost = new Hexagonal_Chess.CustomButton();
@@ -80,32 +81,63 @@
             this.btnSinglePlayer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSinglePlayer.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSinglePlayer.Location = new System.Drawing.Point(20, 20);
-            this.btnSinglePlayer.Margin = new System.Windows.Forms.Padding(20);
+            this.btnSinglePlayer.Margin = new System.Windows.Forms.Padding(12);
             this.btnSinglePlayer.Name = "btnSinglePlayer";
             this.btnSinglePlayer.OnHoverBorderColor = System.Drawing.Color.Gray;
             this.btnSinglePlayer.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnSinglePlayer.OnHoverTextColor = System.Drawing.Color.Gray;
-            this.btnSinglePlayer.Size = new System.Drawing.Size(361, 140);
+            this.btnSinglePlayer.Size = new System.Drawing.Size(241, 140);
             this.btnSinglePlayer.TabIndex = 8;
-            this.btnSinglePlayer.Text = "Single Player";
+            this.btnSinglePlayer.Text = "Play vs Bot";
             this.btnSinglePlayer.TextColor = System.Drawing.Color.White;
             this.btnSinglePlayer.UseVisualStyleBackColor = false;
             this.btnSinglePlayer.Click += new System.EventHandler(this.btnSinglePlayer_Click);
+            //
+            // btnPassAndPlay
+            //
+            this.btnPassAndPlay.BackColor = System.Drawing.Color.Transparent;
+            this.btnPassAndPlay.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
+            this.btnPassAndPlay.ButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(171)))), ((int)(((byte)(95)))));
+            this.btnPassAndPlay.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPassAndPlay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnPassAndPlay.FlatAppearance.BorderSize = 0;
+            this.btnPassAndPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPassAndPlay.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPassAndPlay.Location = new System.Drawing.Point(287, 20);
+            this.btnPassAndPlay.Margin = new System.Windows.Forms.Padding(12);
+            this.btnPassAndPlay.Name = "btnPassAndPlay";
+            this.btnPassAndPlay.OnHoverBorderColor = System.Drawing.Color.Gray;
+            this.btnPassAndPlay.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.btnPassAndPlay.OnHoverTextColor = System.Drawing.Color.Gray;
+            this.btnPassAndPlay.Size = new System.Drawing.Size(241, 140);
+            this.btnPassAndPlay.TabIndex = 12;
+            this.btnPassAndPlay.Text = "Pass and Play";
+            this.btnPassAndPlay.TextColor = System.Drawing.Color.White;
+            this.btnPassAndPlay.UseVisualStyleBackColor = false;
+            this.btnPassAndPlay.Click += new System.EventHandler(this.btnPassAndPlay_Click);
             // 
             // layoutHomeButtons
             // 
-            this.layoutHomeButtons.ColumnCount = 1;
-            this.layoutHomeButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.layoutHomeButtons.Controls.Add(this.layoutLowerButtons, 0, 2);
+            this.layoutHomeButtons.ColumnCount = 6;
+            this.layoutHomeButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.layoutHomeButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.layoutHomeButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.layoutHomeButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.layoutHomeButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.layoutHomeButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66668F));
             this.layoutHomeButtons.Controls.Add(this.pnlTitle, 0, 0);
             this.layoutHomeButtons.Controls.Add(this.layoutUpperButtons, 0, 1);
+            this.layoutHomeButtons.Controls.Add(this.layoutLowerButtons, 1, 2);
+            this.layoutHomeButtons.SetColumnSpan(this.pnlTitle, 6);
+            this.layoutHomeButtons.SetColumnSpan(this.layoutUpperButtons, 6);
+            this.layoutHomeButtons.SetColumnSpan(this.layoutLowerButtons, 4);
             this.layoutHomeButtons.Location = new System.Drawing.Point(0, -31);
             this.layoutHomeButtons.Name = "layoutHomeButtons";
             this.layoutHomeButtons.RowCount = 3;
             this.layoutHomeButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.layoutHomeButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.layoutHomeButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.layoutHomeButtons.Size = new System.Drawing.Size(808, 558);
+            this.layoutHomeButtons.Size = new System.Drawing.Size(1000, 558);
             this.layoutHomeButtons.TabIndex = 9;
             // 
             // layoutLowerButtons
@@ -134,7 +166,7 @@
             this.btnHost.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHost.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHost.Location = new System.Drawing.Point(20, 20);
-            this.btnHost.Margin = new System.Windows.Forms.Padding(20);
+            this.btnHost.Margin = new System.Windows.Forms.Padding(12);
             this.btnHost.Name = "btnHost";
             this.btnHost.OnHoverBorderColor = System.Drawing.Color.Gray;
             this.btnHost.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -157,7 +189,7 @@
             this.btnJoin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnJoin.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnJoin.Location = new System.Drawing.Point(421, 20);
-            this.btnJoin.Margin = new System.Windows.Forms.Padding(20);
+            this.btnJoin.Margin = new System.Windows.Forms.Padding(12);
             this.btnJoin.Name = "btnJoin";
             this.btnJoin.OnHoverBorderColor = System.Drawing.Color.Gray;
             this.btnJoin.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -183,11 +215,13 @@
             // 
             // layoutUpperButtons
             // 
-            this.layoutUpperButtons.ColumnCount = 2;
-            this.layoutUpperButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.layoutUpperButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.layoutUpperButtons.Controls.Add(this.btnSettings, 1, 0);
+            this.layoutUpperButtons.ColumnCount = 3;
+            this.layoutUpperButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.layoutUpperButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.layoutUpperButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
             this.layoutUpperButtons.Controls.Add(this.btnSinglePlayer, 0, 0);
+            this.layoutUpperButtons.Controls.Add(this.btnPassAndPlay, 1, 0);
+            this.layoutUpperButtons.Controls.Add(this.btnSettings, 2, 0);
             this.layoutUpperButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutUpperButtons.Location = new System.Drawing.Point(3, 189);
             this.layoutUpperButtons.Name = "layoutUpperButtons";
@@ -206,13 +240,13 @@
             this.btnSettings.FlatAppearance.BorderSize = 0;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSettings.Location = new System.Drawing.Point(421, 20);
-            this.btnSettings.Margin = new System.Windows.Forms.Padding(20);
+            this.btnSettings.Location = new System.Drawing.Point(554, 20);
+            this.btnSettings.Margin = new System.Windows.Forms.Padding(12);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.OnHoverBorderColor = System.Drawing.Color.Gray;
             this.btnSettings.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnSettings.OnHoverTextColor = System.Drawing.Color.Gray;
-            this.btnSettings.Size = new System.Drawing.Size(361, 140);
+            this.btnSettings.Size = new System.Drawing.Size(241, 140);
             this.btnSettings.TabIndex = 11;
             this.btnSettings.Text = "Settings";
             this.btnSettings.TextColor = System.Drawing.Color.White;
@@ -226,7 +260,7 @@
             this.pnlSelection.Controls.Add(this.layoutHomeButtons);
             this.pnlSelection.Location = new System.Drawing.Point(235, 12);
             this.pnlSelection.Name = "pnlSelection";
-            this.pnlSelection.Size = new System.Drawing.Size(808, 527);
+            this.pnlSelection.Size = new System.Drawing.Size(1000, 527);
             this.pnlSelection.TabIndex = 11;
             // 
             // frmHome
@@ -258,6 +292,7 @@
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Label lblSubitle;
         private CustomButton btnSinglePlayer;
+        private CustomButton btnPassAndPlay;
         private System.Windows.Forms.TableLayoutPanel layoutHomeButtons;
         private CustomButton btnSettings;
         private CustomButton btnJoin;

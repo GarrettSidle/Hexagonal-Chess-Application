@@ -58,6 +58,9 @@ namespace Hexagonal_Chess
             this.colWhite = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colBlack = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlBoard = new System.Windows.Forms.Panel();
+            this.pnlEngineTerminal = new System.Windows.Forms.Panel();
+            this.txtEngineOutput = new System.Windows.Forms.TextBox();
+            this.lblEngineTerminalTitle = new System.Windows.Forms.Label();
             this.layoutGame = new System.Windows.Forms.TableLayoutPanel();
             this.pnlGame = new System.Windows.Forms.Panel();
             this.pnlEvaluation.SuspendLayout();
@@ -71,6 +74,7 @@ namespace Hexagonal_Chess
             this.pnlMoves.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgMoves)).BeginInit();
             this.pnlBoard.SuspendLayout();
+            this.pnlEngineTerminal.SuspendLayout();
             this.layoutGame.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -377,12 +381,53 @@ namespace Hexagonal_Chess
             // pnlBoard
             // 
             this.pnlBoard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(243)))), ((int)(((byte)(232)))));
+            this.pnlBoard.Controls.Add(this.pnlEngineTerminal);
             this.pnlBoard.Controls.Add(this.layoutGame);
             this.pnlBoard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlBoard.Location = new System.Drawing.Point(86, 0);
             this.pnlBoard.Name = "pnlBoard";
             this.pnlBoard.Size = new System.Drawing.Size(895, 690);
             this.pnlBoard.TabIndex = 4;
+            // 
+            // pnlEngineTerminal
+            // 
+            this.pnlEngineTerminal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlEngineTerminal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.pnlEngineTerminal.Controls.Add(this.txtEngineOutput);
+            this.pnlEngineTerminal.Controls.Add(this.lblEngineTerminalTitle);
+            this.pnlEngineTerminal.Location = new System.Drawing.Point(595, 520);
+            this.pnlEngineTerminal.Name = "pnlEngineTerminal";
+            this.pnlEngineTerminal.Padding = new System.Windows.Forms.Padding(6, 4, 6, 6);
+            this.pnlEngineTerminal.Size = new System.Drawing.Size(288, 158);
+            this.pnlEngineTerminal.TabIndex = 5;
+            this.pnlEngineTerminal.Visible = false;
+            // 
+            // txtEngineOutput
+            // 
+            this.txtEngineOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtEngineOutput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.txtEngineOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtEngineOutput.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEngineOutput.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
+            this.txtEngineOutput.Location = new System.Drawing.Point(9, 26);
+            this.txtEngineOutput.Multiline = true;
+            this.txtEngineOutput.Name = "txtEngineOutput";
+            this.txtEngineOutput.ReadOnly = true;
+            this.txtEngineOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtEngineOutput.Size = new System.Drawing.Size(270, 125);
+            this.txtEngineOutput.TabIndex = 1;
+            this.txtEngineOutput.WordWrap = false;
+            // 
+            // lblEngineTerminalTitle
+            // 
+            this.lblEngineTerminalTitle.AutoSize = true;
+            this.lblEngineTerminalTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEngineTerminalTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.lblEngineTerminalTitle.Location = new System.Drawing.Point(6, 5);
+            this.lblEngineTerminalTitle.Name = "lblEngineTerminalTitle";
+            this.lblEngineTerminalTitle.Size = new System.Drawing.Size(45, 15);
+            this.lblEngineTerminalTitle.TabIndex = 0;
+            this.lblEngineTerminalTitle.Text = "Engine";
             // 
             // layoutGame
             // 
@@ -443,6 +488,8 @@ namespace Hexagonal_Chess
             this.pnlMoves.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgMoves)).EndInit();
             this.pnlBoard.ResumeLayout(false);
+            this.pnlEngineTerminal.ResumeLayout(false);
+            this.pnlEngineTerminal.PerformLayout();
             this.layoutGame.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -476,5 +523,8 @@ namespace Hexagonal_Chess
         private System.Windows.Forms.DataGridViewTextBoxColumn colBlack;
         private System.Windows.Forms.TableLayoutPanel layoutGame;
         private System.Windows.Forms.Panel pnlGame;
+        private System.Windows.Forms.Panel pnlEngineTerminal;
+        private System.Windows.Forms.Label lblEngineTerminalTitle;
+        public System.Windows.Forms.TextBox txtEngineOutput;
     }
 }

@@ -61,13 +61,12 @@ namespace Hexagonal_Chess
             // 
             this.lblHostIP.AutoSize = true;
             this.lblHostIP.BackColor = System.Drawing.Color.Transparent;
-            this.lblHostIP.Font = new System.Drawing.Font("Microsoft YaHei", 14.25F);
-            this.lblHostIP.Location = new System.Drawing.Point(137, 395);
+            this.lblHostIP.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblHostIP.Location = new System.Drawing.Point(96, 399);
             this.lblHostIP.Name = "lblHostIP";
-            this.lblHostIP.Size = new System.Drawing.Size(100, 25);
+            this.lblHostIP.Size = new System.Drawing.Size(100, 21);
             this.lblHostIP.TabIndex = 8;
             this.lblHostIP.Text = "Your IP: ...";
-            this.lblHostIP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnCancel
             // 
@@ -102,8 +101,8 @@ namespace Hexagonal_Chess
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.imgLoading);
             this.Controls.Add(this.lblPleaseWait);
-            this.DoubleBuffered = true;
             this.Load += new System.EventHandler(this.FrmWaitingForPlayer_Load);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.ImeMode = System.Windows.Forms.ImeMode.Close;
             this.Name = "FrmWaitingForPlayer";
