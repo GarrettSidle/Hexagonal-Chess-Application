@@ -838,10 +838,10 @@ namespace Hexagonal_Chess
             {
                 //find the number of moves in the game
                 int numOfMoves = dgMoves.Rows.Count + (move.piece.isWhite ? 1 : 0);
-                
-                //initialize and show the results screen
+                // Winner is the side that captured the king (the side that just moved)
+                bool whiteWins = move.piece.isWhite;
                 ResultScreen resultScreen = new ResultScreen();
-                resultScreen.setWinner(true, numOfMoves);
+                resultScreen.setWinner(whiteWins, numOfMoves);
                 resultScreen.ShowDialog();
             }
         }
