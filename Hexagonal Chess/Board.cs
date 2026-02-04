@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -833,6 +834,9 @@ namespace Hexagonal_Chess
             board.swapTurns();
             updateTurnIndicator();
 
+            // Redraw the board so the last-move arrow is shown
+            frmBoard.pnlGame.Invalidate();
+
             //if the king has been captured
             if (endGame)
             {
@@ -970,6 +974,56 @@ namespace Hexagonal_Chess
             {
                 //draw the hexagon
                 Hexagon.DrawHexagon(node.Value, e, hexRadius);
+            }
+
+            // Draw arrow for the most recent move (same green as application buttons)
+            if (board.prevMove != null &&
+                boardNodes.TryGetValue(board.prevMove.startLocation.notation, out Hexagon startHex) &&
+                boardNodes.TryGetValue(board.prevMove.endLocation.notation, out Hexagon endHex))
+            {
+                Point startPoint = startHex.location;
+                Point endPoint = endHex.location;
+                Color arrowColor = Color.FromArgb(136, 171, 95);
+
+                Graphics g = e.Graphics;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+
+                float dx = endPoint.X - startPoint.X;
+                float dy = endPoint.Y - startPoint.Y;
+                float len = (float)Math.Sqrt(dx * dx + dy * dy);
+                if (len >= 2f)
+                {
+                    float ux = dx / len;
+                    float uy = dy / len;
+                    // Inset from both hex centers so the arrow doesn't overlap the pieces
+                    float inset = hexRadius * 0.32f;
+                    float lineStartX = startPoint.X + ux * inset;
+                    float lineStartY = startPoint.Y + uy * inset;
+                    float lineEndX = endPoint.X - ux * inset;
+                    float lineEndY = endPoint.Y - uy * inset;
+                    float lineLen = (float)Math.Sqrt((lineEndX - lineStartX) * (lineEndX - lineStartX) + (lineEndY - lineStartY) * (lineEndY - lineStartY));
+                    if (lineLen >= 2f)
+                    {
+                        float arrowLen = Math.Min(hexRadius * 0.45f, lineLen * 0.3f);
+                        float arrowW = arrowLen * 0.65f;
+                        PointF tip = new PointF(lineEndX, lineEndY);
+                        PointF baseCenter = new PointF(tip.X - ux * arrowLen, tip.Y - uy * arrowLen);
+                        PointF perp = new PointF(-uy * arrowW, ux * arrowW);
+                        PointF[] head = new PointF[]
+                        {
+                            tip,
+                            new PointF(baseCenter.X + perp.X, baseCenter.Y + perp.Y),
+                            new PointF(baseCenter.X - perp.X, baseCenter.Y - perp.Y)
+                        };
+
+                        using (var pen = new Pen(arrowColor, 8f))
+                        using (var brush = new SolidBrush(arrowColor))
+                        {
+                            g.DrawLine(pen, lineStartX, lineStartY, baseCenter.X, baseCenter.Y);
+                            g.FillPolygon(brush, head);
+                        }
+                    }
+                }
             }
         }
 

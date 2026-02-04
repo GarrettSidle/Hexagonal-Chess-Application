@@ -72,6 +72,7 @@ namespace Hexagonal_Chess
             // Set up the initial game board based on the selected variant
             public void setBoard()
             {
+                prevMove = null;
                 List<char>[] glinskiBoard = new List<char>[] {
                     new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
                     new List<char> { 'P', ' ', ' ', ' ', ' ', ' ', 'p' } ,
