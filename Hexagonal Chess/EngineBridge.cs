@@ -28,10 +28,12 @@ namespace Hexagonal_Chess
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string[] candidates = new[]
             {
-                Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "Engine", "build", "Release", "engine.exe")),
-                Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "Engine", "Release", "engine.exe")),
+                // Project Engine folder: Hexagonal Chess\Engine\engine.exe (place engine.exe here)
+                Path.GetFullPath(Path.Combine(baseDir, "..", "..", "Engine", "engine.exe")),
                 Path.GetFullPath(Path.Combine(baseDir, "Engine", "engine.exe")),
-                Path.GetFullPath(Path.Combine(baseDir, "engine.exe"))
+                Path.GetFullPath(Path.Combine(baseDir, "engine.exe")),
+                Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "Engine", "build", "Release", "engine.exe")),
+                Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "Engine", "Release", "engine.exe"))
             };
             foreach (string path in candidates)
             {
@@ -73,6 +75,8 @@ namespace Hexagonal_Chess
                 string exePath = GetEnginePath();
                 if (string.IsNullOrEmpty(exePath))
                     return false;
+
+                EngineOutput?.Invoke("[Engine] Using: " + exePath);
 
                 try
                 {

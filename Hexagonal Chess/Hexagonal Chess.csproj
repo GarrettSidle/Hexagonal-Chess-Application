@@ -145,6 +145,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Engine\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Images\Loading.gif" />
     <None Include="Images\Home.png" />
     <None Include="Images\Settings.png" />

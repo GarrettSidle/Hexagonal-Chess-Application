@@ -39,7 +39,7 @@ namespace Hexagonal_Chess
                 bool enginePlaysWhite = !localPlayerIsWhite;
                 if (!EngineBridge.Start(enginePlaysWhite, Utils.gameVarient))
                 {
-                    System.Windows.Forms.MessageBox.Show("Engine not found. Build Engine and place engine.exe in Engine\\build\\Release\\ (or same folder as this app).", "Single Player");
+                    System.Windows.Forms.MessageBox.Show("Engine not found. Place engine.exe in the Hexagonal Chess\\Engine\\ folder (or same folder as this app).", "Single Player");
                 }
                 else if (!localPlayerIsWhite)
                 {

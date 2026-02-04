@@ -24,3 +24,7 @@ packages/
 # SQLite (local DB files if not meant to be committed)
 *.db-shm
 *.db-wal
+
+# Gephi exports
+gephi_exports/
+
