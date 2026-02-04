@@ -52,7 +52,7 @@ namespace Hexagonal_Chess
             this.layoutConnection.RowCount = 2;
             this.layoutConnection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.layoutConnection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.layoutConnection.Size = new System.Drawing.Size(800, 450);
+            this.layoutConnection.Size = new System.Drawing.Size(802, 450);
             this.layoutConnection.TabIndex = 11;
             // 
             // layoutButtons
@@ -67,7 +67,7 @@ namespace Hexagonal_Chess
             this.layoutButtons.Name = "layoutButtons";
             this.layoutButtons.RowCount = 1;
             this.layoutButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.layoutButtons.Size = new System.Drawing.Size(794, 219);
+            this.layoutButtons.Size = new System.Drawing.Size(796, 219);
             this.layoutButtons.TabIndex = 5;
             // 
             // btnCancel
@@ -85,7 +85,7 @@ namespace Hexagonal_Chess
             this.btnCancel.OnHoverBorderColor = System.Drawing.Color.Gray;
             this.btnCancel.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnCancel.OnHoverTextColor = System.Drawing.Color.Gray;
-            this.btnCancel.Size = new System.Drawing.Size(357, 179);
+            this.btnCancel.Size = new System.Drawing.Size(358, 179);
             this.btnCancel.TabIndex = 2;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.TextColor = System.Drawing.Color.White;
@@ -101,13 +101,13 @@ namespace Hexagonal_Chess
             this.btnConnect.FlatAppearance.BorderSize = 0;
             this.btnConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConnect.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConnect.Location = new System.Drawing.Point(417, 20);
+            this.btnConnect.Location = new System.Drawing.Point(418, 20);
             this.btnConnect.Margin = new System.Windows.Forms.Padding(20);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.OnHoverBorderColor = System.Drawing.Color.Gray;
             this.btnConnect.OnHoverButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnConnect.OnHoverTextColor = System.Drawing.Color.Gray;
-            this.btnConnect.Size = new System.Drawing.Size(357, 179);
+            this.btnConnect.Size = new System.Drawing.Size(358, 179);
             this.btnConnect.TabIndex = 1;
             this.btnConnect.Text = "Connect";
             this.btnConnect.TextColor = System.Drawing.Color.White;
@@ -122,7 +122,7 @@ namespace Hexagonal_Chess
             this.pnlIPAddress.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlIPAddress.Location = new System.Drawing.Point(3, 3);
             this.pnlIPAddress.Name = "pnlIPAddress";
-            this.pnlIPAddress.Size = new System.Drawing.Size(794, 219);
+            this.pnlIPAddress.Size = new System.Drawing.Size(796, 219);
             this.pnlIPAddress.TabIndex = 0;
             // 
             // lblGameMoves
@@ -148,7 +148,7 @@ namespace Hexagonal_Chess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(802, 450);
             this.ControlBox = false;
             this.Controls.Add(this.layoutConnection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;

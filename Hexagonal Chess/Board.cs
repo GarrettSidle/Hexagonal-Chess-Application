@@ -285,46 +285,28 @@ namespace Hexagonal_Chess
         {
             pnlGame.SuspendLayout();
 
-            //The distance from the center of a hexagon to center of any of its lines
-            int hexShortradius = (int)Math.Round((hexRadius / 2) * Math.Sqrt(3));
-
-            //find the point that centers the board horizontally
-            int x = (int)Math.Round((pnlGame.Width / 2) + (hexRadius * 0.0)); //7.78
-            //find the point that centers the board vertical
-            int y = (int)Math.Round((pnlGame.Height / 2) + (hexRadius * 8.0)); //4.26
-
-            //Starting point of the entire board, this will be center of A1
-            Point startingPosition = new Point(x, y);
-
             int rowMax = 5;
 
             for (int col = 0; col < 11; col++)
             {
                 for (int row = 0; row <= rowMax; row++)
                 {
-                    //Find the location of the next node
-                    Point tempLocation = new Point(
-                            (int)(Math.Round(startingPosition.X + (col * hexShortradius * (.9) * 2))),
-                        startingPosition.Y - (row * hexShortradius * 2) + ((col < 6 ? col : (10 - col)) * hexShortradius));
+                    // Use the same hexagon positions as boardNodes (from buildBoard) so piece positions
+                    // match the drawn hexagons and makeMove targets. Recomputing from pnlGame size here
+                    // caused wrong initial positions for the client, since the client calls swapScreen
+                    // before resetBoard, so pnlGame may already be resized while boardNodes still has
+                    // constructor-time positions.
+                    string notation = ((char)(col + 65)).ToString() + (row + 1).ToString();
+                    Point tempLocation = boardNodes.TryGetValue(notation, out Hexagon hex)
+                        ? hex.location
+                        : new Point(0, 0);
 
-
-                    //place the starting pieces
                     placeStartingPieces(col, row, tempLocation);
-
                 }
-                //if we are in the first 6 rows
                 if (col < 5)
-                {
-                    //add another row
                     rowMax++;
-                }
-                //otherwise
                 else
-                {
-                    //remove another row
                     rowMax--;
-
-                }
             }
 
             pnlGame.ResumeLayout(false);
