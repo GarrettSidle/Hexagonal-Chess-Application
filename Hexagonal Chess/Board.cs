@@ -25,54 +25,9 @@ namespace Hexagonal_Chess
 
         private void FrmBoard_Load(object sender, EventArgs e)
         {
-            //reset the board
-            lblBottomEval.Text = "";
-            lblTopEval.Text = "";
-            board.setBoard();
+            // Board reset and engine start are done in updateGameMode()/resetBoard() so they run every new game
             updateTurnIndicator();
             updatePlayerLabels();
-            pnlEngineTerminal.Visible = (userMode == 0);
-            if (userMode == 0)
-            {
-                pnlEngineTerminal.BringToFront();
-                txtEngineOutput.Clear();
-                EngineBridge.EngineOutput += OnEngineOutput;
-                bool enginePlaysWhite = !localPlayerIsWhite;
-                if (!EngineBridge.Start(enginePlaysWhite, Utils.gameVarient))
-                {
-                    System.Windows.Forms.MessageBox.Show("Engine not found. Place engine.exe in the Hexagonal Chess\\Engine\\ folder (or same folder as this app).", "Single Player");
-                }
-                else if (!localPlayerIsWhite)
-                {
-                    // We are black; engine (white) already sent its first move during Start
-                    var firstMove = EngineBridge.GetEngineFirstMove();
-                    if (firstMove != null)
-                    {
-                        int fromCol = firstMove.Item1, fromRow = firstMove.Item2, toCol = firstMove.Item3, toRow = firstMove.Item4;
-                        if (fromCol >= 0 && fromCol < board.gameBoard.Length)
-                        {
-                            var colList = board.gameBoard[fromCol];
-                            if (colList != null && fromRow >= 0 && fromRow < colList.Count)
-                            {
-                                Piece whitePiece = colList[fromRow];
-                                if (whitePiece != null && whitePiece.isWhite)
-                                {
-                                    LocNotation toLoc = new LocNotation(toCol, toRow);
-                                    Piece captured = null;
-                                    if (toCol >= 0 && toCol < board.gameBoard.Length)
-                                    {
-                                        var toColList = board.gameBoard[toCol];
-                                        if (toRow >= 0 && toRow < toColList?.Count)
-                                            captured = toColList[toRow];
-                                    }
-                                    Move engineMove = new Move(whitePiece, toLoc, captured != null, false);
-                                    makeMove(engineMove, board, boardPieces, boardNodes, this);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -148,13 +103,38 @@ namespace Hexagonal_Chess
 
         private void FrmBoard_FormClosing(object sender, FormClosingEventArgs e)
         {
+            EndGameAndDisconnect();
+        }
+
+        /// <summary>
+        /// Disconnect from bot or other player and release resources. Call when leaving the board (FormClosing or Back to Home).
+        /// </summary>
+        private void EndGameAndDisconnect()
+        {
             if (userMode == 0)
             {
                 EngineBridge.EngineOutput -= OnEngineOutput;
                 EngineBridge.Stop();
             }
             else
+            {
+                MessageReceiver.DoWork -= MessageReceiver_DoWork;
+                MessageReceiver.RunWorkerCompleted -= MessageReceiver_RunWorkerCompleted;
                 CleanupMultiplayer();
+            }
+        }
+
+        private void btnBackToHome_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                EndGameAndDisconnect();
+                MDIParent.swapScreen("Home");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error going to Home");
+            }
         }
 
         private void OnEngineOutput(string line)
@@ -279,11 +259,72 @@ namespace Hexagonal_Chess
             updatePlayerLabels();
             pnlEngineTerminal.Visible = (userMode == 0);
             resetBoard();
+
+            // Start engine for single-player (runs every new game; Load only runs once so we do it here)
+            if (userMode == 0)
+            {
+                pnlEngineTerminal.BringToFront();
+                txtEngineOutput.Clear();
+                EngineBridge.EngineOutput += OnEngineOutput;
+                bool enginePlaysWhite = !localPlayerIsWhite;
+                if (!EngineBridge.Start(enginePlaysWhite, Utils.gameVarient))
+                {
+                    MessageBox.Show("Engine not found. Place engine.exe in the Hexagonal Chess\\Engine\\ folder (or same folder as this app).", "Single Player");
+                }
+                else if (!localPlayerIsWhite)
+                {
+                    var firstMove = EngineBridge.GetEngineFirstMove();
+                    if (firstMove != null)
+                    {
+                        int fromCol = firstMove.Item1, fromRow = firstMove.Item2, toCol = firstMove.Item3, toRow = firstMove.Item4;
+                        if (fromCol >= 0 && fromCol < board.gameBoard.Length)
+                        {
+                            var colList = board.gameBoard[fromCol];
+                            if (colList != null && fromRow >= 0 && fromRow < colList.Count)
+                            {
+                                Piece whitePiece = colList[fromRow];
+                                if (whitePiece != null && whitePiece.isWhite)
+                                {
+                                    LocNotation toLoc = new LocNotation(toCol, toRow);
+                                    Piece captured = null;
+                                    if (toCol >= 0 && toCol < board.gameBoard.Length)
+                                    {
+                                        var toColList = board.gameBoard[toCol];
+                                        if (toRow >= 0 && toRow < toColList?.Count)
+                                            captured = toColList[toRow];
+                                    }
+                                    Move engineMove = new Move(whitePiece, toLoc, captured != null, false, captured?.pieceType);
+                                    makeMove(engineMove, board, boardPieces, boardNodes, this);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void resetBoard()
         {
             pnlGame.SuspendLayout();
+
+            // Clear pieces from previous game so we don't get "An item with the same key has already been added"
+            foreach (var kv in boardPieces)
+            {
+                if (kv.Value != null && pnlGame.Controls.Contains(kv.Value))
+                {
+                    pnlGame.Controls.Remove(kv.Value);
+                    kv.Value.Dispose();
+                }
+            }
+            boardPieces.Clear();
+
+            // Reset game state so a new game doesn't show the previous game's position/moves/eval
+            board.setBoard();
+            lblBottomEval.Text = "";
+            lblTopEval.Text = "";
+            lblBottomUserEval.Text = "";
+            lblTopUserEval.Text = "";
+            dgMoves.Rows.Clear();
 
             int rowMax = 5;
 
@@ -349,11 +390,18 @@ namespace Hexagonal_Chess
             byte flags = buffer.Length > 4 ? buffer[4] : (byte)0;
             bool enPassant = (flags & 0x01) != 0;
             bool isCapture = enPassant || (board.gameBoard[capturedCol] != null && capturedRow < board.gameBoard[capturedCol].Count && board.gameBoard[capturedCol][capturedRow] != null);
+            char? capturedType = null;
+            if (isCapture && board.gameBoard[capturedCol] != null && capturedRow < board.gameBoard[capturedCol].Count)
+            {
+                Piece cap = board.gameBoard[capturedCol][capturedRow];
+                if (cap != null) capturedType = cap.pieceType;
+                else if (enPassant) capturedType = 'P';
+            }
 
             Piece piece = board.gameBoard[atkPieceCol][atkPieceRow];
             if (piece == null)
                 return;
-            Move move = new Move(piece, new LocNotation(capturedCol, capturedRow), isCapture, enPassant);
+            Move move = new Move(piece, new LocNotation(capturedCol, capturedRow), isCapture, enPassant, capturedType);
 
             // Marshal makeMove to UI thread
             if (frmBoard.InvokeRequired)
@@ -598,7 +646,7 @@ namespace Hexagonal_Chess
                         if (toRow >= 0 && toRow < toColList?.Count)
                             captured = toColList[toRow];
                     }
-                    Move engineMove = new Move(enginePiece, toLoc, captured != null, false);
+                    Move engineMove = new Move(enginePiece, toLoc, captured != null, false, captured?.pieceType);
                     if (frmBoard.IsDisposed || !frmBoard.IsHandleCreated)
                         return;
                     try
@@ -743,7 +791,7 @@ namespace Hexagonal_Chess
 
                 if (move.enPassent)
                 {
-                    
+
                     LocNotation enPassantLocation = new LocNotation(endLocation.col, endLocation.row + (move.piece.isWhite ? -1 : 1));
 
                     //get the piece object that is being captured
@@ -756,6 +804,9 @@ namespace Hexagonal_Chess
                     capturedPiece = board.gameBoard[endLocation.col][endLocation.row];
                     capturedPieceImage = boardPieces[endLocation.notation];
                 }
+
+                // so the moves table can show e.g. ♕x♕F11 (moving piece x captured piece square)
+                move.capturedPieceType = capturedPiece.pieceType;
 
                 //remove the pieces image
                 capturedPieceImage.Visible = false;
@@ -870,8 +921,11 @@ namespace Hexagonal_Chess
         {
             //add the move the datagrid
             string pieceCharcter = pieceChars[move.piece.pieceType];
-            //build the notation and remove the piece type char
-            string moveNotation = pieceCharcter + move.moveNotation.TrimStart(move.piece.pieceType);
+            string moveNotation;
+            if (move.isCapture && move.capturedPieceType.HasValue)
+                moveNotation = pieceCharcter + "x" + pieceChars[move.capturedPieceType.Value] + move.endLocation.notation;
+            else
+                moveNotation = pieceCharcter + move.moveNotation.TrimStart(move.piece.pieceType);
 
 
             DataGridView movesTable = frmBoard.dgMoves;

@@ -41,6 +41,7 @@ namespace Hexagonal_Chess
             this.pnlEvalTop = new System.Windows.Forms.Panel();
             this.lblTopEval = new System.Windows.Forms.Label();
             this.pnlTopUser = new System.Windows.Forms.Panel();
+            this.btnBackToHome = new Hexagonal_Chess.CustomButton();
             this.pnlTurnIndicatorBlack = new System.Windows.Forms.Panel();
             this.imgTopUser = new System.Windows.Forms.PictureBox();
             this.lblTopUserEval = new System.Windows.Forms.Label();
@@ -160,12 +161,30 @@ namespace Hexagonal_Chess
             this.pnlTopUser.Controls.Add(this.imgTopUser);
             this.pnlTopUser.Controls.Add(this.lblTopUserEval);
             this.pnlTopUser.Controls.Add(this.lblUser);
+            this.pnlTopUser.Controls.Add(this.btnBackToHome);
             this.pnlTopUser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTopUser.Location = new System.Drawing.Point(3, 3);
             this.pnlTopUser.Name = "pnlTopUser";
             this.pnlTopUser.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
             this.pnlTopUser.Size = new System.Drawing.Size(889, 66);
             this.pnlTopUser.TabIndex = 1;
+            // 
+            // btnBackToHome
+            // 
+            this.btnBackToHome.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBackToHome.ButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(171)))), ((int)(((byte)(95)))));
+            this.btnBackToHome.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBackToHome.FlatAppearance.BorderSize = 0;
+            this.btnBackToHome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBackToHome.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
+            this.btnBackToHome.Location = new System.Drawing.Point(795, 14);
+            this.btnBackToHome.Name = "btnBackToHome";
+            this.btnBackToHome.Size = new System.Drawing.Size(90, 38);
+            this.btnBackToHome.TabIndex = 6;
+            this.btnBackToHome.Text = "Home";
+            this.btnBackToHome.TextColor = System.Drawing.Color.White;
+            this.btnBackToHome.UseVisualStyleBackColor = false;
+            this.btnBackToHome.Click += new System.EventHandler(this.btnBackToHome_Click);
             // 
             // pnlTurnIndicatorBlack
             // 
@@ -499,6 +518,7 @@ namespace Hexagonal_Chess
 
         private System.Windows.Forms.Panel pnlEvaluation;
         private System.Windows.Forms.Panel pnlTopUser;
+        private Hexagonal_Chess.CustomButton btnBackToHome;
         private System.Windows.Forms.Panel pnlTurnIndicatorBlack;
         private System.Windows.Forms.Panel pnlTurnIndicatorWhite;
         private System.Windows.Forms.PictureBox imgTopUser;

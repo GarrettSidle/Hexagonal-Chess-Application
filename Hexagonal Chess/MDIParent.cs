@@ -47,12 +47,12 @@ namespace Hexagonal_Chess
 
         public static void swapScreen(string screenName)
         {
-            //get the new the screen
-            screens.TryGetValue(screenName, out var screen);
-            //set it as the new active screen
+            if (!screens.TryGetValue(screenName, out Form screen))
+                return;
             screen.MdiParent = mdiParent;
             screen.Dock = DockStyle.Fill;
             screen.Show();
+            screen.BringToFront();
         }
 
         public static void regenerateBoard()

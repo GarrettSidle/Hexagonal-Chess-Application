@@ -72,6 +72,8 @@ namespace Hexagonal_Chess
             // Set up the initial game board based on the selected variant
             public void setBoard()
             {
+                whiteToPlay = true;
+                evaluation = 0;
                 prevMove = null;
                 List<char>[] glinskiBoard = new List<char>[] {
                     new List<char> { ' ', ' ', ' ', ' ', ' ', ' ' },
@@ -283,16 +285,22 @@ namespace Hexagonal_Chess
             public readonly string moveNotation;
             public bool isCapture;
             public bool enPassent;
+            /// <summary>Piece type captured (e.g. 'Q' for queen). Set when the move is applied so the moves table can show e.g. ♕x♕F11.</summary>
+            public char? capturedPieceType;
 
-            public Move(Piece piece, LocNotation endLocation, bool isCapture, bool enPassant)
+            public Move(Piece piece, LocNotation endLocation, bool isCapture, bool enPassant, char? capturedPieceType = null)
             {
                 this.piece = piece;
                 this.endLocation = endLocation;
                 this.enPassent = enPassant;
                 this.startLocation = piece.locNotation;
+                this.capturedPieceType = capturedPieceType;
 
-                //build the chess move notation
-                this.moveNotation = piece.pieceType + (isCapture ? "x" : "") + endLocation.notation;
+                //build the chess move notation (capture: QxQF11 so display can show ♕x♕F11)
+                if (isCapture && capturedPieceType.HasValue)
+                    this.moveNotation = piece.pieceType + "x" + capturedPieceType.Value + endLocation.notation;
+                else
+                    this.moveNotation = piece.pieceType + (isCapture ? "x" : "") + endLocation.notation;
                 this.isCapture = isCapture;
             }
         }

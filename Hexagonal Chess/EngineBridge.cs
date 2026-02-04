@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hexagonal_Chess
@@ -19,6 +20,7 @@ namespace Hexagonal_Chess
         private static Tuple<int, int, int, int> _engineFirstMove;
         private static StreamReader _stderr;
         private static System.Threading.Tasks.Task _stderrReadTask;
+        private static Timer _heartbeatTimer;
 
         /// <summary>Fired whenever a line is read from the engine's stdout or stderr (for UI terminal).</summary>
         public static event Action<string> EngineOutput;
@@ -138,6 +140,7 @@ namespace Hexagonal_Chess
                         }
                     }
                     _initialized = true;
+                    StartHeartbeatTimer();
                     return true;
                 }
                 catch
@@ -288,6 +291,39 @@ namespace Hexagonal_Chess
             return Tuple.Create(col, row);
         }
 
+        private static void StartHeartbeatTimer()
+        {
+            StopHeartbeatTimer();
+            _heartbeatTimer = new Timer(_ =>
+            {
+                lock (_lock)
+                {
+                    if (_stdin == null || (_process != null && _process.HasExited))
+                    {
+                        StopHeartbeatTimer();
+                        return;
+                    }
+                    try
+                    {
+                        _stdin.WriteLine("heartbeat");
+                        _stdin.Flush();
+                    }
+                    catch (ObjectDisposedException) { StopHeartbeatTimer(); }
+                    catch (IOException) { StopHeartbeatTimer(); }
+                }
+            }, null, 500, 500);  // First after 500ms, then every 500ms
+        }
+
+        private static void StopHeartbeatTimer()
+        {
+            try
+            {
+                _heartbeatTimer?.Dispose();
+                _heartbeatTimer = null;
+            }
+            catch { }
+        }
+
         /// <summary>
         /// Kill the engine process. Call when leaving single-player or closing the board.
         /// </summary>
@@ -296,6 +332,7 @@ namespace Hexagonal_Chess
             lock (_lock)
             {
                 _initialized = false;
+                StopHeartbeatTimer();
                 try
                 {
                     if (_stdin != null)
