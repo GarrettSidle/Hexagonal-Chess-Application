@@ -72,8 +72,9 @@ namespace Hexagonal_Chess
 
         /// <summary>
         /// Get startup command for variant: 0 = Glinski, 1 = McCooey, 2 = Hexofen.
+        /// Format: "glinski white 3000" (command, optional "white", max_nodes).
         /// </summary>
-        private static string GetVariantCommand(int gameVariant, bool enginePlaysWhite)
+        private static string GetVariantCommand(int gameVariant, bool enginePlaysWhite, int maxNodes)
         {
             string name;
             switch (gameVariant)
@@ -82,16 +83,18 @@ namespace Hexagonal_Chess
                 case 2: name = "hexofen"; break;
                 default: name = "glinski"; break;
             }
-            return enginePlaysWhite ? name + " white" : name;
+            string cmd = enginePlaysWhite ? name + " white" : name;
+            return cmd + " " + maxNodes.ToString();
         }
 
         /// <summary>
-        /// Start the engine and send variant command (e.g. "glinski", "mccooey white"). When enginePlaysWhite is true,
+        /// Start the engine and send variant command (e.g. "glinski white 3000", "mccooey 5000"). When enginePlaysWhite is true,
         /// reads the engine's first move and stores it for GetEngineFirstMove().
         /// </summary>
         /// <param name="enginePlaysWhite">True if engine plays white.</param>
         /// <param name="gameVariant">0 = Glinski, 1 = McCooey, 2 = Hexofen.</param>
-        public static bool Start(bool enginePlaysWhite, int gameVariant = 0)
+        /// <param name="maxNodes">Maximum nodes the engine may evaluate per move (e.g. 1500).</param>
+        public static bool Start(bool enginePlaysWhite, int gameVariant = 0, int maxNodes = 1500)
         {
             lock (_lock)
             {
@@ -131,7 +134,7 @@ namespace Hexagonal_Chess
                         }
                         catch { }
                     });
-                    string cmd = GetVariantCommand(gameVariant, enginePlaysWhite);
+                    string cmd = GetVariantCommand(gameVariant, enginePlaysWhite, maxNodes);
                     _stdin.WriteLine(cmd);
                     _stdin.Flush();
                     string posName;

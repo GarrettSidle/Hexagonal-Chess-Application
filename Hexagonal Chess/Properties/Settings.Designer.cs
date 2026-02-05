@@ -34,5 +34,17 @@ namespace Hexagonal_Chess.Properties {
                 this["EngineDebugMode"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1500")]
+        public int BotMaxNodes {
+            get {
+                return ((int)(this["BotMaxNodes"]));
+            }
+            set {
+                this["BotMaxNodes"] = value;
+            }
+        }
     }
 }

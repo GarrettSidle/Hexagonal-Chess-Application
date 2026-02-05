@@ -272,7 +272,8 @@ namespace Hexagonal_Chess
                     EngineBridge.EngineOutput += OnEngineOutput;
                 }
                 bool enginePlaysWhite = !localPlayerIsWhite;
-                if (!EngineBridge.Start(enginePlaysWhite, Utils.gameVarient))
+                int maxNodes = Properties.Settings.Default.BotMaxNodes;
+                if (!EngineBridge.Start(enginePlaysWhite, Utils.gameVarient, maxNodes))
                 {
                     MessageBox.Show("Engine not found. Place engine.exe in the Hexagonal Chess\\Engine\\ folder (or same folder as this app).", "Single Player");
                 }

@@ -65,6 +65,9 @@
     <Compile Include="CustomButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="EngineBridge.cs" />
     <Compile Include="FindMoves.cs" />
     <Compile Include="Home.cs">

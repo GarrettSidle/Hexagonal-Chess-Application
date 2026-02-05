@@ -9,5 +9,10 @@
       <DefaultValue>false</DefaultValue>
       <Description>When on, the engine terminal is visible when playing against the bot.</Description>
     </Setting>
+    <Setting Name="BotMaxNodes" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1500</Value>
+      <DefaultValue>1500</DefaultValue>
+      <Description>Maximum nodes the bot evaluates per move. Higher = stronger but more computationally expensive.</Description>
+    </Setting>
   </Settings>
 </SettingsFile>

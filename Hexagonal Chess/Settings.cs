@@ -31,6 +31,17 @@ namespace Hexagonal_Chess
             setGameVarient(Utils.gameVarient);
             // load engine debug mode (default off)
             chkEngineDebugMode.Checked = Properties.Settings.Default.EngineDebugMode;
+            // load bot max nodes (default 1500), clamp to slider range
+            int maxNodes = Properties.Settings.Default.BotMaxNodes;
+            if (maxNodes < trkMaxNodes.Minimum) maxNodes = trkMaxNodes.Minimum;
+            if (maxNodes > trkMaxNodes.Maximum) maxNodes = trkMaxNodes.Maximum;
+            trkMaxNodes.Value = maxNodes;
+            lblMaxNodesValue.Text = maxNodes.ToString();
+        }
+
+        private void trkMaxNodes_ValueChanged(object sender, EventArgs e)
+        {
+            lblMaxNodesValue.Text = trkMaxNodes.Value.ToString();
         }
 
 
@@ -94,6 +105,8 @@ namespace Hexagonal_Chess
             Utils.gameVarient = currentGameVarient;
             // save engine debug mode
             Properties.Settings.Default.EngineDebugMode = chkEngineDebugMode.Checked;
+            // save bot max nodes
+            Properties.Settings.Default.BotMaxNodes = trkMaxNodes.Value;
             Properties.Settings.Default.Save();
             //reset the board
             Utils.board.setBoard();
@@ -104,5 +117,6 @@ namespace Hexagonal_Chess
         {
             this.Close();
         }
+
     }
 }
