@@ -5,13 +5,11 @@ using System.Windows.Forms;
 
 namespace Hexagonal_Chess
 {
-    /// <summary>
-    /// A horizontal slider with a green circular thumb and styled track.
-    /// </summary>
+    /// <summary>Horizontal slider, green thumb.</summary>
     public class CustomSlider : Control
     {
-        // Exponential scale: left=100, 25%=1500, right=5000. Exponent chosen so PositionToValue(0.25)==1500.
-        private const double ExpPower = 0.266;  // 0.25^ExpPower = log50(15) => value(0.25)=1500
+        // exp scale: left 100, 25% -> 1500, right 5000
+        private const double ExpPower = 0.266;
 
         private int _value = 1500;
         private int _minimum = 100;
@@ -65,7 +63,7 @@ namespace Hexagonal_Chess
             ValueChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <summary>Convert position t in [0,1] to value (exponential: 0->min, 0.25->1500, 1->max when min=100,max=5000).</summary>
+        /// <summary>Position [0,1] to value.</summary>
         private int PositionToValue(double t)
         {
             t = Math.Max(0, Math.Min(1, t));
@@ -76,7 +74,7 @@ namespace Hexagonal_Chess
             return (int)Math.Round(_minimum * ratio);
         }
 
-        /// <summary>Convert value to position t in [0,1].</summary>
+        /// <summary>Value to position [0,1].</summary>
         private double ValueToPosition(int value)
         {
             value = Math.Max(_minimum, Math.Min(_maximum, value));
@@ -150,7 +148,7 @@ namespace Hexagonal_Chess
             int trackTop = yCenter - TrackHeight / 2;
             int thumbX = ValueToX(_value);
 
-            // Track background (rounded rect)
+            // track bg
             int x1 = PaddingX;
             int x2 = PaddingX + trackWidth - TrackHeight;
             using (var path = new GraphicsPath())
@@ -166,7 +164,7 @@ namespace Hexagonal_Chess
                     g.DrawPath(pen, path);
             }
 
-            // Thumb (green circle)
+            // thumb
             int thumbLeft = thumbX - ThumbRadius;
             int thumbTop = yCenter - ThumbRadius;
             using (var brush = new SolidBrush(ThumbColor))

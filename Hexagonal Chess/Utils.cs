@@ -285,7 +285,7 @@ namespace Hexagonal_Chess
             public readonly string moveNotation;
             public bool isCapture;
             public bool enPassent;
-            /// <summary>Piece type captured (e.g. 'Q' for queen). Set when the move is applied so the moves table can show e.g. ♕x♕F11.</summary>
+            /// <summary>Piece type captured (e.g. Q). Set when move applied for moves table.</summary>
             public char? capturedPieceType;
 
             public Move(Piece piece, LocNotation endLocation, bool isCapture, bool enPassant, char? capturedPieceType = null)
@@ -296,7 +296,7 @@ namespace Hexagonal_Chess
                 this.startLocation = piece.locNotation;
                 this.capturedPieceType = capturedPieceType;
 
-                //build the chess move notation (capture: QxQF11 so display can show ♕x♕F11)
+                // build move notation for display
                 if (isCapture && capturedPieceType.HasValue)
                     this.moveNotation = piece.pieceType + "x" + capturedPieceType.Value + endLocation.notation;
                 else
@@ -346,14 +346,14 @@ namespace Hexagonal_Chess
                 this.row = row;
             }
 
-            // Reused buffer to avoid allocating 91 PointF[] per paint (paint is UI-thread only)
+            // reused buffer so we dont alloc every paint
             private static readonly PointF[] HexShapeBuffer = new PointF[6];
 
             public static void DrawHexagon(Hexagon hexagon, PaintEventArgs e, int hexRadius)
             {
                 var graphics = e.Graphics;
 
-                //Create the 6 points (reuse buffer to reduce GC pressure)
+                // create 6 points (reuse buffer)
                 for (int a = 0; a < 6; a++)
                 {
                     HexShapeBuffer[a] = new PointF(
@@ -361,7 +361,7 @@ namespace Hexagonal_Chess
                         hexagon.location.Y + hexRadius * (float)Math.Sin(a * 60 * Math.PI / 180f));
                 }
 
-                //color in the shape (dispose brush to avoid GDI leak on every repaint)
+                // fill shape, dispose brush
                 using (var brush = new SolidBrush(hexagon.color))
                 {
                     graphics.FillPolygon(brush, HexShapeBuffer);

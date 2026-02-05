@@ -27,11 +27,11 @@ namespace Hexagonal_Chess
 
         private void FrmSettings_Load(object sender, EventArgs e)
         {
-            //set the currently selected varient
+            // set selected varient
             setGameVarient(Utils.gameVarient);
-            // load engine debug mode (default off)
+            // load engine debug (default off)
             chkEngineDebugMode.Checked = Properties.Settings.Default.EngineDebugMode;
-            // load bot max nodes (default 1500), clamp to slider range
+            // load bot max nodes, clamp to slider
             int maxNodes = Properties.Settings.Default.BotMaxNodes;
             if (maxNodes < trkMaxNodes.Minimum) maxNodes = trkMaxNodes.Minimum;
             if (maxNodes > trkMaxNodes.Maximum) maxNodes = trkMaxNodes.Maximum;

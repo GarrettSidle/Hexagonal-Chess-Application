@@ -86,7 +86,7 @@ namespace Hexagonal_Chess
             //    }
             //}
 
-            //select the appropriate moves based on the piece type
+            // moves based on piece type
             switch (piece.pieceType)
             {
                 case 'P':
@@ -127,17 +127,17 @@ namespace Hexagonal_Chess
         {
             List<Move> outputMoves = new List<Move>();
 
-            //Get the location of the piece we are moving (storage coords)
+            // piece location (storage coords)
             int col = piece.locNotation.col;
             int row = piece.locNotation.row;
             int logicalRow = GetLogicalRow(col, row);
 
             LocNotation tempLocation;
 
-            //represents the square we are trying to move to 
+            // square we're trying to move to 
             Piece selectedPiece;
 
-            //For each potential move
+            // for each potential move
             for (int i = 0; i < displacements.Length; i++)
             {
                 int dc = displacements[i][0];

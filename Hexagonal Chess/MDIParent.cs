@@ -18,11 +18,11 @@ namespace Hexagonal_Chess
         {
             InitializeComponent();
 
-            // Hide window until fully loaded to prevent elements popping in
+            // hide til loaded so nothing pops in
             this.Opacity = 0;
             this.Shown += MDIParent_Shown;
 
-            // Initialize Home only - Board is lazy loaded when user starts a game
+            // Home only, Board lazy loaded when game starts
             frmHome home = new frmHome();
             screens.Add("Home", home);
 
@@ -36,7 +36,7 @@ namespace Hexagonal_Chess
         private void MDIParent_Shown(object sender, EventArgs e)
         {
             this.Shown -= MDIParent_Shown;
-            // Defer until after layout and paint complete, then reveal the window
+            // after layout/paint then show
             this.BeginInvoke(new Action(() =>
             {
                 Application.DoEvents();
@@ -62,14 +62,11 @@ namespace Hexagonal_Chess
 
             FrmBoard oldBoard = (FrmBoard)getScreen("Board");
 
-            // Create and register the new board BEFORE tearing down the old one.
-            // This ensures getScreen("Board") never returns the old board during teardown
-            // (e.g. from FormClosing/Dispose), so nothing can hold a reference to the first board.
+            // register new board before tearing down old so getScreen never returns disposed one
             FrmBoard newBoard = new FrmBoard();
             screens["Board"] = newBoard;
 
-            // Tear down old board: detach from MDI (and remove from parent Controls explicitly),
-            // close so FormClosing unsubscribes, then dispose.
+            // tear down old: detach, close, dispose
             oldBoard.MdiParent = null;
             if (mdiParent != null && mdiParent.Controls.Contains(oldBoard))
                 mdiParent.Controls.Remove(oldBoard);

@@ -20,19 +20,17 @@ namespace Hexagonal_Chess
 {
     public partial class FrmBoard : Form
     {
-        //find the size of each hexagon based on the screen size
+        // hex size from screen
         readonly int hexRadius = (int) Math.Round(Screen.PrimaryScreen.Bounds.Height / 25.0);
 
         private void FrmBoard_Load(object sender, EventArgs e)
         {
-            // Board reset and engine start are done in updateGameMode()/resetBoard() so they run every new game
+            // reset/engine in updateGameMode and resetBoard so it runs each new game
             updateTurnIndicator();
             updatePlayerLabels();
         }
 
-        /// <summary>
-        /// Set "White" / "Black" labels and append "(You)" next to the color the local player controls (Host/Client/Bot/Pass and Play).
-        /// </summary>
+        /// <summary>Set White/Black labels and (You) for the side you control.</summary>
         private void updatePlayerLabels()
         {
             bool youAreWhite = false;
@@ -84,7 +82,7 @@ namespace Hexagonal_Chess
         //stores each piece based on its location notation within the board
         private readonly IDictionary<string, PictureBox> boardPieces = new Dictionary<string, PictureBox>();
 
-        //stores the action buttons for later retrival (Panel = hitbox, PictureBox inside = icon)
+        // action buttons for later (Panel=hitbox, PictureBox=icon)
         private readonly List<Panel> MovementButtons = new List<Panel>();
         private readonly List<Panel> CaptureButtons = new List<Panel>();
 
@@ -93,7 +91,7 @@ namespace Hexagonal_Chess
             InitializeComponent();
             this.FormClosing += FrmBoard_FormClosing;
 
-            // Enable double buffering to reduce flicker during repaints
+            // double buffer to reduce flicker
             typeof(Control).GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
                 ?.SetValue(pnlGame, true);
 
@@ -106,9 +104,7 @@ namespace Hexagonal_Chess
             EndGameAndDisconnect();
         }
 
-        /// <summary>
-        /// Disconnect from bot or other player and release resources. Call when leaving the board (FormClosing or Back to Home).
-        /// </summary>
+        /// <summary>Disconnect from bot/other player. Call on FormClosing or Back to Home.</summary>
         private void EndGameAndDisconnect()
         {
             if (userMode == 0)
@@ -257,11 +253,11 @@ namespace Hexagonal_Chess
             }
 
             updatePlayerLabels();
-            // Show engine terminal only when playing vs bot and Engine Debug Mode is on (default off)
+            // engine terminal only when vs bot and debug mode on
             pnlEngineTerminal.Visible = (userMode == 0) && Properties.Settings.Default.EngineDebugMode;
             resetBoard();
 
-            // Start engine for single-player (runs every new game; Load only runs once so we do it here)
+            // start engine for single player (each new game)
             if (userMode == 0)
             {
                 EngineBridge.EngineOutput -= OnEngineOutput;
@@ -323,7 +319,7 @@ namespace Hexagonal_Chess
         {
             pnlGame.SuspendLayout();
 
-            // Clear pieces from previous game so we don't get "An item with the same key has already been added"
+            // clear old pieces so we dont get duplicate key
             foreach (var kv in boardPieces)
             {
                 if (kv.Value != null && pnlGame.Controls.Contains(kv.Value))
@@ -334,7 +330,7 @@ namespace Hexagonal_Chess
             }
             boardPieces.Clear();
 
-            // Reset game state so a new game doesn't show the previous game's position/moves/eval
+            // reset state so new game doesnt show last game
             board.setBoard();
             lblBottomEval.Text = "";
             lblTopEval.Text = "";
@@ -348,11 +344,7 @@ namespace Hexagonal_Chess
             {
                 for (int row = 0; row <= rowMax; row++)
                 {
-                    // Use the same hexagon positions as boardNodes (from buildBoard) so piece positions
-                    // match the drawn hexagons and makeMove targets. Recomputing from pnlGame size here
-                    // caused wrong initial positions for the client, since the client calls swapScreen
-                    // before resetBoard, so pnlGame may already be resized while boardNodes still has
-                    // constructor-time positions.
+                    // use boardNodes positions so pieces line up with hexes (client used to get wrong pos)
                     string notation = ((char)(col + 65)).ToString() + (row + 1).ToString();
                     Point tempLocation = boardNodes.TryGetValue(notation, out Hexagon hex)
                         ? hex.location
@@ -419,7 +411,7 @@ namespace Hexagonal_Chess
                 return;
             Move move = new Move(piece, new LocNotation(capturedCol, capturedRow), isCapture, enPassant, capturedType);
 
-            // Marshal makeMove to UI thread
+            // marshal makeMove to UI thread
             if (frmBoard.InvokeRequired)
                 frmBoard.Invoke(new Action(() => makeMove(move, board, boardPieces, boardNodes, frmBoard)));
             else
@@ -443,9 +435,7 @@ namespace Hexagonal_Chess
                 }));
         }
 
-        /// <summary>
-        /// Format move for engine: "PeP {start} {end} {captured}" for en passant (e instead of x), else "startend" (e.g. a1b2).
-        /// </summary>
+        /// <summary>Format move for engine: PeP for en passant else startend.</summary>
         private static string GetMoveNotationForEngine(Move move)
         {
             string start = move.startLocation.notation.ToLowerInvariant();
@@ -462,7 +452,7 @@ namespace Hexagonal_Chess
 
         private void SendMove(Move move)
         {
-            // Only send over network for Host (1) or Client (2). Pass and Play (3) is local only.
+            // only send over network for host/client, not pass and play
             if (userMode == 1 || userMode == 2)
             {
                 byte flags = (byte)(move.enPassent ? 0x01 : 0x00);
@@ -471,7 +461,7 @@ namespace Hexagonal_Chess
                 if (!MessageReceiver.IsBusy)
                     MessageReceiver.RunWorkerAsync();
             }
-            // Turn is swapped in makeMove(); do not swap here or we double-swap (turn would stay the same).
+            // turn swapped in makeMove, dont swap here
         }
 
         private void buildBoard()
@@ -561,7 +551,7 @@ namespace Hexagonal_Chess
             colLabel.ForeColor = Color.FromArgb(80, 70, 60);
             colLabel.BackColor = Color.Transparent;
             colLabel.Width = 30;
-            //input the custom values
+            // set the custom valeus
             colLabel.Text = text;
             colLabel.Location = new Point(x,y);
             //add it to the board
@@ -622,7 +612,7 @@ namespace Hexagonal_Chess
             //input the piece specific values
             pictureBox.Name = piece.pieceType + piece.locNotation.notation;
             pictureBox.Location = new Point(tempLocation.X - size / 2, tempLocation.Y - size / 2);
-            //create the click even for adding action buttons
+            // click handler for action buttons
             pictureBox.Click += (sender, EventArgs) => { Piece_Click(sender, EventArgs, piece); };
             //add the image to the screen
             this.pnlGame.Controls.Add(pictureBox);
@@ -654,7 +644,7 @@ namespace Hexagonal_Chess
                     ? EngineBridge.GetBlackMoveAsync(moveNotation)
                     : EngineBridge.GetWhiteMoveAsync(moveNotation);
                 bool wePlayWhite = localPlayerIsWhite;
-                FrmBoard frmBoard = this; // capture form that received the move so callback can Invoke on it
+                FrmBoard frmBoard = this; // for invoke in callback
                 engineTask.ContinueWith(t =>
                 {
                     if (t.IsFaulted || t.Result == null)
@@ -668,8 +658,8 @@ namespace Hexagonal_Chess
                         return;
                     Piece enginePiece = colList[fromRow];
                     if (enginePiece == null || enginePiece.isWhite == wePlayWhite)
-                        return; // engine's piece: white when we're black, black when we're white — skip if it's our color
-                    // Ensure piece's locNotation matches (fromCol, fromRow) so makeMove finds it in boardPieces
+                        return; // engines piece - skip if its our color
+                    // make sure piece locNotation matches so makeMove finds it
                     enginePiece.locNotation = new LocNotation(fromCol, fromRow);
                     LocNotation toLoc = new LocNotation(toCol, toRow);
                     Piece captured = null;
@@ -729,7 +719,7 @@ namespace Hexagonal_Chess
             }
         }
 
-        // Remove all event handlers from the control's named event.
+        // remove all handlers from the controls named event
         private void RemoveEvent(Control ctl, string event_name)
         {
             FieldInfo field_info = typeof(Control).GetField(event_name,
@@ -747,7 +737,7 @@ namespace Hexagonal_Chess
 
         private void Piece_Click(object s, EventArgs e, Piece piece)
         {
-            // Only allow clicking pieces that belong to the local player
+            // only allow clicking our pieces
             bool isMyPiece = (userMode == 0 && (piece.isWhite == localPlayerIsWhite))  // Play vs Bot: randomized
                 || (userMode == 1 && piece.isWhite)             // Host: I am white
                 || (userMode == 2 && !piece.isWhite)             // Client: I am black
@@ -755,7 +745,7 @@ namespace Hexagonal_Chess
             if (!isMyPiece)
                 return;
 
-            // If it is not that piece's turn to move, ignore
+            // not our turn, ignore
             if (!(piece.isWhite == board.whiteToPlay))
                 return;
             //remove all the active action buttons
@@ -848,7 +838,7 @@ namespace Hexagonal_Chess
                     capturedPieceImage = boardPieces[endLocation.notation];
                 }
 
-                // so the moves table can show e.g. ♕x♕F11 (moving piece x captured piece square)
+                // for moves table display
                 move.capturedPieceType = capturedPiece.pieceType;
 
                 //remove the pieces image

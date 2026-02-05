@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,7 +20,7 @@ namespace Hexagonal_Chess
             //set the winner text
             string tempWinner = whiteIsWinner ? "White" : "Black";
 
-            //Find the semi colon in the text
+            // find the semicolon in the text
             int movesStart = lblGameMoves.Text.IndexOf(':') + 1;
 
             //add the number of moves after the semicolon

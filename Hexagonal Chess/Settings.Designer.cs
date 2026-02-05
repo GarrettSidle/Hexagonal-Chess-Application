@@ -195,7 +195,7 @@ namespace Hexagonal_Chess
             this.lblExpensive.Name = "lblExpensive";
             this.lblExpensive.Size = new System.Drawing.Size(213, 17);
             this.lblExpensive.TabIndex = 5;
-            this.lblExpensive.Text = "More computationally expensive ➔\r\n";
+            this.lblExpensive.Text = "More computationally expensive ->\r\n";
             // 
             // lblHard
             // 

@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hexagonal_Chess
 {
-    /// <summary>
-    /// Result of parsing an engine move line. For en passant, CapturedCol/CapturedRow are the captured pawn's square.
-    /// </summary>
+    /// <summary>Parsed engine move. En passant uses CapturedCol/Row for captured pawn.</summary>
     public sealed class EngineMoveResult
     {
         public int FromCol { get; }
@@ -31,10 +29,7 @@ namespace Hexagonal_Chess
         }
     }
 
-    /// <summary>
-    /// Runs the C++ engine process and communicates via stdin/stdout for single-player.
-    /// Engine can play white or black; local player color is randomized at game start.
-    /// </summary>
+    /// <summary>C++ engine over stdin/stdout. Plays white or black, we randomize who.</summary>
     public static class EngineBridge
     {
         private static Process _process;
@@ -47,7 +42,7 @@ namespace Hexagonal_Chess
         private static System.Threading.Tasks.Task _stderrReadTask;
         private static Timer _heartbeatTimer;
 
-        /// <summary>Fired whenever a line is read from the engine's stdout or stderr (for UI terminal).</summary>
+        /// <summary>Fired when we read a line from engine stdout/stderr.</summary>
         public static event Action<string> EngineOutput;
 
         private static string GetEnginePath()
@@ -55,7 +50,7 @@ namespace Hexagonal_Chess
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string[] candidates = new[]
             {
-                // Project Engine folder: Hexagonal Chess\Engine\engine.exe (place engine.exe here)
+                // engine.exe lives in Engine folder
                 Path.GetFullPath(Path.Combine(baseDir, "..", "..", "Engine", "engine.exe")),
                 Path.GetFullPath(Path.Combine(baseDir, "Engine", "engine.exe")),
                 Path.GetFullPath(Path.Combine(baseDir, "engine.exe")),
@@ -70,10 +65,7 @@ namespace Hexagonal_Chess
             return null;
         }
 
-        /// <summary>
-        /// Get startup command for variant: 0 = Glinski, 1 = McCooey, 2 = Hexofen.
-        /// Format: "glinski white 3000" (command, optional "white", max_nodes).
-        /// </summary>
+        /// <summary>Startup cmd: 0=Glinski 1=McCooey 2=Hexofen. e.g. glinski white 3000.</summary>
         private static string GetVariantCommand(int gameVariant, bool enginePlaysWhite, int maxNodes)
         {
             string name;
@@ -87,13 +79,7 @@ namespace Hexagonal_Chess
             return cmd + " " + maxNodes.ToString();
         }
 
-        /// <summary>
-        /// Start the engine and send variant command (e.g. "glinski white 3000", "mccooey 5000"). When enginePlaysWhite is true,
-        /// reads the engine's first move and stores it for GetEngineFirstMove().
-        /// </summary>
-        /// <param name="enginePlaysWhite">True if engine plays white.</param>
-        /// <param name="gameVariant">0 = Glinski, 1 = McCooey, 2 = Hexofen.</param>
-        /// <param name="maxNodes">Maximum nodes the engine may evaluate per move (e.g. 1500).</param>
+        /// <summary>Start engine, send variant cmd. If engine plays white we read first move for GetEngineFirstMove.</summary>
         public static bool Start(bool enginePlaysWhite, int gameVariant = 0, int maxNodes = 1500)
         {
             lock (_lock)
@@ -145,7 +131,7 @@ namespace Hexagonal_Chess
                         default: posName = "glinski"; break;
                     }
                     string posPrefix = "position " + posName;
-                    // Read until we have consumed startup output. Expect "thinking....." then "Engine Move (White): ...".
+                    // consume startup output til we get Engine Move line
                     while (true)
                     {
                         string line = _stdout.ReadLine();
@@ -182,9 +168,7 @@ namespace Hexagonal_Chess
             }
         }
 
-        /// <summary>
-        /// After Start(true), returns the engine's first (white) move, or null. Call once after load when local player is black.
-        /// </summary>
+        /// <summary>After Start(true), returns engines first white move or null. Call once when we're black.</summary>
         public static EngineMoveResult GetEngineFirstMove()
         {
             lock (_lock)
@@ -195,10 +179,7 @@ namespace Hexagonal_Chess
             }
         }
 
-        /// <summary>
-        /// Send white's move (e.g. "a1b2" or "PeP a5 b6 c6") and read until "Engine Move (Black): ...", then parse and return move result.
-        /// Returns null on failure or if engine returns "(none)".
-        /// </summary>
+        /// <summary>Send white move, read til Engine Move (Black), return result or null.</summary>
         public static Task<EngineMoveResult> GetBlackMoveAsync(string whiteMoveNotation)
         {
             return Task.Run(() =>
@@ -235,10 +216,7 @@ namespace Hexagonal_Chess
             });
         }
 
-        /// <summary>
-        /// Send black's move and read until "Engine Move (White): ...", then return engine's (white) move result.
-        /// Returns null on failure or if engine returns "(none)".
-        /// </summary>
+        /// <summary>Send black move, read til Engine Move (White), return result or null.</summary>
         public static Task<EngineMoveResult> GetWhiteMoveAsync(string blackMoveNotation)
         {
             return Task.Run(() =>
@@ -270,10 +248,7 @@ namespace Hexagonal_Chess
             });
         }
 
-        /// <summary>
-        /// Parse a line like "Engine Move (White): P E7 E6", "Engine Move (White): PeP A5 B6 C6", or "Engine Move (Black): (none)".
-        /// PeP format: PeP {pawn start} {pawn end} {captured pawn location}. Returns null on (none) or parse failure.
-        /// </summary>
+        /// <summary>Parse Engine Move line. PeP = start end captured. Returns null on (none) or fail.</summary>
         private static EngineMoveResult ParseEngineMoveLine(string line)
         {
             if (line == null)
@@ -349,7 +324,7 @@ namespace Hexagonal_Chess
                     catch (ObjectDisposedException) { StopHeartbeatTimer(); }
                     catch (IOException) { StopHeartbeatTimer(); }
                 }
-            }, null, 500, 500);  // First after 500ms, then every 500ms
+            }, null, 500, 500);  // first 500ms then every 500ms
         }
 
         private static void StopHeartbeatTimer()
@@ -362,9 +337,7 @@ namespace Hexagonal_Chess
             catch { }
         }
 
-        /// <summary>
-        /// Kill the engine process. Call when leaving single-player or closing the board.
-        /// </summary>
+        /// <summary>Kill engine. Call when leaving single player or closing board.</summary>
         public static void Stop()
         {
             lock (_lock)

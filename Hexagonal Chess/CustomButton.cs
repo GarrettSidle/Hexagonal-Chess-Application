@@ -23,7 +23,7 @@ namespace Hexagonal_Chess
 
         public CustomButton()
         {
-            // Prevent the default rectangular hover highlight so only our custom pill shape highlights
+            // no default rect highlight, just our pill
             FlatAppearance.MouseOverBackColor = Color.Transparent;
             FlatAppearance.MouseDownBackColor = Color.Transparent;
             Button_WOC();
