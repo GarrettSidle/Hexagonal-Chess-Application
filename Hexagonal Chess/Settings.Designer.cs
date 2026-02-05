@@ -38,6 +38,7 @@ namespace Hexagonal_Chess
             this.btnMcCooey = new Hexagonal_Chess.CustomButton();
             this.btnGlinksi = new Hexagonal_Chess.CustomButton();
             this.lblVariation = new System.Windows.Forms.Label();
+            this.chkEngineDebugMode = new System.Windows.Forms.CheckBox();
             this.layoutSettings.SuspendLayout();
             this.layoutFormButtons.SuspendLayout();
             this.layoutVariationButtons.SuspendLayout();
@@ -48,15 +49,17 @@ namespace Hexagonal_Chess
             this.layoutSettings.BackColor = System.Drawing.Color.Transparent;
             this.layoutSettings.ColumnCount = 1;
             this.layoutSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.layoutSettings.Controls.Add(this.layoutFormButtons, 0, 2);
+            this.layoutSettings.Controls.Add(this.layoutFormButtons, 0, 3);
+            this.layoutSettings.Controls.Add(this.chkEngineDebugMode, 0, 2);
             this.layoutSettings.Controls.Add(this.lblTitle, 0, 0);
             this.layoutSettings.Controls.Add(this.layoutVariationButtons, 0, 1);
             this.layoutSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutSettings.Location = new System.Drawing.Point(0, 0);
             this.layoutSettings.Name = "layoutSettings";
-            this.layoutSettings.RowCount = 3;
+            this.layoutSettings.RowCount = 4;
             this.layoutSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.layoutSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.layoutSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.layoutSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.layoutSettings.Size = new System.Drawing.Size(800, 599);
             this.layoutSettings.TabIndex = 1;
@@ -70,7 +73,7 @@ namespace Hexagonal_Chess
             this.layoutFormButtons.Controls.Add(this.btnSave, 1, 0);
             this.layoutFormButtons.Controls.Add(this.btnClose, 0, 0);
             this.layoutFormButtons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.layoutFormButtons.Location = new System.Drawing.Point(3, 401);
+            this.layoutFormButtons.Location = new System.Drawing.Point(3, 446);
             this.layoutFormButtons.Name = "layoutFormButtons";
             this.layoutFormButtons.RowCount = 1;
             this.layoutFormButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -242,6 +245,20 @@ namespace Hexagonal_Chess
             this.lblVariation.Text = "Chess Variation";
             this.lblVariation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // chkEngineDebugMode
+            // 
+            this.chkEngineDebugMode.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.chkEngineDebugMode.AutoSize = true;
+            this.chkEngineDebugMode.BackColor = System.Drawing.Color.Transparent;
+            this.chkEngineDebugMode.Font = new System.Drawing.Font("Microsoft YaHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkEngineDebugMode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(133)))), ((int)(((byte)(64)))));
+            this.chkEngineDebugMode.Location = new System.Drawing.Point(275, 10);
+            this.chkEngineDebugMode.Name = "chkEngineDebugMode";
+            this.chkEngineDebugMode.Size = new System.Drawing.Size(250, 28);
+            this.chkEngineDebugMode.TabIndex = 7;
+            this.chkEngineDebugMode.Text = "Engine Debug Mode";
+            this.chkEngineDebugMode.UseVisualStyleBackColor = false;
+            // 
             // FrmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -277,5 +294,6 @@ namespace Hexagonal_Chess
         private CustomButton btnGlinksi;
         private System.Windows.Forms.Label lblVariation;
         private System.Windows.Forms.TableLayoutPanel layoutFormButtons;
+        private System.Windows.Forms.CheckBox chkEngineDebugMode;
     }
 }

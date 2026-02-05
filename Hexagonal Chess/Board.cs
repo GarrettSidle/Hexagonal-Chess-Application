@@ -257,15 +257,20 @@ namespace Hexagonal_Chess
             }
 
             updatePlayerLabels();
-            pnlEngineTerminal.Visible = (userMode == 0);
+            // Show engine terminal only when playing vs bot and Engine Debug Mode is on (default off)
+            pnlEngineTerminal.Visible = (userMode == 0) && Properties.Settings.Default.EngineDebugMode;
             resetBoard();
 
             // Start engine for single-player (runs every new game; Load only runs once so we do it here)
             if (userMode == 0)
             {
-                pnlEngineTerminal.BringToFront();
-                txtEngineOutput.Clear();
-                EngineBridge.EngineOutput += OnEngineOutput;
+                EngineBridge.EngineOutput -= OnEngineOutput;
+                if (Properties.Settings.Default.EngineDebugMode)
+                {
+                    pnlEngineTerminal.BringToFront();
+                    txtEngineOutput.Clear();
+                    EngineBridge.EngineOutput += OnEngineOutput;
+                }
                 bool enginePlaysWhite = !localPlayerIsWhite;
                 if (!EngineBridge.Start(enginePlaysWhite, Utils.gameVarient))
                 {

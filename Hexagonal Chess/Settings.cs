@@ -29,6 +29,8 @@ namespace Hexagonal_Chess
         {
             //set the currently selected varient
             setGameVarient(Utils.gameVarient);
+            // load engine debug mode (default off)
+            chkEngineDebugMode.Checked = Properties.Settings.Default.EngineDebugMode;
         }
 
 
@@ -90,6 +92,9 @@ namespace Hexagonal_Chess
         {
             //save the selected value
             Utils.gameVarient = currentGameVarient;
+            // save engine debug mode
+            Properties.Settings.Default.EngineDebugMode = chkEngineDebugMode.Checked;
+            Properties.Settings.Default.Save();
             //reset the board
             Utils.board.setBoard();
             this.Close();
