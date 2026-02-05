@@ -7,6 +7,31 @@ using System.Threading.Tasks;
 namespace Hexagonal_Chess
 {
     /// <summary>
+    /// Result of parsing an engine move line. For en passant, CapturedCol/CapturedRow are the captured pawn's square.
+    /// </summary>
+    public sealed class EngineMoveResult
+    {
+        public int FromCol { get; }
+        public int FromRow { get; }
+        public int ToCol { get; }
+        public int ToRow { get; }
+        public bool IsEnPassant { get; }
+        public int? CapturedCol { get; }
+        public int? CapturedRow { get; }
+
+        public EngineMoveResult(int fromCol, int fromRow, int toCol, int toRow, bool isEnPassant = false, int? capturedCol = null, int? capturedRow = null)
+        {
+            FromCol = fromCol;
+            FromRow = fromRow;
+            ToCol = toCol;
+            ToRow = toRow;
+            IsEnPassant = isEnPassant;
+            CapturedCol = capturedCol;
+            CapturedRow = capturedRow;
+        }
+    }
+
+    /// <summary>
     /// Runs the C++ engine process and communicates via stdin/stdout for single-player.
     /// Engine can play white or black; local player color is randomized at game start.
     /// </summary>
@@ -17,7 +42,7 @@ namespace Hexagonal_Chess
         private static StreamReader _stdout;
         private static readonly object _lock = new object();
         private static bool _initialized;
-        private static Tuple<int, int, int, int> _engineFirstMove;
+        private static EngineMoveResult _engineFirstMove;
         private static StreamReader _stderr;
         private static System.Threading.Tasks.Task _stderrReadTask;
         private static Timer _heartbeatTimer;
@@ -136,7 +161,8 @@ namespace Hexagonal_Chess
                         if (enginePlaysWhite && line.StartsWith("Engine Move (White):", StringComparison.OrdinalIgnoreCase))
                         {
                             _engineFirstMove = ParseEngineMoveLine(line);
-                            break;
+                            if (_engineFirstMove != null)
+                                break;
                         }
                     }
                     _initialized = true;
@@ -156,7 +182,7 @@ namespace Hexagonal_Chess
         /// <summary>
         /// After Start(true), returns the engine's first (white) move, or null. Call once after load when local player is black.
         /// </summary>
-        public static Tuple<int, int, int, int> GetEngineFirstMove()
+        public static EngineMoveResult GetEngineFirstMove()
         {
             lock (_lock)
             {
@@ -167,10 +193,10 @@ namespace Hexagonal_Chess
         }
 
         /// <summary>
-        /// Send white's move (e.g. "a1b2") and read until "Engine Move (Black): ...", then parse and return (fromCol, fromRow, toCol, toRow).
+        /// Send white's move (e.g. "a1b2" or "PeP a5 b6 c6") and read until "Engine Move (Black): ...", then parse and return move result.
         /// Returns null on failure or if engine returns "(none)".
         /// </summary>
-        public static Task<Tuple<int, int, int, int>> GetBlackMoveAsync(string whiteMoveNotation)
+        public static Task<EngineMoveResult> GetBlackMoveAsync(string whiteMoveNotation)
         {
             return Task.Run(() =>
             {
@@ -207,10 +233,10 @@ namespace Hexagonal_Chess
         }
 
         /// <summary>
-        /// Send black's move and read until "Engine Move (White): ...", then return engine's (white) move (fromCol, fromRow, toCol, toRow).
+        /// Send black's move and read until "Engine Move (White): ...", then return engine's (white) move result.
         /// Returns null on failure or if engine returns "(none)".
         /// </summary>
-        public static Task<Tuple<int, int, int, int>> GetWhiteMoveAsync(string blackMoveNotation)
+        public static Task<EngineMoveResult> GetWhiteMoveAsync(string blackMoveNotation)
         {
             return Task.Run(() =>
             {
@@ -242,10 +268,10 @@ namespace Hexagonal_Chess
         }
 
         /// <summary>
-        /// Parse a line like "Engine Move (White): P E7 E6" or "Engine Move (Black): (none)".
-        /// Returns (fromCol, fromRow, toCol, toRow) or null.
+        /// Parse a line like "Engine Move (White): P E7 E6", "Engine Move (White): PeP A5 B6 C6", or "Engine Move (Black): (none)".
+        /// PeP format: PeP {pawn start} {pawn end} {captured pawn location}. Returns null on (none) or parse failure.
         /// </summary>
-        private static Tuple<int, int, int, int> ParseEngineMoveLine(string line)
+        private static EngineMoveResult ParseEngineMoveLine(string line)
         {
             if (line == null)
                 return null;
@@ -256,12 +282,21 @@ namespace Hexagonal_Chess
             if (rest.StartsWith("(none)", StringComparison.OrdinalIgnoreCase))
                 return null;
             string[] parts = rest.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            // PeP {start} {end} {captured}
+            if (parts.Length >= 4 && parts[0].Equals("PeP", StringComparison.OrdinalIgnoreCase))
+            {
+                var from = ParseSquare(parts[1]);
+                var to = ParseSquare(parts[2]);
+                var captured = ParseSquare(parts[3]);
+                if (from != null && to != null && captured != null)
+                    return new EngineMoveResult(from.Item1, from.Item2, to.Item1, to.Item2, true, captured.Item1, captured.Item2);
+            }
             if (parts.Length >= 3)
             {
                 var from = ParseSquare(parts[1]);
                 var to = ParseSquare(parts[2]);
                 if (from != null && to != null)
-                    return Tuple.Create(from.Item1, from.Item2, to.Item1, to.Item2);
+                    return new EngineMoveResult(from.Item1, from.Item2, to.Item1, to.Item2);
             }
             if (parts.Length >= 1 && parts[0].Length >= 4)
             {
@@ -271,7 +306,7 @@ namespace Hexagonal_Chess
                     int c1 = compact[0] - 'a', r1 = compact[1] - '0' - 1;
                     int c2 = compact[2] - 'a', r2 = compact[3] - '0' - 1;
                     if (c1 >= 0 && c1 < 11 && r1 >= 0 && c2 >= 0 && c2 < 11 && r2 >= 0)
-                        return Tuple.Create(c1, r1, c2, r2);
+                        return new EngineMoveResult(c1, r1, c2, r2);
                 }
             }
             return null;

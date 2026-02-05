@@ -276,7 +276,7 @@ namespace Hexagonal_Chess
                     var firstMove = EngineBridge.GetEngineFirstMove();
                     if (firstMove != null)
                     {
-                        int fromCol = firstMove.Item1, fromRow = firstMove.Item2, toCol = firstMove.Item3, toRow = firstMove.Item4;
+                        int fromCol = firstMove.FromCol, fromRow = firstMove.FromRow, toCol = firstMove.ToCol, toRow = firstMove.ToRow;
                         if (fromCol >= 0 && fromCol < board.gameBoard.Length)
                         {
                             var colList = board.gameBoard[fromCol];
@@ -287,13 +287,23 @@ namespace Hexagonal_Chess
                                 {
                                     LocNotation toLoc = new LocNotation(toCol, toRow);
                                     Piece captured = null;
-                                    if (toCol >= 0 && toCol < board.gameBoard.Length)
+                                    if (firstMove.IsEnPassant && firstMove.CapturedCol.HasValue && firstMove.CapturedRow.HasValue)
+                                    {
+                                        int cc = firstMove.CapturedCol.Value, cr = firstMove.CapturedRow.Value;
+                                        if (cc >= 0 && cc < board.gameBoard.Length)
+                                        {
+                                            var capList = board.gameBoard[cc];
+                                            if (capList != null && cr >= 0 && cr < capList.Count)
+                                                captured = capList[cr];
+                                        }
+                                    }
+                                    else if (toCol >= 0 && toCol < board.gameBoard.Length)
                                     {
                                         var toColList = board.gameBoard[toCol];
                                         if (toRow >= 0 && toRow < toColList?.Count)
                                             captured = toColList[toRow];
                                     }
-                                    Move engineMove = new Move(whitePiece, toLoc, captured != null, false, captured?.pieceType);
+                                    Move engineMove = new Move(whitePiece, toLoc, captured != null || firstMove.IsEnPassant, firstMove.IsEnPassant, captured?.pieceType ?? (firstMove.IsEnPassant ? 'P' : (char?)null));
                                     makeMove(engineMove, board, boardPieces, boardNodes, this);
                                 }
                             }
@@ -425,6 +435,23 @@ namespace Hexagonal_Chess
                     MessageBox.Show("Connection lost.", "Connection");
                     MDIParent.swapScreen("Home");
                 }));
+        }
+
+        /// <summary>
+        /// Format move for engine: "PeP {start} {end} {captured}" for en passant (e instead of x), else "startend" (e.g. a1b2).
+        /// </summary>
+        private static string GetMoveNotationForEngine(Move move)
+        {
+            string start = move.startLocation.notation.ToLowerInvariant();
+            string end = move.endLocation.notation.ToLowerInvariant();
+            if (move.enPassent)
+            {
+                int capRow = move.endLocation.row + (move.piece.isWhite ? -1 : 1);
+                var capturedLoc = new LocNotation(move.endLocation.col, capRow);
+                string captured = capturedLoc.notation.ToLowerInvariant();
+                return "PeP " + start + " " + end + " " + captured;
+            }
+            return start + end;
         }
 
         private void SendMove(Move move)
@@ -616,8 +643,8 @@ namespace Hexagonal_Chess
             // single player: send our move to engine and apply engine's reply
             if (Utils.userMode == 0)
             {
-                string moveNotation = (move.startLocation.notation + move.endLocation.notation).ToLowerInvariant();
-                Task<Tuple<int, int, int, int>> engineTask = localPlayerIsWhite
+                string moveNotation = GetMoveNotationForEngine(move);
+                Task<EngineMoveResult> engineTask = localPlayerIsWhite
                     ? EngineBridge.GetBlackMoveAsync(moveNotation)
                     : EngineBridge.GetWhiteMoveAsync(moveNotation);
                 bool wePlayWhite = localPlayerIsWhite;
@@ -627,7 +654,7 @@ namespace Hexagonal_Chess
                     if (t.IsFaulted || t.Result == null)
                         return;
                     var result = t.Result;
-                    int fromCol = result.Item1, fromRow = result.Item2, toCol = result.Item3, toRow = result.Item4;
+                    int fromCol = result.FromCol, fromRow = result.FromRow, toCol = result.ToCol, toRow = result.ToRow;
                     if (fromCol < 0 || fromCol >= board.gameBoard.Length)
                         return;
                     var colList = board.gameBoard[fromCol];
@@ -640,13 +667,23 @@ namespace Hexagonal_Chess
                     enginePiece.locNotation = new LocNotation(fromCol, fromRow);
                     LocNotation toLoc = new LocNotation(toCol, toRow);
                     Piece captured = null;
-                    if (toCol >= 0 && toCol < board.gameBoard.Length)
+                    if (result.IsEnPassant && result.CapturedCol.HasValue && result.CapturedRow.HasValue)
+                    {
+                        int cc = result.CapturedCol.Value, cr = result.CapturedRow.Value;
+                        if (cc >= 0 && cc < board.gameBoard.Length)
+                        {
+                            var capList = board.gameBoard[cc];
+                            if (capList != null && cr >= 0 && cr < capList.Count)
+                                captured = capList[cr];
+                        }
+                    }
+                    else if (toCol >= 0 && toCol < board.gameBoard.Length)
                     {
                         var toColList = board.gameBoard[toCol];
                         if (toRow >= 0 && toRow < toColList?.Count)
                             captured = toColList[toRow];
                     }
-                    Move engineMove = new Move(enginePiece, toLoc, captured != null, false, captured?.pieceType);
+                    Move engineMove = new Move(enginePiece, toLoc, captured != null || result.IsEnPassant, result.IsEnPassant, captured?.pieceType ?? (result.IsEnPassant ? 'P' : (char?)null));
                     if (frmBoard.IsDisposed || !frmBoard.IsHandleCreated)
                         return;
                     try
